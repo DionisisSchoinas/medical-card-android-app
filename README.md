@@ -1,2 +1,3 @@
-# medical-card-android-app
+# README
  
+Uses https://github.com/DionisisSchoinas/medical-card-api for data management
