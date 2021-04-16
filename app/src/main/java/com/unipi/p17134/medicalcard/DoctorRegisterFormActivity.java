@@ -63,7 +63,7 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
         }
 
         if (MyPrefs.isDoctor(this)) {
-            Toast.makeText(this, "Already a doctor", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.already_a_doctor), Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }
@@ -90,7 +90,7 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
             startActivityForResult(takePictureIntent, MyPermissions.RESULT_TAKE_PHOTO);
         }
         catch (ActivityNotFoundException e) {
-            Toast.makeText(this, "Couldn't open camera", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.unable_to_open_camera), Toast.LENGTH_LONG).show();
         }
         catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -108,11 +108,11 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
                         profilePic = BitmapFactory.decodeStream(imageStream);
                         image.setImageBitmap(profilePic);
                     } catch (FileNotFoundException e) {
-                        Toast.makeText(DoctorRegisterFormActivity.this, "Couldn't load image", Toast.LENGTH_LONG).show();
+                        Toast.makeText(DoctorRegisterFormActivity.this, getResources().getString(R.string.unable_to_load_image), Toast.LENGTH_LONG).show();
                     }
                 }
                 else {
-                    Toast.makeText(DoctorRegisterFormActivity.this, "Didn't pick an image",Toast.LENGTH_LONG).show();
+                    Toast.makeText(DoctorRegisterFormActivity.this, getResources().getString(R.string.image_not_picked),Toast.LENGTH_LONG).show();
                 }
                 break;
             case MyPermissions.RESULT_TAKE_PHOTO:
@@ -122,7 +122,7 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
                     image.setImageBitmap(profilePic);
                 }
                 else {
-                    Toast.makeText(DoctorRegisterFormActivity.this, "Didn't take a picture",Toast.LENGTH_LONG).show();
+                    Toast.makeText(DoctorRegisterFormActivity.this, getResources().getString(R.string.picture_not_taken),Toast.LENGTH_LONG).show();
                 }
                 break;
             case MyPermissions.ACCESS_CAMERA_REQUEST:

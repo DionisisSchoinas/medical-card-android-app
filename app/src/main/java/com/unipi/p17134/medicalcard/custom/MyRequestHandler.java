@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.unipi.p17134.medicalcard.R;
 
 public class MyRequestHandler {
     private static MyRequestHandler instance;
@@ -39,7 +40,7 @@ public class MyRequestHandler {
 
     public <T> void addToRequestQueue(Activity activity, Request<T> req) {
         if (InternetAccessController.noInternetAccess(activity)) {
-            Toast.makeText(activity, "Enable your internet connection", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, activity.getResources().getString(R.string.enable_internet_connection), Toast.LENGTH_LONG).show();
             return;
         }
 

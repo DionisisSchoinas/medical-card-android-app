@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">Medical Card</string>
+    <string name="app_name">Κάρτα Υγείας</string>
+
+    <!-- Messages to user -->
+    <string name="failed_to_speak_to_server">Δεν έγινε σύνδεση με τον server</string>
+    <string name="problem_with_request">Υπήρξε κάποιο πρόβλημα</string>
+    <string name="fatal_error">Υπήρξε κάποιο πρόβλημα</string>
+
+    <string name="enable_internet_connection">Ενεργοποίησε την σύνδεσή σου στο διαδίκυτο</string>
+    <string name="unable_to_open_camera">Η κάμερα δεν μπόρεσε να ανοιχτεί</string>
+    <string name="unable_to_load_image">Η φωτογραφία δεν μπόρεσε να φορτωθεί</string>
+    <string name="image_not_picked">Δεν διαλέχτηκε φωτογραφία</string>
+    <string name="picture_not_taken">Δεν τραβήχτηκε φωτογραφία</string>
+
+    <string name="already_a_doctor">Αυτός ο λαγιασμός είναι ήδη γιατρός</string>
 </resources>

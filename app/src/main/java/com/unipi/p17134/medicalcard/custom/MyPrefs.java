@@ -16,6 +16,8 @@ public class MyPrefs {
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove("token");
         editor.remove("isDoctor");
+        editor.remove("userFullname");
+        editor.remove("userBirth");
         editor.apply();
     }
 

@@ -12,34 +12,33 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.unipi.p17134.medicalcard.DoctorRegisterFormActivity;
 import com.unipi.p17134.medicalcard.LoginActivity;
 import com.unipi.p17134.medicalcard.MainActivity;
+import com.unipi.p17134.medicalcard.R;
 import com.unipi.p17134.medicalcard.singletons.Doctor;
 import com.unipi.p17134.medicalcard.singletons.User;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class API {
-    private static String url = "http://192.168.1.5:3000";
+    private static final String url = "http://192.168.1.5:3000";
 
     private static void errorResponse(Context ctx, VolleyError error) {
         if (error.networkResponse == null) {
-            Toast.makeText(ctx, "Couldn't talk to the server", Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx, ctx.getResources().getString(R.string.failed_to_speak_to_server), Toast.LENGTH_LONG).show();
             return;
         }
 
         try {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
+            String message = error.networkResponse.statusCode + "\n" + data.getString("message");
             Toast.makeText(ctx, message, Toast.LENGTH_LONG).show();
         }
         catch (Exception e){
-            Toast.makeText(ctx, "There was a problem with the request", Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx, ctx.getResources().getString(R.string.problem_with_request), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -51,7 +50,7 @@ public class API {
         public static void login(Activity activity, User user, boolean fromRegister) {
             JSONObject postData = user.toJson();
             if (postData == null) {
-                Toast.makeText(activity, "Something went very wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
             }
             else {
                 String loginUrl = url + "/auth/login";
@@ -62,18 +61,18 @@ public class API {
                             MyPrefs.setToken(activity, response.getString("auth_token"));
                             MyPrefs.isDoctor(activity, response.getBoolean("is_doctor"));
                             MyPrefs.setUserData(activity, new User().setFullname(response.getString("fullname")).setDateOfBirth(response.getString("date_of_birth")));
-                            Toast.makeText(activity, response.getString("message"), Toast.LENGTH_LONG).show();
 
                             if (fromRegister) {
                                 activity.startActivity(new Intent(activity, DoctorRegisterFormActivity.class));
                                 activity.finish();
                             }
                             else {
+                                Toast.makeText(activity, response.getString("message"), Toast.LENGTH_LONG).show();
                                 activity.startActivity(new Intent(activity, MainActivity.class));
                                 activity.finish();
                             }
                         } catch (JSONException e) {
-                            Toast.makeText(activity, "Something went very wrong", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -95,7 +94,7 @@ public class API {
         public static void register(Activity activity, User user, boolean simpleRegister) {
             JSONObject postData = user.toJson();
             if (postData == null) {
-                Toast.makeText(activity, "Something went very wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
             }
             else {
                 String signupUrl = url + "/signup";
@@ -116,7 +115,7 @@ public class API {
                                 activity.finish();
                             }
                         } catch (JSONException e) {
-                            Toast.makeText(activity, "Something went very wrong", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -132,7 +131,7 @@ public class API {
         public static void registerDoctor(Activity activity, Doctor doctor) {
             JSONObject postData = doctor.toJson();
             if (postData == null) {
-                Toast.makeText(activity, "Something went very wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
             }
             else {
                 String signupUrl = url + "/doctors";
@@ -146,7 +145,7 @@ public class API {
                             activity.startActivity(new Intent(activity, MainActivity.class));
                             activity.finish();
                         } catch (JSONException e) {
-                            Toast.makeText(activity, "Something went very wrong", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {
