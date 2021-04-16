@@ -87,6 +87,7 @@ public class API {
 
         public static void logout(Activity activity) {
             MyPrefs.clearLogin(activity);
+            Toast.makeText(activity, activity.getResources().getString(R.string.logged_out_successfully), Toast.LENGTH_SHORT).show();
             activity.startActivity(new Intent(activity, LoginActivity.class));
             activity.finish();
         }
@@ -104,7 +105,7 @@ public class API {
                         try {
                             MyPrefs.setToken(activity, response.getString("auth_token"));
                             MyPrefs.isDoctor(activity, response.getBoolean("is_doctor"));
-                            Toast.makeText(activity, response.getString("message"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, response.getString("message"), Toast.LENGTH_SHORT).show();
 
                             if (simpleRegister) {
                                 activity.startActivity(new Intent(activity, MainActivity.class));
@@ -140,7 +141,7 @@ public class API {
                     public void onResponse(JSONObject response) {
                         try {
                             MyPrefs.isDoctor(activity, true);
-                            Toast.makeText(activity, response.getString("message"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, response.getString("message"), Toast.LENGTH_SHORT).show();
 
                             activity.startActivity(new Intent(activity, MainActivity.class));
                             activity.finish();

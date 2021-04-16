@@ -57,7 +57,7 @@ public class MyPrefs {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
         User user = new User();
         user.setFullname(preferences.getString("userFullname", ""));
-        user.setFullname(preferences.getString("userBirth", ""));
+        user.setDateOfBirth(preferences.getString("userBirth", ""));
         return user;
     }
 }

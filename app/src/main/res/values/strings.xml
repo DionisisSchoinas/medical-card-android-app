@@ -6,11 +6,35 @@
     <string name="problem_with_request">Υπήρξε κάποιο πρόβλημα</string>
     <string name="fatal_error">Υπήρξε κάποιο πρόβλημα</string>
 
-    <string name="enable_internet_connection">Ενεργοποίησε την σύνδεσή σου στο διαδίκυτο</string>
+    <string name="enable_internet_connection">Ενεργοποιήστε την σύνδεσή σου στο διαδίκυτο</string>
     <string name="unable_to_open_camera">Η κάμερα δεν μπόρεσε να ανοιχτεί</string>
     <string name="unable_to_load_image">Η φωτογραφία δεν μπόρεσε να φορτωθεί</string>
     <string name="image_not_picked">Δεν διαλέχτηκε φωτογραφία</string>
     <string name="picture_not_taken">Δεν τραβήχτηκε φωτογραφία</string>
 
     <string name="already_a_doctor">Αυτός ο λαγιασμός είναι ήδη γιατρός</string>
+
+
+    <!-- Global -->
+    <string name="action_settings">Ρυθμίσεις</string>
+
+    <!-- Main Activity -->
+    <string name="connected_as_subtitle">Συνδεδεμένος με :</string>
+    <string name="connected_as_name">Όνομα Χρήστη</string>
+    <string name="logged_out_successfully">Επιτυχής αποσύνδεση</string>
+
+    <!-- Menu -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="menu_doctor_search">Αναζήτηση Γιατρού</string>
+    <string name="menu_qr_generate">Δημιουργία Κωδικού</string>
+    <string name="menu_qr_read">Ανάγνωση Κωδικού</string>
+    <string name="menu_login_register">Σύνδεση/Εγγραφή</string>
+    <string name="menu_my_account">Τα Στοιχεία Μου</string>
+    <string name="menu_my_appointments">Τα Ραντεβού Μου</string>
+    <string name="menu_logout">Αποσύνδεση</string>
+
+    <!-- Activity Names -->
+    <string name="main_activity">Κεντρική Σελίδα</string>
+    <string name="title_activity_main">Κεντρική Σελίδα</string>
 </resources>
