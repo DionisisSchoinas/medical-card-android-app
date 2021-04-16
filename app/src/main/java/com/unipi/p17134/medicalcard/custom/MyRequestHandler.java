@@ -1,6 +1,13 @@
 package com.unipi.p17134.medicalcard.custom;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -30,7 +37,19 @@ public class MyRequestHandler {
         return requestQueue;
     }
 
-    public <T> void addToRequestQueue(Context ctx, Request<T> req) {
-        getRequestQueue(ctx).add(req);
+    public <T> void addToRequestQueue(Activity activity, Request<T> req) {
+        if (InternetAccessController.noInternetAccess(activity)) {
+            Toast.makeText(activity, "Enable your internet connection", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.INTERNET}, MyPermissions.INTERNET_ACCESS_REQUEST);
+                return;
+            }
+        }
+
+        getRequestQueue(activity).add(req);
     }
 }

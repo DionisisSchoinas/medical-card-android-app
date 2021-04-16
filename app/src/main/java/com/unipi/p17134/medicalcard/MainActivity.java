@@ -1,13 +1,11 @@
 package com.unipi.p17134.medicalcard;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 
 import com.unipi.p17134.medicalcard.custom.API;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends ConnectedBaseClass {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
