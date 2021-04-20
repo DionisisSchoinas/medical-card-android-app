@@ -9,12 +9,22 @@ import org.json.JSONObject;
 
 public class Doctor {
     private int id;
+    private User user;
     private String speciality;
     private String office_address;
     private String phone;
     private String email;
     private float cost;
     private Bitmap image;
+
+    public Doctor() {
+        this.speciality = null;
+        this.office_address = null;
+        this.phone = null;
+        this.email = null;
+        this.cost = 0;
+        this.image = null;
+    }
 
     public Doctor(String speciality, String office_address, String phone, String email, float cost, Bitmap image) {
         this.speciality = speciality;
@@ -52,55 +62,71 @@ public class Doctor {
         return id;
     }
 
-    public void setId(int id) {
+    public Doctor setId(int id) {
         this.id = id;
+        return this;
     }
 
     public String getSpeciality() {
         return speciality;
     }
 
-    public void setSpeciality(String speciality) {
+    public Doctor setSpeciality(String speciality) {
         this.speciality = speciality;
+        return this;
     }
 
     public String getOfficeAddress() {
         return office_address;
     }
 
-    public void setOfficeAddress(String office_address) {
+    public Doctor setOfficeAddress(String office_address) {
         this.office_address = office_address;
+        return this;
     }
 
     public String getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public Doctor setPhone(String phone) {
         this.phone = phone;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public Doctor setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public float getCost() {
         return cost;
     }
 
-    public void setCost(float cost) {
+    public Doctor setCost(float cost) {
         this.cost = cost;
+        return this;
     }
 
     public Bitmap getImage() {
         return image;
     }
 
-    public void setImage(Bitmap image) {
+    public Doctor setImage(Bitmap image) {
         this.image = image;
+        return this;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Doctor setUser(User user) {
+        this.user = user;
+        return this;
     }
 }

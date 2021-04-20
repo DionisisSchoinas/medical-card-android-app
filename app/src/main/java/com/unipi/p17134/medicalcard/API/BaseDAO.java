@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 public class BaseDAO {
     protected static final String url = "http://192.168.1.10:3000";
+    protected static final String TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
     protected static void errorResponse(Context ctx, VolleyError error) {
         if (error.networkResponse == null) {

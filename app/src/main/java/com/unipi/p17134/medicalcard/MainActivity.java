@@ -1,6 +1,8 @@
 package com.unipi.p17134.medicalcard;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -9,6 +11,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.unipi.p17134.medicalcard.API.PatientDAO;
 import com.unipi.p17134.medicalcard.API.UserDAO;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 
@@ -17,10 +20,15 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends ConnectedBaseClass implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private TextView fullnameDisplay;
+    private RecyclerView appointmentsDisplay;
+    private LinearLayoutManager layoutManager;
+    private int currentDisplayState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +55,34 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         navigationView.setNavigationItemSelectedListener(this);
 
         fullnameDisplay = navigationView.getHeaderView(0).findViewById(R.id.fullnameActionBarDisplay);
+
+        appointmentsDisplay = findViewById(R.id.mainAppointmentDisplay);
+        appointmentsDisplay.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        layoutManager = (LinearLayoutManager)appointmentsDisplay.getLayoutManager();
+        Activity activity = this;
+        appointmentsDisplay.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                currentDisplayState = newState;
+                // If last visible item's index is greater than the total appointments - 10
+                if (layoutManager.findLastVisibleItemPosition() >= appointmentsDisplay.getAdapter().getItemCount() - 10) {
+                    PatientDAO.appointments(activity, appointmentsDisplay, -1);
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                // If last visible item's index is greater than the total appointments - 10
+                if (currentDisplayState == RecyclerView.SCROLL_STATE_DRAGGING && dy > 0 && layoutManager.findLastVisibleItemPosition() >= appointmentsDisplay.getAdapter().getItemCount() - 10) {
+                    PatientDAO.appointments(activity, appointmentsDisplay, -1);
+                }
+            }
+        });
+        PatientDAO.appointments(this, appointmentsDisplay, 1);
     }
 
     @Override
