@@ -13,10 +13,10 @@ import com.unipi.p17134.medicalcard.DoctorRegisterFormActivity;
 import com.unipi.p17134.medicalcard.LoginActivity;
 import com.unipi.p17134.medicalcard.MainActivity;
 import com.unipi.p17134.medicalcard.R;
-import com.unipi.p17134.medicalcard.custom.MyPrefs;
-import com.unipi.p17134.medicalcard.custom.MyRequestHandler;
-import com.unipi.p17134.medicalcard.singletons.Doctor;
-import com.unipi.p17134.medicalcard.singletons.User;
+import com.unipi.p17134.medicalcard.Custom.MyPrefs;
+import com.unipi.p17134.medicalcard.Custom.MyRequestHandler;
+import com.unipi.p17134.medicalcard.Singletons.Doctor;
+import com.unipi.p17134.medicalcard.Singletons.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;

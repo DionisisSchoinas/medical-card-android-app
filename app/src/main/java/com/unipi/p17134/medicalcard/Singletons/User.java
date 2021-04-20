@@ -1,4 +1,4 @@
-package com.unipi.p17134.medicalcard.singletons;
+package com.unipi.p17134.medicalcard.Singletons;
 
 import org.json.JSONException;
 import org.json.JSONObject;

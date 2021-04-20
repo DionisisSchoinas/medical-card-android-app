@@ -1,8 +1,8 @@
-package com.unipi.p17134.medicalcard.singletons;
+package com.unipi.p17134.medicalcard.Singletons;
 
 import android.graphics.Bitmap;
 
-import com.unipi.p17134.medicalcard.custom.BitmapConversion;
+import com.unipi.p17134.medicalcard.Custom.BitmapConversion;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,14 +1,10 @@
-package com.unipi.p17134.medicalcard.custom;
+package com.unipi.p17134.medicalcard.Custom;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import androidx.collection.ArraySet;
-
-import com.unipi.p17134.medicalcard.singletons.User;
-
-import java.util.Set;
+import com.unipi.p17134.medicalcard.Singletons.User;
 
 public class MyPrefs {
     public static void clearLogin(Context ctx) {

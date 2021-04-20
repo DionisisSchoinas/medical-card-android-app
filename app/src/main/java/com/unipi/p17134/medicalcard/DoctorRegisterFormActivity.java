@@ -1,6 +1,8 @@
 package com.unipi.p17134.medicalcard;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
@@ -13,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,10 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.unipi.p17134.medicalcard.API.UserDAO;
-import com.unipi.p17134.medicalcard.custom.MyPermissions;
-import com.unipi.p17134.medicalcard.custom.MyPrefs;
-import com.unipi.p17134.medicalcard.singletons.Doctor;
-import com.unipi.p17134.medicalcard.singletons.User;
+import com.unipi.p17134.medicalcard.Custom.MyPermissions;
+import com.unipi.p17134.medicalcard.Custom.MyPrefs;
+import com.unipi.p17134.medicalcard.Singletons.Doctor;
+import com.unipi.p17134.medicalcard.Singletons.User;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -38,6 +41,9 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_register_form);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
 
         image = findViewById(R.id.imageDoctorRegisterInput);
         speciality = findViewById(R.id.specialityDoctorRegisterInput);
@@ -143,5 +149,32 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
                 Float.parseFloat(cost.getText().toString()),
                 profilePic
         ));
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        backButton();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else
+            return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        backButton();
+    }
+
+    private void backButton() {
+        startActivity(new Intent(this, DoctorRegisterPickActivity.class));
+        finish();
     }
 }

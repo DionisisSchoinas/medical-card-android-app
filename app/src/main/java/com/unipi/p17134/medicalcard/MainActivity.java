@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.unipi.p17134.medicalcard.API.UserDAO;
-import com.unipi.p17134.medicalcard.custom.MyPrefs;
+import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -29,7 +29,6 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.main_activity);
 
         FloatingActionButton fab = findViewById(R.id.plusButton);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -93,10 +92,22 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else
+            return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else {
             super.onBackPressed();
         }
     }

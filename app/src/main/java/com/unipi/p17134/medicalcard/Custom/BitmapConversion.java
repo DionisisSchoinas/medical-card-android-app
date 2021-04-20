@@ -1,4 +1,4 @@
-package com.unipi.p17134.medicalcard.custom;
+package com.unipi.p17134.medicalcard.Custom;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

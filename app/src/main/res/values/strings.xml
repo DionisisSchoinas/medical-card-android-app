@@ -37,4 +37,9 @@
     <!-- Activity Names -->
     <string name="main_activity">Κεντρική Σελίδα</string>
     <string name="title_activity_main">Κεντρική Σελίδα</string>
+    <string name="doctor_register_pick_activity">Εγγραφή Γιατρού</string>
+    <string name="doctor_register_activity">Εγγραφή Γιατρού</string>
+    <string name="register_pick_activity">Εγγραφή</string>
+    <string name="register_activity">Εγγραφή</string>
+    <string name="login_activity">Σύνδεση</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.unipi.p17134.medicalcard.custom;
+package com.unipi.p17134.medicalcard.Custom;
 
 import android.Manifest;
 import android.app.Activity;

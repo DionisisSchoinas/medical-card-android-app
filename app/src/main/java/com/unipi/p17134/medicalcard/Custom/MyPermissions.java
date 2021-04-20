@@ -1,4 +1,4 @@
-package com.unipi.p17134.medicalcard.custom;
+package com.unipi.p17134.medicalcard.Custom;
 
 public class MyPermissions {
     public static final int INTERNET_ACCESS_REQUEST = 150;
