@@ -12,8 +12,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.ClickListener;
+import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 import com.unipi.p17134.medicalcard.Custom.MyRequestHandler;
+import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
 import com.unipi.p17134.medicalcard.R;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
@@ -72,15 +74,20 @@ public class PatientDAO extends BaseDAO {
 
                     // If display has items on it
                     PatientAppointmentsAdapter oldAdapter = (PatientAppointmentsAdapter)display.getAdapter();
-                    ArrayList<Appointment> appointmentList;
-                    if (oldAdapter != null)
-                        appointmentList = oldAdapter.getDataset();
-                    else
-                        appointmentList = new ArrayList<>();
+                    ArrayList<RecycleViewItem> items;
+                    String lastDate;
+                    if (oldAdapter != null) {
+                        items = oldAdapter.getDataset();
+                        lastDate = DateTimeParsing.dateToDateString(items.get(items.size()-1).getAppointmentData().getStartDate());
+                    }
+                    else {
+                        items = new ArrayList<>();
+                        lastDate = "";
+                    }
 
                     for (int i=0; i<appointments.length(); i++) {
                         object = appointments.getJSONObject(i);
-                        appointmentList.add(new Appointment(
+                        Appointment app = new Appointment(
                                 object.getInt("id"),
                                 new Doctor()
                                         .setId(object.getJSONObject("doctor").getInt("id"))
@@ -93,15 +100,35 @@ public class PatientDAO extends BaseDAO {
                                 null,
                                 formatter.parse(object.getString("appointment_date_time_start")),
                                 formatter.parse(object.getString("appointment_date_time_end"))
-                        ));
+                        );
+
+                        // Check if date has changed
+                        // If it has add a date splitter
+                        String currentDate = DateTimeParsing.dateToDateString(app.getStartDate());
+                        if (!currentDate.equals(lastDate)) {
+                            RecycleViewItem item = new RecycleViewItem();
+                            if (DateTimeParsing.currentDate().equals(currentDate)) {
+                                item.setDateSplitterType("Today");
+                            }
+                            else {
+                                item.setDateSplitterType(currentDate);
+                            }
+                            items.add(item);
+                            lastDate = currentDate;
+                        }
+
+                        // Add appointment item
+                        RecycleViewItem item = new RecycleViewItem();
+                        item.setPatientAppointmentType(app);
+                        items.add(item);
                     }
 
                     // Fill display with appointments
                     // Create adapter passing in the sample user data
-                    PatientAppointmentsAdapter mAdapter = new PatientAppointmentsAdapter(activity, appointmentList, new ClickListener() {
+                    PatientAppointmentsAdapter mAdapter = new PatientAppointmentsAdapter(activity, items, new ClickListener() {
                         @Override
                         public void onMoreInfoClicked(int index) {
-                            Appointment appointment = appointmentList.get(index);
+                            Appointment appointment = items.get(index).getAppointmentData();
                             Toast.makeText(activity, "Clicked appointment with id = " + appointment.getId(), Toast.LENGTH_SHORT).show();
                         }
                     });
