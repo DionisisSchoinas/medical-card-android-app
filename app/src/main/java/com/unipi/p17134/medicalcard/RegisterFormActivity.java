@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.unipi.p17134.medicalcard.custom.API;
+import com.unipi.p17134.medicalcard.API.UserDAO;
 import com.unipi.p17134.medicalcard.singletons.User;
 
 public class RegisterFormActivity extends AppCompatActivity {
@@ -29,7 +29,7 @@ public class RegisterFormActivity extends AppCompatActivity {
     }
 
     public void register(View view) {
-        API.UserDAO.register(this, new User(
+        UserDAO.register(this, new User(
                 amka.getText().toString(),
                 email.getText().toString(),
                 password.getText().toString(),

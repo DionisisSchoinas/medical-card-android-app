@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.unipi.p17134.medicalcard.custom.API;
+import com.unipi.p17134.medicalcard.API.UserDAO;
 import com.unipi.p17134.medicalcard.singletons.User;
 
 public class LoginActivity extends AppCompatActivity {
@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
-        API.UserDAO.login(this, new User(username.getText().toString(), password.getText().toString()), fromRegister);
+        UserDAO.login(this, new User(username.getText().toString(), password.getText().toString()), fromRegister);
     }
 
     public void register(View view) {

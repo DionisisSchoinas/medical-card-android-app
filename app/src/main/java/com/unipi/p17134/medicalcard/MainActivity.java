@@ -4,23 +4,17 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
-import com.unipi.p17134.medicalcard.custom.API;
+import com.unipi.p17134.medicalcard.API.UserDAO;
 import com.unipi.p17134.medicalcard.custom.MyPrefs;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
 
@@ -89,10 +83,10 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             Toast.makeText(this, "My Appointments", Toast.LENGTH_SHORT).show();
         }
         else if (id == R.id.nav_login_register) {
-            API.UserDAO.logout(this);
+            UserDAO.logout(this);
         }
         else if (id == R.id.nav_logout) {
-            API.UserDAO.logout(this);
+            UserDAO.logout(this);
         }
 
         return true;

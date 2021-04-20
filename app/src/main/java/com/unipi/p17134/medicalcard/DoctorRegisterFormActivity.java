@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.unipi.p17134.medicalcard.custom.API;
+import com.unipi.p17134.medicalcard.API.UserDAO;
 import com.unipi.p17134.medicalcard.custom.MyPermissions;
 import com.unipi.p17134.medicalcard.custom.MyPrefs;
 import com.unipi.p17134.medicalcard.singletons.Doctor;
@@ -55,7 +55,7 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (API.UserDAO.missingToken(this)) {
+        if (UserDAO.missingToken(this)) {
             Intent intent = new Intent(this, LoginActivity.class);
             intent.putExtra("fromRegister", true);
             startActivity(intent);
@@ -135,7 +135,7 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
     }
 
     public void registerDoctor(View view) {
-        API.UserDAO.registerDoctor(this, new Doctor(
+        UserDAO.registerDoctor(this, new Doctor(
                 speciality.getText().toString(),
                 office.getText().toString(),
                 phone.getText().toString(),
