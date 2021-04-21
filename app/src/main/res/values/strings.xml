@@ -14,6 +14,12 @@
 
     <string name="already_a_doctor">Αυτός ο λαγιασμός είναι ήδη γιατρός</string>
 
+    <!-- Popups -->
+    <string name="logout_popup_title">Αποσύνδεση</string>
+    <string name="logout_popup_message">Είσαι σίγουρος ότι θες να αποσυνδεθείς ;</string>
+    <string name="logout_popup_positive">Ναι</string>
+    <string name="logout_popup_negative">Όχι</string>
+
 
     <!-- Global -->
     <string name="action_settings">Ρυθμίσεις</string>

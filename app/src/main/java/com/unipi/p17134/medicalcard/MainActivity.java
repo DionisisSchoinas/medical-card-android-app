@@ -15,7 +15,9 @@ import com.unipi.p17134.medicalcard.API.PatientDAO;
 import com.unipi.p17134.medicalcard.API.UserDAO;
 import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
+import com.unipi.p17134.medicalcard.Custom.VerificationPopup;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
+import com.unipi.p17134.medicalcard.Listeners.VerificationPopupListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 
 import androidx.annotation.NonNull;
@@ -137,13 +139,34 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             Toast.makeText(this, "My Appointments", Toast.LENGTH_SHORT).show();
         }
         else if (id == R.id.nav_login_register) {
-            UserDAO.logout(this);
+            logout();
         }
         else if (id == R.id.nav_logout) {
-            UserDAO.logout(this);
+            logout();
         }
 
         return true;
+    }
+
+    private void logout() {
+        Activity activity = this;
+        VerificationPopup.showPopup(this,
+                getResources().getString(R.string.logout_popup_title),
+                getResources().getString(R.string.logout_popup_message),
+                getResources().getString(R.string.logout_popup_positive),
+                getResources().getString(R.string.logout_popup_negative),
+                new VerificationPopupListener() {
+                    @Override
+                    public void onPositive() {
+                        UserDAO.logout(activity);
+                    }
+
+                    @Override
+                    public void onNegative() {
+
+                    }
+                }
+        );
     }
 
     @Override
