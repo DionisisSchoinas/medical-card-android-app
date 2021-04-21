@@ -11,11 +11,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
-import com.unipi.p17134.medicalcard.ClickListener;
+import com.unipi.p17134.medicalcard.Custom.BitmapConversion;
+import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 import com.unipi.p17134.medicalcard.Custom.MyRequestHandler;
 import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
+import com.unipi.p17134.medicalcard.Listeners.ItemListener;
 import com.unipi.p17134.medicalcard.R;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
@@ -37,7 +39,7 @@ public class PatientDAO extends BaseDAO {
     private static int currentPage = 0;
     private static int queueItems = 0;
 
-    public static void appointments(Activity activity, RecyclerView display, int page) {
+    public static void appointments(Activity activity, RecyclerView display, ClickListener onMoreInfo, int page) {
         // Already loading appointments
         if (queueItems > 0)
             return;
@@ -123,23 +125,13 @@ public class PatientDAO extends BaseDAO {
 
                     // Fill display with appointments
                     // Create adapter passing in the sample user data
-                    PatientAppointmentsAdapter mAdapter = new PatientAppointmentsAdapter(activity, items, new ClickListener() {
-                        @Override
-                        public void onMoreInfoClicked(int index) {
-                            Appointment appointment = items.get(index).getAppointmentData();
-                            Toast.makeText(activity, "Clicked appointment with id = " + appointment.getId(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    PatientAppointmentsAdapter mAdapter = new PatientAppointmentsAdapter(activity, items, onMoreInfo);
 
                     // Attach the adapter to the recyclerview to populate items
                     display.setAdapter(mAdapter);
                 }
                 catch (JSONException | ParseException e) {
                     Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
-                    Log.e("Error on appointments", e.getMessage());
-                }
-                catch (Exception e) {
-                    Log.e("Error not sure what", e.getMessage());
                 }
                 queueItems--;
             }
@@ -161,5 +153,59 @@ public class PatientDAO extends BaseDAO {
         };
         MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
         queueItems++;
+    }
+
+    public static void getAppointment(Activity activity, int id, ItemListener itemListener) {
+        String appointmentUrl = url + "/appointments/" + id;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, appointmentUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    // Get appointment
+                    JSONObject object = response.getJSONObject("appointment");
+                    // Parse appointment data
+                    Appointment appointment = new Appointment(
+                            object.getInt("id"),
+                            new Doctor(
+                                    object.getJSONObject("doctor").getString("speciality"),
+                                    object.getJSONObject("doctor").getString("office_address"),
+                                    object.getJSONObject("doctor").getString("phone"),
+                                    object.getJSONObject("doctor").getString("email"),
+                                    object.getJSONObject("doctor").getLong("cost"),
+                                    BitmapConversion.base64ToBitmap(object.getJSONObject("doctor").getJSONObject("image").getString("image_base64"))
+                                )
+                                    .setId(object.getJSONObject("doctor").getInt("id"))
+                                    .setUser(new User()
+                                            .setFullname(object.getJSONObject("doctor").getJSONObject("user").getString("fullname"))
+                                    )
+                            ,
+                            null,
+                            formatter.parse(object.getString("appointment_date_time_start")),
+                            formatter.parse(object.getString("appointment_date_time_end"))
+                    );
+                    // Send appointment back to caller
+                    itemListener.onFoundAppointment(appointment);
+                }
+                catch (JSONException | ParseException e) {
+                    Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                queueItems--;
+                errorResponse(activity, error);
+            }
+        })
+        {    //this is the part, that adds the header to the request
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("AuthorizationToken", MyPrefs.getToken(activity));
+                params.put("content-type", "application/json");
+                return params;
+            }
+        };
+        MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
     }
 }

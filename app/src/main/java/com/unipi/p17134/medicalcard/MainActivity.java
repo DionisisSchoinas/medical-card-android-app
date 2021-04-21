@@ -1,8 +1,8 @@
 package com.unipi.p17134.medicalcard;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -13,7 +13,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.unipi.p17134.medicalcard.API.PatientDAO;
 import com.unipi.p17134.medicalcard.API.UserDAO;
+import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
+import com.unipi.p17134.medicalcard.Listeners.ClickListener;
+import com.unipi.p17134.medicalcard.Singletons.Appointment;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -61,6 +64,14 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         appointmentsDisplay.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         layoutManager = (LinearLayoutManager)appointmentsDisplay.getLayoutManager();
         Activity activity = this;
+
+        ClickListener clickListener =  new ClickListener() {
+            @Override
+            public void onMoreInfoClicked(int index) {
+                moreAppointmentInfo(index);
+            }
+        };
+
         appointmentsDisplay.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -73,7 +84,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
                 // If last visible item's index is greater than the total appointments - 10
                 if (layoutManager.findLastVisibleItemPosition() >= appointmentsDisplay.getAdapter().getItemCount() - 10) {
-                    PatientDAO.appointments(activity, appointmentsDisplay, -1);
+                    PatientDAO.appointments(activity, appointmentsDisplay, clickListener, -1);
                 }
             }
 
@@ -86,11 +97,11 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
                 // If last visible item's index is greater than the total appointments - 10
                 if (currentDisplayState == RecyclerView.SCROLL_STATE_DRAGGING && dy > 0 && layoutManager.findLastVisibleItemPosition() >= appointmentsDisplay.getAdapter().getItemCount() - 10) {
-                    PatientDAO.appointments(activity, appointmentsDisplay, -1);
+                    PatientDAO.appointments(activity, appointmentsDisplay,clickListener, -1);
                 }
             }
         });
-        PatientDAO.appointments(this, appointmentsDisplay, 1);
+        PatientDAO.appointments(this, appointmentsDisplay,clickListener, 1);
     }
 
     @Override
@@ -158,5 +169,16 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
     private void plusButtonClick() {
         Toast.makeText(this, "Plus pressed", Toast.LENGTH_SHORT).show();
+    }
+
+    private void moreAppointmentInfo(int index) {
+        PatientAppointmentsAdapter adapter = (PatientAppointmentsAdapter)appointmentsDisplay.getAdapter();
+        if (adapter == null)
+            return;
+
+        Appointment appointment = adapter.getDataset().get(index).getAppointmentData();
+        Intent intent = new Intent(getApplicationContext(), AppointmentDetailsActivity.class);
+        intent.putExtra("id", appointment.getId());
+        startActivity(intent);
     }
 }

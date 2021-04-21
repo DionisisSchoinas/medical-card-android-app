@@ -58,6 +58,9 @@
 
     <string name="register_form_error_need_cost">Δώστε έγκυρη τιμή κόστους</string>
 
+    <!-- Appointment Info -->
+
+
     <!-- Menu -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -73,6 +76,7 @@
     <string name="register_button">Ολοκληρωση Εγγραφης</string>
     <string name="login_button_login">Συνδεση</string>
     <string name="login_button_register">Εγγραφή</string>
+    <string name="appointment_button_cancel">Ακυρωση ραντεβου</string>
 
     <!-- Activity Names -->
     <string name="main_activity">Κεντρική Σελίδα</string>
@@ -81,4 +85,5 @@
     <string name="register_pick_activity">Εγγραφή</string>
     <string name="register_activity">Εγγραφή</string>
     <string name="login_activity">Σύνδεση</string>
+    <string name="appointment_details_activity">Λεπτομέρειες Ραντεβού</string>
 </resources>
