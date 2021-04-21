@@ -28,11 +28,11 @@ public class RegisterFormActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        amka = findViewById(R.id.specialityDoctorRegisterInput);
-        email = findViewById(R.id.officeDoctorRegisterInput);
-        password = findViewById(R.id.phoneDoctorRegisterInput);
-        passwordConf = findViewById(R.id.emailDoctorRegisterInput);
-        fullname = findViewById(R.id.costDoctorRegisterInput);
+        amka = findViewById(R.id.amkaRegisterInput);
+        email = findViewById(R.id.emailRegisterInput);
+        password = findViewById(R.id.passwordRegisterInput);
+        passwordConf = findViewById(R.id.passwordConfirmationRegisterInput);
+        fullname = findViewById(R.id.fullnameRegisterInput);
         dateOfBirth = findViewById(R.id.dateOfBirthRegisterInput);
 
         simpleRegister = getIntent().getBooleanExtra("simpleRegister", true);

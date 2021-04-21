@@ -37,6 +37,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.main_activity));
 
         FloatingActionButton fab = findViewById(R.id.plusButton);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +67,10 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
                 super.onScrollStateChanged(recyclerView, newState);
 
                 currentDisplayState = newState;
+
+                if (appointmentsDisplay.getAdapter() == null)
+                    return;
+
                 // If last visible item's index is greater than the total appointments - 10
                 if (layoutManager.findLastVisibleItemPosition() >= appointmentsDisplay.getAdapter().getItemCount() - 10) {
                     PatientDAO.appointments(activity, appointmentsDisplay, -1);
@@ -75,6 +80,9 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+
+                if (appointmentsDisplay.getAdapter() == null)
+                    return;
 
                 // If last visible item's index is greater than the total appointments - 10
                 if (currentDisplayState == RecyclerView.SCROLL_STATE_DRAGGING && dy > 0 && layoutManager.findLastVisibleItemPosition() >= appointmentsDisplay.getAdapter().getItemCount() - 10) {

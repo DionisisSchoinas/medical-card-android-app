@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.unipi.p17134.medicalcard.API.UserDAO;
-import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyPermissions;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
@@ -47,11 +46,11 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         image = findViewById(R.id.imageDoctorRegisterInput);
-        speciality = findViewById(R.id.specialityDoctorRegisterInput);
-        office = findViewById(R.id.officeDoctorRegisterInput);
-        phone = findViewById(R.id.phoneDoctorRegisterInput);
-        email = findViewById(R.id.emailDoctorRegisterInput);
-        cost = findViewById(R.id.costDoctorRegisterInput);
+        speciality = findViewById(R.id.amkaRegisterInput);
+        office = findViewById(R.id.emailRegisterInput);
+        phone = findViewById(R.id.passwordRegisterInput);
+        email = findViewById(R.id.passwordConfirmationRegisterInput);
+        cost = findViewById(R.id.fullnameRegisterInput);
 
         profilePic = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.default_profile);
         image.setImageBitmap(profilePic);

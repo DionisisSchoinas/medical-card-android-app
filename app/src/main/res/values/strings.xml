@@ -23,18 +23,38 @@
     <string name="connected_as_name">Όνομα Χρήστη</string>
     <string name="logged_out_successfully">Επιτυχής αποσύνδεση</string>
 
-    <!-- Doctor Register -->
-    <string name="register_form_speciality">Ειδίκευση</string>
-    <string name="register_form_address">Διεύθυνση Γραφείου</string>
-    <string name="register_form_email">Email Επικοινωνίας</string>
-    <string name="register_form_phone">Τηλέφωνο Επικοινωνίας</string>
-    <string name="register_form_cost">Κόστος Συνάντησης (€)</string>
+    <!-- Login Form -->
+    <string name="login_email">Email</string>
+    <string name="login_password">Κωδικός Πρόσβασης</string>
 
-    <string name="register_form_speciality_hint">Καρδιολόγος, …</string>
-    <string name="register_form_address_hint">Απόλωνος 5, Ανθούπολη</string>
-    <string name="register_form_email_hint">myemail@gmail.com, myemail2@gmail.com</string>
-    <string name="register_form_phone_hint">210–5864895, 6977785856</string>
-    <string name="register_form_cost_hint">50</string>
+    <!-- Doctor Register Pick -->
+    <string name="register_pick_need_account">Χρειαζομαι νεο λογαριασμο</string>
+    <string name="register_pick_have_account">Εχω λογαριασμο</string>
+
+    <!-- Register Pick -->
+    <string name="register_pick_simple_account">Απλος χρηστης</string>
+    <string name="register_pick_doctor_account">Γιατρος</string>
+
+    <!-- Doctor Register -->
+    <string name="doctor_register_form_speciality">Ειδίκευση</string>
+    <string name="doctor_register_form_address">Διεύθυνση Γραφείου</string>
+    <string name="doctor_register_form_email">Email Επικοινωνίας</string>
+    <string name="doctor_register_form_phone">Τηλέφωνο Επικοινωνίας</string>
+    <string name="doctor_register_form_cost">Κόστος Συνάντησης (€)</string>
+
+    <string name="doctor_register_form_speciality_hint">Καρδιολόγος, …</string>
+    <string name="doctor_register_form_address_hint">Απόλωνος 5, Ανθούπολη</string>
+    <string name="doctor_register_form_email_hint">myemail@gmail.com, myemail2@gmail.com</string>
+    <string name="doctor_register_form_phone_hint">210–5864895, 6977785856</string>
+    <string name="doctor_register_form_cost_hint">50</string>
+
+    <!-- Register -->
+    <string name="register_form_amka">ΑΜΚΑ</string>
+    <string name="register_form_email">Email (για σύνδεση)</string>
+    <string name="register_form_password">Κωδικός Πρόσβασης</string>
+    <string name="register_form_password_confirmation">Επανάληψη Κωδικού Πρόσβασης</string>
+    <string name="register_form_fullname">Ονοματεπώνυμο</string>
+    <string name="register_form_date_of_birth">Ημερομηνία Γέννησης</string>
 
     <string name="register_form_error_need_cost">Δώστε έγκυρη τιμή κόστους</string>
 
@@ -51,10 +71,11 @@
 
     <!-- Buttons -->
     <string name="register_button">Ολοκληρωση Εγγραφης</string>
+    <string name="login_button_login">Συνδεση</string>
+    <string name="login_button_register">Εγγραφή</string>
 
     <!-- Activity Names -->
     <string name="main_activity">Κεντρική Σελίδα</string>
-    <string name="title_activity_main">Κεντρική Σελίδα</string>
     <string name="doctor_register_pick_activity">Εγγραφή Γιατρού</string>
     <string name="doctor_register_activity">Εγγραφή Γιατρού</string>
     <string name="register_pick_activity">Εγγραφή</string>
