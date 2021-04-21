@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.unipi.p17134.medicalcard.API.UserDAO;
+import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyPermissions;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
@@ -141,6 +142,14 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
     }
 
     public void registerDoctor(View view) {
+        try {
+            Float.parseFloat(cost.getText().toString());
+        }
+        catch (Exception e) {
+            Toast.makeText(this, getResources().getString(R.string.register_form_error_need_cost), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         UserDAO.registerDoctor(this, new Doctor(
                 speciality.getText().toString(),
                 office.getText().toString(),
@@ -174,6 +183,7 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
     }
 
     private void backButton() {
+        MyPrefs.clearLogin(this);
         startActivity(new Intent(this, DoctorRegisterPickActivity.class));
         finish();
     }

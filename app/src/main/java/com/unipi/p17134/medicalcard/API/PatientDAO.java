@@ -25,16 +25,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PatientDAO extends BaseDAO {
-    private static final SimpleDateFormat formatter = new SimpleDateFormat(TIME_FORMAT);
+    private static final SimpleDateFormat formatter = new SimpleDateFormat(APPOINTMENT_TIME_FORMAT);
     private static int totalPages = -1;
     private static int currentPage = 0;
     private static int queueItems = 0;

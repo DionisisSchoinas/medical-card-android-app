@@ -9,6 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.DoctorRegisterFormActivity;
 import com.unipi.p17134.medicalcard.LoginActivity;
 import com.unipi.p17134.medicalcard.MainActivity;
@@ -21,10 +22,14 @@ import com.unipi.p17134.medicalcard.Singletons.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 public class UserDAO extends BaseDAO {
+    private static final SimpleDateFormat formatter = new SimpleDateFormat(USER_DATE_OF_BIRTH_FORMAT);
+
     public static boolean missingToken(Context ctx) {
         return MyPrefs.getToken(ctx) == null;
     }
@@ -42,7 +47,7 @@ public class UserDAO extends BaseDAO {
                     try {
                         MyPrefs.setToken(activity, response.getString("auth_token"));
                         MyPrefs.isDoctor(activity, response.getBoolean("is_doctor"));
-                        MyPrefs.setUserData(activity, new User().setFullname(response.getString("fullname")).setDateOfBirth(response.getString("date_of_birth")));
+                        MyPrefs.setUserData(activity, new User().setFullname(response.getString("fullname")).setDateOfBirth(DateTimeParsing.dateToDateString(formatter.parse(response.getString("date_of_birth")))));
 
                         if (fromRegister) {
                             activity.startActivity(new Intent(activity, DoctorRegisterFormActivity.class));
@@ -53,7 +58,7 @@ public class UserDAO extends BaseDAO {
                             activity.startActivity(new Intent(activity, MainActivity.class));
                             activity.finish();
                         }
-                    } catch (JSONException e) {
+                    } catch (JSONException | ParseException e) {
                         Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
                     }
                 }
