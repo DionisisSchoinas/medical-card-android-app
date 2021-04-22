@@ -3,7 +3,6 @@ package com.unipi.p17134.medicalcard;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -13,9 +12,9 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.unipi.p17134.medicalcard.API.PatientDAO;
-import com.unipi.p17134.medicalcard.API.UserDAO;
 import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
+import com.unipi.p17134.medicalcard.Custom.MyPermissions;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
 import com.unipi.p17134.medicalcard.Custom.VerificationPopup;
@@ -25,6 +24,7 @@ import com.unipi.p17134.medicalcard.Listeners.VerificationPopupListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -33,7 +33,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends ConnectedBaseClass implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
@@ -177,8 +176,8 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         VerificationPopup.showPopup(this,
                 getResources().getString(R.string.logout_popup_title),
                 getResources().getString(R.string.logout_popup_message),
-                getResources().getString(R.string.logout_popup_positive),
-                getResources().getString(R.string.logout_popup_negative),
+                getResources().getString(R.string.popup_positive),
+                getResources().getString(R.string.popup_negative),
                 new VerificationPopupListener() {
                     @Override
                     public void onPositive() {
@@ -225,7 +224,19 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         Appointment appointment = recycleViewItems.get(index).getAppointmentData();
         Intent intent = new Intent(getApplicationContext(), AppointmentDetailsActivity.class);
         intent.putExtra("id", appointment.getId());
-        startActivity(intent);
+        startActivityForResult(intent, MyPermissions.RESPONSE_FROM_APPOINTMENT_INFO);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MyPermissions.RESPONSE_FROM_APPOINTMENT_INFO && resultCode == RESULT_OK) {
+            int id = 0;
+            if (data != null)
+                id = data.getIntExtra("id", 0);
+
+            renameAppointmentWithId(id);
+        }
     }
 
     private boolean isDuplicate(ArrayList<Appointment> appointments, Appointment newAppointment) {
@@ -253,6 +264,8 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             // If appointment already exists skip it
             if (isDuplicate(appointments, appointment))
                 continue;
+
+            appointments.add(appointment);
 
             // Check if date has changed
             // If it has add a date splitter
@@ -290,5 +303,44 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         else {
             appointmentsDisplay.getAdapter().notifyDataSetChanged();
         }
+    }
+
+    private void renameAppointmentWithId(int id) {
+        // Go through appointments to find specific appointment
+        for (int i=0; i<appointments.size(); i++) {
+            // WHen found
+            if (appointments.get(i).getId() == id) {
+                // Go through recycle view items to find date splitter for this item's date
+                Appointment appointment = appointments.get(i);
+                for (int j=0; j<recycleViewItems.size(); j++) {
+                    // When found
+                    if (recycleViewItems.get(j).getItemType() == RecycleViewItem.DATE_SPLITTER && recycleViewItems.get(j).getDateString().equals(DateTimeParsing.dateToDateString(appointment.getStartDate()))) {
+                        // Go through recycle view items to find appointment display with specified id
+                        int count = 0;
+                        int index = j;
+                        for (int k=j+1; k<recycleViewItems.size(); k++) {
+                            // If finished going through this days appointments ( found another date splitter )
+                            if (recycleViewItems.get(k).getItemType() == RecycleViewItem.DATE_SPLITTER)
+                                break;
+
+                            // When found
+                            if (recycleViewItems.get(k).getAppointmentData().getId() == id) {
+                                index = k;
+                            }
+                            count++;
+                        }
+                        recycleViewItems.remove(index);
+                        // If only one appointment existed for this date, remove the date splitter as well
+                        if (count == 1)
+                            recycleViewItems.remove(j);
+                        break;
+                    }
+                }
+                appointments.remove(i);
+                break;
+            }
+        }
+        appointmentsDisplay.getAdapter().notifyDataSetChanged();
+        Toast.makeText(this, getResources().getString(R.string.appointment_list_updated), Toast.LENGTH_SHORT).show();
     }
 }

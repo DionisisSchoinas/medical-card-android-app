@@ -5,8 +5,10 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
@@ -59,11 +61,12 @@ public class PatientDAO extends BaseDAO {
             public void onResponse(JSONObject response) {
                 try {
                     JSONObject meta = response.getJSONObject("meta");
-                    currentPage = meta.getInt("current_page");
-                    totalPages = meta.getInt("total_pages");
 
                     // Get appointments array
                     JSONArray appointments = response.getJSONArray("appointments");
+
+                    currentPage = meta.getInt("current_page");
+                    totalPages = meta.getInt("total_pages");
 
                     // Fill list with appointments
                     JSONObject object;
@@ -156,9 +159,40 @@ public class PatientDAO extends BaseDAO {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                queueItems--;
-                errorResponse(activity, error);
+                //errorResponse(activity, error);
                 responseListener.onErrorResponse(error);
+            }
+        })
+        {    //this is the part, that adds the header to the request
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("AuthorizationToken", MyPrefs.getToken(activity));
+                params.put("content-type", "application/json");
+                return params;
+            }
+        };
+        MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
+    }
+
+    public static void deleteAppointment(Activity activity, int id, DAOResponseListener responseListener) {
+        String appointmentUrl = url + "/appointments/" + id;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE, appointmentUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                // Send appointment back to caller
+                responseListener.onResponse(null);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //errorResponse(activity, error);
+
+                // Volley can't parse 204 No Content error
+                if (error instanceof ParseError)
+                    responseListener.onResponse(null);
+                else
+                    responseListener.onErrorResponse(error);
             }
         })
         {    //this is the part, that adds the header to the request

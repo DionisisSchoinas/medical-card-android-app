@@ -7,4 +7,6 @@ public class MyPermissions {
     public static final int RESULT_LOAD_IMG = 555;
     public static final int RESULT_TAKE_PHOTO = 556;
     public static final int ACCESS_CAMERA_REQUEST = 253;
+
+    public static final int RESPONSE_FROM_APPOINTMENT_INFO = 100;
 }

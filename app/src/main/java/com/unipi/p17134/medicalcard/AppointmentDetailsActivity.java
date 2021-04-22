@@ -3,14 +3,24 @@ package com.unipi.p17134.medicalcard;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.unipi.p17134.medicalcard.API.PatientDAO;
+import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
+import com.unipi.p17134.medicalcard.Custom.VerificationPopup;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
+import com.unipi.p17134.medicalcard.Listeners.VerificationPopupListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 
 import org.json.JSONException;
@@ -19,6 +29,8 @@ import java.text.ParseException;
 
 public class AppointmentDetailsActivity extends ConnectedBaseClass {
     private int id;
+    private ImageView image;
+    private TextView fullname, speciality, cost, date, address, phone, email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +40,14 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        fullname = findViewById(R.id.appointment_details_doctor_name);
+        speciality = findViewById(R.id.appointment_details_doctor_speciality);
+        cost = findViewById(R.id.appointment_details_doctor_cost);
+        date = findViewById(R.id.appointment_details_doctor_date);
+        address = findViewById(R.id.appointment_details_doctor_address);
+        phone = findViewById(R.id.appointment_details_doctor_phone);
+        email = findViewById(R.id.appointment_details_doctor_email);
 
         id = getIntent().getIntExtra("id", 0);
         PatientDAO.getAppointment(this, id, new DAOResponseListener() {
@@ -45,7 +65,70 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
     }
 
     private void loadAppointmentData(Appointment appointment) {
-        Toast.makeText(this, appointment.getId() + " - " + appointment.getDoctor().getUser().getFullname(), Toast.LENGTH_SHORT).show();
+        if (appointment.getDoctor().getImage() != null)
+            image.setImageBitmap(appointment.getDoctor().getImage());
+
+        fullname.setText(appointment.getDoctor().getUser().getFullname());
+        speciality.setText(appointment.getDoctor().getSpeciality());
+        cost.setText(appointment.getDoctor().getCost()+" €");
+        String dateTime = DateTimeParsing.dateToDateString(appointment.getStartDate()) + "  " + DateTimeParsing.dateToTimeString(appointment.getStartDate()) + "-" + DateTimeParsing.dateToTimeString(appointment.getEndDate());
+        date.setText(dateTime);
+        address.setText(appointment.getDoctor().getOfficeAddress());
+        phone.setText(appointment.getDoctor().getPhone());
+        email.setText(appointment.getDoctor().getEmail());
+    }
+
+    public void cancelAppointment(View view) {
+        String appointment = "\n\n" + fullname.getText().toString() + "\n" + speciality.getText() + "\n" + date.getText().toString();
+
+        Activity activity = this;
+        VerificationPopup.showPopup(
+                this,
+                getResources().getString(R.string.cancel_appointment_popup_title_1),
+                getResources().getString(R.string.cancel_appointment_popup_message_1) + appointment,
+                getResources().getString(R.string.popup_positive),
+                getResources().getString(R.string.popup_negative),
+                new VerificationPopupListener() {
+                    @Override
+                    public void onPositive() {
+                        VerificationPopup.showPopup(
+                                activity,
+                                getResources().getString(R.string.cancel_appointment_popup_title_2),
+                                getResources().getString(R.string.cancel_appointment_popup_message_2),
+                                getResources().getString(R.string.popup_positive),
+                                getResources().getString(R.string.popup_negative),
+                                new VerificationPopupListener() {
+                                    @Override
+                                    public void onPositive() {
+                                        completeCancellation();
+                                    }
+
+                                    @Override
+                                    public void onNegative() {
+                                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.cancel_appointment_failure), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onNegative() {
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.cancel_appointment_failure), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void completeCancellation() {
+        PatientDAO.deleteAppointment(this, id, new DAOResponseListener() {
+            @Override
+            public <T> void onResponse(T object) {
+                deletionComplete();
+            }
+
+            @Override
+            public <T> void onErrorResponse(T error) {
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.cancel_appointment_failure), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -78,7 +161,16 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
     }
 
     private void backButton() {
-        //startActivity(new Intent(this, MainActivity.class));
+        setResult(RESULT_CANCELED, new Intent());
+        finish();
+    }
+
+    private void deletionComplete() {
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.cancel_appointment_success), Toast.LENGTH_LONG).show();
+
+        Intent intent = new Intent();
+        intent.putExtra("id", id);
+        setResult(RESULT_OK, intent);
         finish();
     }
 }
