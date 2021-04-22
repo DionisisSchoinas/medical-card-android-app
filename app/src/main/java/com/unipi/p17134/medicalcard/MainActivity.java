@@ -3,6 +3,7 @@ package com.unipi.p17134.medicalcard;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -218,11 +219,10 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
     }
 
     private void moreAppointmentInfo(int index) {
-        PatientAppointmentsAdapter adapter = (PatientAppointmentsAdapter)appointmentsDisplay.getAdapter();
-        if (adapter == null)
+        if (recycleViewItems.size() == 0)
             return;
 
-        Appointment appointment = adapter.getDataset().get(index).getAppointmentData();
+        Appointment appointment = recycleViewItems.get(index).getAppointmentData();
         Intent intent = new Intent(getApplicationContext(), AppointmentDetailsActivity.class);
         intent.putExtra("id", appointment.getId());
         startActivity(intent);
@@ -237,6 +237,9 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
     }
 
     private void processNewAppointments(ArrayList<Appointment> newAppointments) {
+        if (newAppointments.size() == 0)
+            return;
+
         // Find last date if it exists
         String lastDate;
         if (recycleViewItems.size() == 0)
@@ -274,14 +277,18 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
         // Fill display with appointments
         // Create adapter passing in the sample user data
-        PatientAppointmentsAdapter mAdapter = new PatientAppointmentsAdapter(this, recycleViewItems, new ClickListener() {
-            @Override
-            public void onMoreInfoClicked(int index) {
-                moreAppointmentInfo(index);
-            }
-        });
-
-        // Attach the adapter to the recyclerview to populate items
-        appointmentsDisplay.setAdapter(mAdapter);
+        if (appointmentsDisplay.getAdapter() == null) {
+            PatientAppointmentsAdapter mAdapter = new PatientAppointmentsAdapter(this, recycleViewItems, new ClickListener() {
+                @Override
+                public void onMoreInfoClicked(int index) {
+                    moreAppointmentInfo(index);
+                }
+            });
+            // Attach the adapter to the recyclerview to populate items
+            appointmentsDisplay.setAdapter(mAdapter);
+        }
+        else {
+            appointmentsDisplay.getAdapter().notifyDataSetChanged();
+        }
     }
 }
