@@ -12,7 +12,7 @@
     <string name="image_not_picked">Δεν διαλέχτηκε φωτογραφία</string>
     <string name="picture_not_taken">Δεν τραβήχτηκε φωτογραφία</string>
 
-    <string name="already_a_doctor">Αυτός ο λαγιασμός είναι ήδη γιατρός</string>
+    <string name="already_a_doctor">Αυτός ο λογαριασμός είναι ήδη γιατρός</string>
 
     <!-- Popups -->
     <string name="logout_popup_title">Αποσύνδεση</string>
@@ -25,7 +25,7 @@
     <string name="action_settings">Ρυθμίσεις</string>
 
     <!-- Main Activity -->
-    <string name="connected_as_subtitle">Συνδεδεμένος με :</string>
+    <string name="connected_as_subtitle">Συνδεδεμένος ως :</string>
     <string name="connected_as_name">Όνομα Χρήστη</string>
     <string name="logged_out_successfully">Επιτυχής αποσύνδεση</string>
 

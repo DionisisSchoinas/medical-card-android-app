@@ -1,7 +1,6 @@
 package com.unipi.p17134.medicalcard.API;
 
 import android.app.Activity;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +16,7 @@ import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 import com.unipi.p17134.medicalcard.Custom.MyRequestHandler;
 import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
-import com.unipi.p17134.medicalcard.Listeners.ItemListener;
+import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.R;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
@@ -39,7 +38,7 @@ public class PatientDAO extends BaseDAO {
     private static int currentPage = 0;
     private static int queueItems = 0;
 
-    public static void appointments(Activity activity, RecyclerView display, ClickListener onMoreInfo, int page) {
+    public static void appointments(Activity activity, RecyclerView display, int page, DAOResponseListener responseListener) {
         // Already loading appointments
         if (queueItems > 0)
             return;
@@ -51,10 +50,7 @@ public class PatientDAO extends BaseDAO {
         // If page not specifically given (go to next page)
         if (page == -1) {
             // If last read page and total pages are the same (we are at the last page)
-            if (currentPage == totalPages)
-                return;
-            else
-                page = currentPage + 1;
+            page = currentPage + 1;
         }
 
         String appointmentsUrl = url + "/appointments?page="+page;
@@ -72,66 +68,31 @@ public class PatientDAO extends BaseDAO {
                     // Fill list with appointments
                     JSONObject object;
 
-                    // If display has items on it
-                    PatientAppointmentsAdapter oldAdapter = (PatientAppointmentsAdapter)display.getAdapter();
-                    ArrayList<RecycleViewItem> items;
-                    String lastDate;
-                    if (oldAdapter != null) {
-                        items = oldAdapter.getDataset();
-                        lastDate = DateTimeParsing.dateToDateString(items.get(items.size()-1).getAppointmentData().getStartDate());
-                    }
-                    else {
-                        items = new ArrayList<>();
-                        lastDate = "";
-                    }
-
+                    ArrayList<Appointment> appointmentsList = new ArrayList<>();
                     for (int i=0; i<appointments.length(); i++) {
                         object = appointments.getJSONObject(i);
-                        Appointment app = new Appointment(
-                                object.getInt("id"),
-                                new Doctor()
-                                        .setId(object.getJSONObject("doctor").getInt("id"))
-                                        .setOfficeAddress(object.getJSONObject("doctor").getString("office_address"))
-                                        .setSpeciality(object.getJSONObject("doctor").getString("speciality"))
-                                        .setUser(new User()
-                                                .setFullname(object.getJSONObject("doctor").getJSONObject("user").getString("fullname"))
-                                        )
-                                ,
-                                null,
-                                formatter.parse(object.getString("appointment_date_time_start")),
-                                formatter.parse(object.getString("appointment_date_time_end"))
+                        appointmentsList.add(
+                                new Appointment(
+                                        object.getInt("id"),
+                                        new Doctor()
+                                                .setId(object.getJSONObject("doctor").getInt("id"))
+                                                .setOfficeAddress(object.getJSONObject("doctor").getString("office_address"))
+                                                .setSpeciality(object.getJSONObject("doctor").getString("speciality"))
+                                                .setUser(new User()
+                                                        .setFullname(object.getJSONObject("doctor").getJSONObject("user").getString("fullname"))
+                                                )
+                                        ,
+                                        null,
+                                        formatter.parse(object.getString("appointment_date_time_start")),
+                                        formatter.parse(object.getString("appointment_date_time_end"))
+                                )
                         );
-
-                        // Check if date has changed
-                        // If it has add a date splitter
-                        String currentDate = DateTimeParsing.dateToDateString(app.getStartDate());
-                        if (!currentDate.equals(lastDate)) {
-                            RecycleViewItem item = new RecycleViewItem();
-                            if (DateTimeParsing.currentDate().equals(currentDate)) {
-                                item.setDateSplitterType("Today");
-                            }
-                            else {
-                                item.setDateSplitterType(currentDate);
-                            }
-                            items.add(item);
-                            lastDate = currentDate;
-                        }
-
-                        // Add appointment item
-                        RecycleViewItem item = new RecycleViewItem();
-                        item.setPatientAppointmentType(app);
-                        items.add(item);
                     }
-
-                    // Fill display with appointments
-                    // Create adapter passing in the sample user data
-                    PatientAppointmentsAdapter mAdapter = new PatientAppointmentsAdapter(activity, items, onMoreInfo);
-
-                    // Attach the adapter to the recyclerview to populate items
-                    display.setAdapter(mAdapter);
+                    responseListener.onResponse(appointmentsList);
                 }
                 catch (JSONException | ParseException e) {
-                    Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+                    responseListener.onErrorResponse(e);
                 }
                 queueItems--;
             }
@@ -139,7 +100,8 @@ public class PatientDAO extends BaseDAO {
             @Override
             public void onErrorResponse(VolleyError error) {
                 queueItems--;
-                errorResponse(activity, error);
+                //errorResponse(activity, error);
+                responseListener.onErrorResponse(error);
             }
         })
         {    //this is the part, that adds the header to the request
@@ -155,7 +117,7 @@ public class PatientDAO extends BaseDAO {
         queueItems++;
     }
 
-    public static void getAppointment(Activity activity, int id, ItemListener itemListener) {
+    public static void getAppointment(Activity activity, int id, DAOResponseListener responseListener) {
         String appointmentUrl = url + "/appointments/" + id;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, appointmentUrl, null, new Response.Listener<JSONObject>() {
             @Override
@@ -184,10 +146,11 @@ public class PatientDAO extends BaseDAO {
                             formatter.parse(object.getString("appointment_date_time_end"))
                     );
                     // Send appointment back to caller
-                    itemListener.onFoundAppointment(appointment);
+                    responseListener.onResponse(appointment);
                 }
                 catch (JSONException | ParseException e) {
-                    Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+                    responseListener.onErrorResponse(e);
+                    //Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {
@@ -195,6 +158,7 @@ public class PatientDAO extends BaseDAO {
             public void onErrorResponse(VolleyError error) {
                 queueItems--;
                 errorResponse(activity, error);
+                responseListener.onErrorResponse(error);
             }
         })
         {    //this is the part, that adds the header to the request

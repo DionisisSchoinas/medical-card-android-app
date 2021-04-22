@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import com.unipi.p17134.medicalcard.API.UserDAO;
 import com.unipi.p17134.medicalcard.Custom.MyPermissions;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
+import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
 import com.unipi.p17134.medicalcard.Singletons.User;
 
@@ -149,7 +151,7 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
             Toast.makeText(this, getResources().getString(R.string.register_form_error_need_cost), Toast.LENGTH_SHORT).show();
             return;
         }
-
+        Activity activity = this;
         UserDAO.registerDoctor(this, new Doctor(
                 speciality.getText().toString(),
                 office.getText().toString(),
@@ -157,7 +159,21 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
                 email.getText().toString(),
                 Float.parseFloat(cost.getText().toString()),
                 profilePic
-        ));
+        ), new DAOResponseListener() {
+            @Override
+            public <T> void onResponse(T object) {
+                MyPrefs.isDoctor(activity, true);
+                //Toast.makeText(activity, response.getString("message"), Toast.LENGTH_SHORT).show();
+
+                startActivity(new Intent(activity, MainActivity.class));
+                finish();
+            }
+
+            @Override
+            public <T> void onErrorResponse(T error) {
+
+            }
+        });
     }
 
     @Override

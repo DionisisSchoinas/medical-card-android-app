@@ -1,20 +1,21 @@
 package com.unipi.p17134.medicalcard;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.unipi.p17134.medicalcard.API.PatientDAO;
-import com.unipi.p17134.medicalcard.Custom.MyPrefs;
-import com.unipi.p17134.medicalcard.Listeners.ItemListener;
+import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
+
+import org.json.JSONException;
+
+import java.text.ParseException;
 
 public class AppointmentDetailsActivity extends ConnectedBaseClass {
     private int id;
@@ -29,10 +30,16 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         id = getIntent().getIntExtra("id", 0);
-        PatientDAO.getAppointment(this, id, new ItemListener() {
+        PatientDAO.getAppointment(this, id, new DAOResponseListener() {
             @Override
-            public void onFoundAppointment(Appointment appointment) {
+            public <T> void onResponse(T object) {
+                Appointment appointment = (Appointment)object;
                 loadAppointmentData(appointment);
+            }
+
+            @Override
+            public <T> void onErrorResponse(T error) {
+
             }
         });
     }

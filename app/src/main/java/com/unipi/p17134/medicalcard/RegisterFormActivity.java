@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,6 +14,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.unipi.p17134.medicalcard.API.UserDAO;
+import com.unipi.p17134.medicalcard.Custom.MyPrefs;
+import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
+import com.unipi.p17134.medicalcard.Singletons.LoginResponse;
 import com.unipi.p17134.medicalcard.Singletons.User;
 
 public class RegisterFormActivity extends AppCompatActivity {
@@ -39,6 +43,8 @@ public class RegisterFormActivity extends AppCompatActivity {
     }
 
     public void register(View view) {
+        Activity activity = this;
+
         UserDAO.register(this, new User(
                 amka.getText().toString(),
                 email.getText().toString(),
@@ -46,7 +52,30 @@ public class RegisterFormActivity extends AppCompatActivity {
                 passwordConf.getText().toString(),
                 fullname.getText().toString(),
                 dateOfBirth.getText().toString()
-        ), simpleRegister);
+        ), new DAOResponseListener() {
+            @Override
+            public <T> void onResponse(T object) {
+                LoginResponse loginResponse = (LoginResponse)object;
+
+                MyPrefs.setToken(activity, loginResponse.getAuthToken());
+                MyPrefs.isDoctor(activity, loginResponse.isDoctor());
+                //Toast.makeText(activity, response.getString("message"), Toast.LENGTH_SHORT).show();
+
+                if (simpleRegister) {
+                    startActivity(new Intent(activity, MainActivity.class));
+                    finish();
+                }
+                else {
+                    startActivity(new Intent(activity, DoctorRegisterFormActivity.class));
+                    finish();
+                }
+            }
+
+            @Override
+            public <T> void onErrorResponse(T error) {
+
+            }
+        });
     }
 
     @Override

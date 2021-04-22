@@ -3,6 +3,7 @@ package com.unipi.p17134.medicalcard.API;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -11,12 +12,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.DoctorRegisterFormActivity;
+import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.LoginActivity;
 import com.unipi.p17134.medicalcard.MainActivity;
 import com.unipi.p17134.medicalcard.R;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 import com.unipi.p17134.medicalcard.Custom.MyRequestHandler;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
+import com.unipi.p17134.medicalcard.Singletons.LoginResponse;
 import com.unipi.p17134.medicalcard.Singletons.User;
 
 import org.json.JSONException;
@@ -34,7 +37,7 @@ public class UserDAO extends BaseDAO {
         return MyPrefs.getToken(ctx) == null;
     }
 
-    public static void login(Activity activity, User user, boolean fromRegister) {
+    public static void login(Activity activity, User user, DAOResponseListener responseListener) {
         JSONObject postData = user.toJson();
         if (postData == null) {
             Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
@@ -45,41 +48,34 @@ public class UserDAO extends BaseDAO {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        MyPrefs.setToken(activity, response.getString("auth_token"));
-                        MyPrefs.isDoctor(activity, response.getBoolean("is_doctor"));
-                        MyPrefs.setUserData(activity, new User().setFullname(response.getString("fullname")).setDateOfBirth(DateTimeParsing.dateToDateString(formatter.parse(response.getString("date_of_birth")))));
-
-                        if (fromRegister) {
-                            activity.startActivity(new Intent(activity, DoctorRegisterFormActivity.class));
-                            activity.finish();
-                        }
-                        else {
-                            Toast.makeText(activity, response.getString("message"), Toast.LENGTH_LONG).show();
-                            activity.startActivity(new Intent(activity, MainActivity.class));
-                            activity.finish();
-                        }
-                    } catch (JSONException | ParseException e) {
-                        Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+                        LoginResponse loginResponse = new LoginResponse(
+                                response.getString("auth_token"),
+                                response.getBoolean("is_doctor"),
+                                new User()
+                                        .setFullname(response.getString("fullname"))
+                                        .setDateOfBirth(DateTimeParsing.dateToDateString(formatter.parse(response.getString("date_of_birth"))
+                                                )
+                                        )
+                        );
+                        responseListener.onResponse(loginResponse);
+                    }
+                    catch (JSONException | ParseException e) {
+                        //Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+                        responseListener.onErrorResponse(e);
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    errorResponse(activity, error);
+                    //errorResponse(activity, error);
+                    responseListener.onErrorResponse(error);
                 }
             });
             MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
         }
     }
 
-    public static void logout(Activity activity) {
-        MyPrefs.clearLogin(activity);
-        Toast.makeText(activity, activity.getResources().getString(R.string.logged_out_successfully), Toast.LENGTH_SHORT).show();
-        activity.startActivity(new Intent(activity, LoginActivity.class));
-        activity.finish();
-    }
-
-    public static void register(Activity activity, User user, boolean simpleRegister) {
+    public static void register(Activity activity, User user, DAOResponseListener responseListener) {
         JSONObject postData = user.toJson();
         if (postData == null) {
             Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
@@ -90,33 +86,30 @@ public class UserDAO extends BaseDAO {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        MyPrefs.setToken(activity, response.getString("auth_token"));
-                        MyPrefs.isDoctor(activity, response.getBoolean("is_doctor"));
-                        Toast.makeText(activity, response.getString("message"), Toast.LENGTH_SHORT).show();
-
-                        if (simpleRegister) {
-                            activity.startActivity(new Intent(activity, MainActivity.class));
-                            activity.finish();
-                        }
-                        else {
-                            activity.startActivity(new Intent(activity, DoctorRegisterFormActivity.class));
-                            activity.finish();
-                        }
-                    } catch (JSONException e) {
-                        Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+                        LoginResponse loginResponse = new LoginResponse(
+                                response.getString("auth_token"),
+                                response.getBoolean("is_doctor"),
+                                null
+                        );
+                        responseListener.onResponse(loginResponse);
+                    }
+                    catch (JSONException e) {
+                        //Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+                        responseListener.onErrorResponse(e);
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    errorResponse(activity, error);
+                    //errorResponse(activity, error);
+                    responseListener.onErrorResponse(error);
                 }
             });
             MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
         }
     }
 
-    public static void registerDoctor(Activity activity, Doctor doctor) {
+    public static void registerDoctor(Activity activity, Doctor doctor, DAOResponseListener responseListener) {
         JSONObject postData = doctor.toJson();
         if (postData == null) {
             Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
@@ -126,20 +119,13 @@ public class UserDAO extends BaseDAO {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, signupUrl, postData, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    try {
-                        MyPrefs.isDoctor(activity, true);
-                        Toast.makeText(activity, response.getString("message"), Toast.LENGTH_SHORT).show();
-
-                        activity.startActivity(new Intent(activity, MainActivity.class));
-                        activity.finish();
-                    } catch (JSONException e) {
-                        Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
-                    }
+                    responseListener.onResponse(null);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    errorResponse(activity, error);
+                    //errorResponse(activity, error);
+                    responseListener.onErrorResponse(error);
                 }
             })
             {    //this is the part, that adds the header to the request

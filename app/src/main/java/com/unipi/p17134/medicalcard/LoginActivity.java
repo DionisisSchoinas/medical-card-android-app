@@ -1,17 +1,23 @@
 package com.unipi.p17134.medicalcard;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.unipi.p17134.medicalcard.API.UserDAO;
+import com.unipi.p17134.medicalcard.Custom.MyPrefs;
+import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
+import com.unipi.p17134.medicalcard.Singletons.LoginResponse;
 import com.unipi.p17134.medicalcard.Singletons.User;
 
 public class LoginActivity extends AppCompatActivity {
@@ -50,7 +56,29 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
-        UserDAO.login(this, new User(username.getText().toString(), password.getText().toString()), fromRegister);
+        Activity activity = this;
+
+        UserDAO.login(this, new User(username.getText().toString(), password.getText().toString()), new DAOResponseListener() {
+            @Override
+            public <T> void onResponse(T object) {
+                MyPrefs.setLogin(getApplicationContext(), (LoginResponse)object);
+
+                if (fromRegister) {
+                    startActivity(new Intent(activity, DoctorRegisterFormActivity.class));
+                    finish();
+                }
+                else {
+                    //Toast.makeText(activity, response.getString("message"), Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(activity, MainActivity.class));
+                    finish();
+                }
+            }
+
+            @Override
+            public <T> void onErrorResponse(T error) {
+
+            }
+        });
     }
 
     public void register(View view) {

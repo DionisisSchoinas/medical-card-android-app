@@ -14,9 +14,12 @@ import com.google.android.material.navigation.NavigationView;
 import com.unipi.p17134.medicalcard.API.PatientDAO;
 import com.unipi.p17134.medicalcard.API.UserDAO;
 import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
+import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
+import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
 import com.unipi.p17134.medicalcard.Custom.VerificationPopup;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
+import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Listeners.VerificationPopupListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 
@@ -28,12 +31,18 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends ConnectedBaseClass implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private TextView fullnameDisplay;
     private RecyclerView appointmentsDisplay;
     private LinearLayoutManager layoutManager;
     private int currentDisplayState;
+
+    private ArrayList<Appointment> appointments;
+    private ArrayList<RecycleViewItem> recycleViewItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +71,8 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
         fullnameDisplay = navigationView.getHeaderView(0).findViewById(R.id.fullnameActionBarDisplay);
 
+        appointments = new ArrayList<>();
+        recycleViewItems = new ArrayList<>();
         appointmentsDisplay = findViewById(R.id.mainAppointmentDisplay);
         appointmentsDisplay.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         layoutManager = (LinearLayoutManager)appointmentsDisplay.getLayoutManager();
@@ -71,6 +82,18 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             @Override
             public void onMoreInfoClicked(int index) {
                 moreAppointmentInfo(index);
+            }
+        };
+
+        DAOResponseListener responseListener = new DAOResponseListener() {
+            @Override
+            public <T> void onResponse(T object) {
+                processNewAppointments((ArrayList<Appointment>)object);
+            }
+
+            @Override
+            public <T> void onErrorResponse(T error) {
+                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -86,7 +109,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
                 // If last visible item's index is greater than the total appointments - 10
                 if (layoutManager.findLastVisibleItemPosition() >= appointmentsDisplay.getAdapter().getItemCount() - 10) {
-                    PatientDAO.appointments(activity, appointmentsDisplay, clickListener, -1);
+                    PatientDAO.appointments(activity, appointmentsDisplay, -1, responseListener);
                 }
             }
 
@@ -99,11 +122,11 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
                 // If last visible item's index is greater than the total appointments - 10
                 if (currentDisplayState == RecyclerView.SCROLL_STATE_DRAGGING && dy > 0 && layoutManager.findLastVisibleItemPosition() >= appointmentsDisplay.getAdapter().getItemCount() - 10) {
-                    PatientDAO.appointments(activity, appointmentsDisplay,clickListener, -1);
+                    PatientDAO.appointments(activity, appointmentsDisplay, -1, responseListener);
                 }
             }
         });
-        PatientDAO.appointments(this, appointmentsDisplay,clickListener, 1);
+        PatientDAO.appointments(activity, appointmentsDisplay, 1, responseListener);
     }
 
     @Override
@@ -158,7 +181,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
                 new VerificationPopupListener() {
                     @Override
                     public void onPositive() {
-                        UserDAO.logout(activity);
+                        MyPrefs.logout(activity);
                     }
 
                     @Override
@@ -203,5 +226,62 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         Intent intent = new Intent(getApplicationContext(), AppointmentDetailsActivity.class);
         intent.putExtra("id", appointment.getId());
         startActivity(intent);
+    }
+
+    private boolean isDuplicate(ArrayList<Appointment> appointments, Appointment newAppointment) {
+        for (Appointment app:appointments) {
+            if (app.getId() == newAppointment.getId())
+                return true;
+        }
+        return false;
+    }
+
+    private void processNewAppointments(ArrayList<Appointment> newAppointments) {
+        // Find last date if it exists
+        String lastDate;
+        if (recycleViewItems.size() == 0)
+            lastDate = "";
+        else
+            lastDate = DateTimeParsing.dateToDateString(recycleViewItems.get(recycleViewItems.size()-1).getAppointmentData().getStartDate());
+
+        Appointment appointment;
+        for (int i=0; i<newAppointments.size(); i++) {
+            appointment = newAppointments.get(i);
+            // If appointment already exists skip it
+            if (isDuplicate(appointments, appointment))
+                continue;
+
+            // Check if date has changed
+            // If it has add a date splitter
+            String currentDate = DateTimeParsing.dateToDateString(appointment.getStartDate());
+            if (!currentDate.equals(lastDate)) {
+                RecycleViewItem item = new RecycleViewItem();
+                if (DateTimeParsing.currentDate().equals(currentDate)) {
+                    item.setDateSplitterType("Today");
+                }
+                else {
+                    item.setDateSplitterType(currentDate);
+                }
+                recycleViewItems.add(item);
+                lastDate = currentDate;
+            }
+
+            // Add appointment item
+            RecycleViewItem item = new RecycleViewItem();
+            item.setPatientAppointmentType(appointment);
+            recycleViewItems.add(item);
+        }
+
+        // Fill display with appointments
+        // Create adapter passing in the sample user data
+        PatientAppointmentsAdapter mAdapter = new PatientAppointmentsAdapter(this, recycleViewItems, new ClickListener() {
+            @Override
+            public void onMoreInfoClicked(int index) {
+                moreAppointmentInfo(index);
+            }
+        });
+
+        // Attach the adapter to the recyclerview to populate items
+        appointmentsDisplay.setAdapter(mAdapter);
     }
 }
