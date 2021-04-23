@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Layout;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -33,6 +35,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -73,6 +76,9 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         navigationView.setNavigationItemSelectedListener(this);
 
         fullnameDisplay = navigationView.getHeaderView(0).findViewById(R.id.fullnameActionBarDisplay);
+        // Hide or Show functions meant only for doctors
+        navigationView.getMenu().findItem(R.id.nav_qr_read).setVisible(MyPrefs.isDoctor(this));
+        navigationView.getMenu().findItem(R.id.nav_my_appointments).setVisible(MyPrefs.isDoctor(this));
 
         appointments = new ArrayList<>();
         recycleViewItems = new ArrayList<>();
@@ -81,7 +87,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         layoutManager = (LinearLayoutManager)appointmentsDisplay.getLayoutManager();
         mAdapter = new PatientAppointmentsAdapter(this, recycleViewItems, new ClickListener() {
             @Override
-            public void onMoreInfoClicked(int index) {
+            public void onClick(int index) {
                 moreAppointmentInfo(index);
             }
         });
@@ -151,7 +157,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         int id = item.getItemId();
 
         if (id == R.id.nav_doctor_search) {
-            Toast.makeText(this, "Doctor Search", Toast.LENGTH_SHORT).show();
+            doctorList();
         }
         else if (id == R.id.nav_qr_generate) {
             Toast.makeText(this, "Generate QR", Toast.LENGTH_SHORT).show();
@@ -170,6 +176,10 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         }
         else if (id == R.id.nav_logout) {
             logout();
+        }
+
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
         }
 
         return true;
@@ -218,7 +228,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
     }
 
     private void plusButtonClick() {
-        Toast.makeText(this, "Plus pressed", Toast.LENGTH_SHORT).show();
+        doctorList();
     }
 
     private void moreAppointmentInfo(int index) {
@@ -240,6 +250,9 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
                 id = data.getIntExtra("id", 0);
 
             renameAppointmentWithId(id);
+        }
+        else if (requestCode == MyPermissions.RESPONSE_FROM_DOCTOR_LIST && resultCode == RESULT_OK) {
+
         }
     }
 
@@ -335,5 +348,10 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         }
         appointmentsDisplay.getAdapter().notifyDataSetChanged();
         Toast.makeText(this, getResources().getString(R.string.appointment_list_updated), Toast.LENGTH_SHORT).show();
+    }
+
+    private void doctorList() {
+        Intent intent = new Intent(getApplicationContext(), DoctorListActivity.class);
+        startActivityForResult(intent, MyPermissions.RESPONSE_FROM_DOCTOR_LIST);
     }
 }

@@ -51,16 +51,16 @@ public class PatientAppointmentsAdapter extends RecyclerView.Adapter<RecyclerVie
             super(v);
             name = v.findViewById(R.id.patient_row_doctorName);
             time = v.findViewById(R.id.patient_row_time);
-            address = v.findViewById(R.id.patient_row_adress);
+            address = v.findViewById(R.id.patient_row_address);
             speciality = v.findViewById(R.id.patient_row_doctorSpeciality);
-            moreInfo = v.findViewById(R.id.patient_row_moreInfo);
+            moreInfo = v.findViewById(R.id.doctor_row_add_appointment);
 
             listenerRef = new WeakReference<>(listener);
             // OnClickListeners to trigger the Listener given in the constructor
             moreInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listenerRef.get().onMoreInfoClicked(getAdapterPosition());
+                    listenerRef.get().onClick(getAdapterPosition());
                 }
             });
         }

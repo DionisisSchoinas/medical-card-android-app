@@ -103,4 +103,5 @@
     <string name="register_activity">Εγγραφή</string>
     <string name="login_activity">Σύνδεση</string>
     <string name="appointment_details_activity">Λεπτομέρειες Ραντεβού</string>
+    <string name="doctor_list_activity">Λίστα Γιατρών</string>
 </resources>

@@ -9,4 +9,5 @@ public class MyPermissions {
     public static final int ACCESS_CAMERA_REQUEST = 253;
 
     public static final int RESPONSE_FROM_APPOINTMENT_INFO = 100;
+    public static final int RESPONSE_FROM_DOCTOR_LIST = 101;
 }
