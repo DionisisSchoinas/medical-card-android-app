@@ -40,7 +40,7 @@ public class PatientDAO extends BaseDAO {
     private static int currentPage = 0;
     private static int queueItems = 0;
 
-    public static void appointments(Activity activity, RecyclerView display, int page, DAOResponseListener responseListener) {
+    public static void appointments(Activity activity, int page, DAOResponseListener responseListener) {
         // Already loading appointments
         if (queueItems > 0)
             return;

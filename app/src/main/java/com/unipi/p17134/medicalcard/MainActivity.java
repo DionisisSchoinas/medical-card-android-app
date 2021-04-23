@@ -1,6 +1,7 @@
 package com.unipi.p17134.medicalcard;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -33,6 +34,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends ConnectedBaseClass implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
@@ -40,6 +42,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
     private RecyclerView appointmentsDisplay;
     private LinearLayoutManager layoutManager;
     private int currentDisplayState;
+    private PatientAppointmentsAdapter mAdapter;
 
     private ArrayList<Appointment> appointments;
     private ArrayList<RecycleViewItem> recycleViewItems;
@@ -76,15 +79,16 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         appointmentsDisplay = findViewById(R.id.mainAppointmentDisplay);
         appointmentsDisplay.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         layoutManager = (LinearLayoutManager)appointmentsDisplay.getLayoutManager();
-        Activity activity = this;
-
-        ClickListener clickListener =  new ClickListener() {
+        mAdapter = new PatientAppointmentsAdapter(this, recycleViewItems, new ClickListener() {
             @Override
             public void onMoreInfoClicked(int index) {
                 moreAppointmentInfo(index);
             }
-        };
+        });
+        // Attach the adapter to the recyclerview to populate items
+        appointmentsDisplay.setAdapter(mAdapter);
 
+        Activity activity = this;
         DAOResponseListener responseListener = new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
@@ -109,7 +113,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
                 // If last visible item's index is greater than the total appointments - 10
                 if (layoutManager.findLastVisibleItemPosition() >= appointmentsDisplay.getAdapter().getItemCount() - 10) {
-                    PatientDAO.appointments(activity, appointmentsDisplay, -1, responseListener);
+                    PatientDAO.appointments(activity, -1, responseListener);
                 }
             }
 
@@ -122,11 +126,11 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
                 // If last visible item's index is greater than the total appointments - 10
                 if (currentDisplayState == RecyclerView.SCROLL_STATE_DRAGGING && dy > 0 && layoutManager.findLastVisibleItemPosition() >= appointmentsDisplay.getAdapter().getItemCount() - 10) {
-                    PatientDAO.appointments(activity, appointmentsDisplay, -1, responseListener);
+                    PatientDAO.appointments(activity, -1, responseListener);
                 }
             }
         });
-        PatientDAO.appointments(activity, appointmentsDisplay, 1, responseListener);
+        PatientDAO.appointments(activity, 1, responseListener);
     }
 
     @Override
@@ -290,19 +294,8 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
         // Fill display with appointments
         // Create adapter passing in the sample user data
-        if (appointmentsDisplay.getAdapter() == null) {
-            PatientAppointmentsAdapter mAdapter = new PatientAppointmentsAdapter(this, recycleViewItems, new ClickListener() {
-                @Override
-                public void onMoreInfoClicked(int index) {
-                    moreAppointmentInfo(index);
-                }
-            });
-            // Attach the adapter to the recyclerview to populate items
-            appointmentsDisplay.setAdapter(mAdapter);
-        }
-        else {
+        if (appointmentsDisplay.getAdapter() != null)
             appointmentsDisplay.getAdapter().notifyDataSetChanged();
-        }
     }
 
     private void renameAppointmentWithId(int id) {
