@@ -19,12 +19,10 @@ import java.util.ArrayList;
 
 public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.DoctorViewHolder> {
     private ArrayList<Doctor> mDataset;
-    private Context context;
     private ClickListener listener;
 
     // Constructor of Adapter class
-    public DoctorListAdapter(Context context, ArrayList<Doctor> mDataset, ClickListener listener) {
-        this.context = context;
+    public DoctorListAdapter(ArrayList<Doctor> mDataset, ClickListener listener) {
         this.mDataset = mDataset;
         this.listener = listener;
     }
@@ -75,13 +73,6 @@ public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.Do
     @Override
     public int getItemCount() {
         return mDataset.size();
-    }
-
-    // Clear the dataset and notify the adapter about the change
-    public void clear() {
-        int size = mDataset.size();
-        mDataset.clear();
-        notifyItemRangeRemoved(0, size);
     }
 
     public ArrayList<Doctor> getDataset() {

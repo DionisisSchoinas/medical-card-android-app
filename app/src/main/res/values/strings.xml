@@ -27,9 +27,9 @@
     <string name="cancel_appointment_popup_title_2">Επιβεβαίωση Ακύρωσης Ραντεβού</string>
     <string name="cancel_appointment_popup_message_2">Είσαι σίγουρος ότι θες να ακυρώσεις το ραντεβού ;</string>
 
-
     <!-- Global -->
     <string name="action_settings">Ρυθμίσεις</string>
+    <string name="action_filter">Φιλτράρισμα</string>
 
     <!-- Main Activity -->
     <string name="connected_as_subtitle">Συνδεδεμένος ως :</string>
@@ -94,6 +94,10 @@
     <string name="login_button_login">Συνδεση</string>
     <string name="login_button_register">Εγγραφή</string>
     <string name="appointment_button_cancel">Ακυρωση ραντεβου</string>
+    <string name="doctors_list_search_button">Αναζητηση</string>
+
+    <!-- Doctors List -->
+    <string name="doctors_list_speciality_search_hint">Ειδικότητα</string>
 
     <!-- Activity Names -->
     <string name="main_activity">Κεντρική Σελίδα</string>
