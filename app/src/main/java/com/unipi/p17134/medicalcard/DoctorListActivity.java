@@ -11,6 +11,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,9 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.unipi.p17134.medicalcard.API.DoctorDAO;
 import com.unipi.p17134.medicalcard.Adapters.DoctorListAdapter;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
+import com.unipi.p17134.medicalcard.Custom.MyPermissions;
 import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
+import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
 
 import java.util.ArrayList;
@@ -129,7 +132,24 @@ public class DoctorListActivity extends ConnectedBaseClass {
     }
 
     private void addAppointment(int index) {
-        Toast.makeText(this, "Book with : " + doctors.get(index).getUser().getFullname(), Toast.LENGTH_SHORT).show();
+        Doctor doctor = doctors.get(index);
+        Intent intent = new Intent(getApplicationContext(), DoctorDetailsActivity.class);
+        intent.putExtra("id", doctor.getId());
+        startActivityForResult(intent, MyPermissions.RESPONSE_FROM_DOCTOR_DETAILS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MyPermissions.RESPONSE_FROM_DOCTOR_DETAILS && resultCode == RESULT_OK) {
+            int id = 0;
+            if (data != null)
+                id = data.getIntExtra("id", 0);
+
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
     private void processNewDoctors(ArrayList<Doctor> newDoctors) {

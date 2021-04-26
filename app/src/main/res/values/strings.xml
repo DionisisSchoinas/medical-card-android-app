@@ -95,6 +95,7 @@
     <string name="login_button_register">Εγγραφή</string>
     <string name="appointment_button_cancel">Ακυρωση ραντεβου</string>
     <string name="doctors_list_search_button">Αναζητηση</string>
+    <string name="doctors_details_book_button">Κλεισιμο Ραντεβου</string>
 
     <!-- Doctors List -->
     <string name="doctors_list_speciality_search_hint">Ειδικότητα</string>
@@ -108,4 +109,5 @@
     <string name="login_activity">Σύνδεση</string>
     <string name="appointment_details_activity">Λεπτομέρειες Ραντεβού</string>
     <string name="doctor_list_activity">Λίστα Γιατρών</string>
+    <string name="doctor_details_activity">Πληροφορίες Γιατρού</string>
 </resources>

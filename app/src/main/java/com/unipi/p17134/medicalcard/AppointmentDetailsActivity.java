@@ -5,8 +5,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,17 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.unipi.p17134.medicalcard.API.PatientDAO;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.VerificationPopup;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Listeners.VerificationPopupListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
-
-import org.json.JSONException;
-
-import java.text.ParseException;
 
 public class AppointmentDetailsActivity extends ConnectedBaseClass {
     private int id;
@@ -41,6 +34,7 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        image = findViewById(R.id.appointment_details_doctor_photo);
         fullname = findViewById(R.id.appointment_details_doctor_name);
         speciality = findViewById(R.id.appointment_details_doctor_speciality);
         cost = findViewById(R.id.appointment_details_doctor_cost);
@@ -50,7 +44,7 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
         email = findViewById(R.id.appointment_details_doctor_email);
 
         id = getIntent().getIntExtra("id", 0);
-        PatientDAO.getAppointment(this, id, new DAOResponseListener() {
+        PatientDAO.appointment(this, id, new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
                 Appointment appointment = (Appointment)object;

@@ -18,9 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedicalCard">
         <activity
+            android:name=".DoctorDetailsActivity"
+            android:label="@string/doctor_details_activity"
+            android:theme="@style/Theme.MedicalCard.NoActionBar" />
+        <activity
             android:name=".DoctorListActivity"
             android:label="@string/doctor_list_activity"
-            android:theme="@style/Theme.MedicalCard.NoActionBar"/>
+            android:theme="@style/Theme.MedicalCard.NoActionBar" />
         <activity
             android:name=".AppointmentDetailsActivity"
             android:label="@string/appointment_details_activity"

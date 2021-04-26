@@ -65,7 +65,8 @@ public class PatientDAO extends BaseDAO {
                     // Get appointments array
                     JSONArray appointments = response.getJSONArray("appointments");
 
-                    currentPage = meta.getInt("current_page");
+                    if (appointments.length() != 0)
+                        currentPage = meta.getInt("current_page");
                     totalPages = meta.getInt("total_pages");
 
                     // Fill list with appointments
@@ -120,7 +121,7 @@ public class PatientDAO extends BaseDAO {
         queueItems++;
     }
 
-    public static void getAppointment(Activity activity, int id, DAOResponseListener responseListener) {
+    public static void appointment(Activity activity, int id, DAOResponseListener responseListener) {
         String appointmentUrl = url + "/appointments/" + id;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, appointmentUrl, null, new Response.Listener<JSONObject>() {
             @Override
