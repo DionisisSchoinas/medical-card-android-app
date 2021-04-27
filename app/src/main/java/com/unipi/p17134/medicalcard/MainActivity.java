@@ -1,11 +1,8 @@
 package com.unipi.p17134.medicalcard;
 
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -35,9 +32,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.security.acl.Group;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MainActivity extends ConnectedBaseClass implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
@@ -164,6 +159,8 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         }
         else if (id == R.id.nav_qr_read) {
             Toast.makeText(this, "Read QR", Toast.LENGTH_SHORT).show();
+
+            startActivity(new Intent(this, DoctorAppointmentScheduleActivity.class));
         }
         else if (id == R.id.nav_my_account) {
             Toast.makeText(this, "My Account", Toast.LENGTH_SHORT).show();
@@ -249,7 +246,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             if (data != null)
                 id = data.getIntExtra("id", 0);
 
-            renameAppointmentWithId(id);
+            removeAppointmentWithId(id);
         }
         else if (requestCode == MyPermissions.RESPONSE_FROM_DOCTOR_LIST && resultCode == RESULT_OK) {
 
@@ -311,7 +308,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             appointmentsDisplay.getAdapter().notifyDataSetChanged();
     }
 
-    private void renameAppointmentWithId(int id) {
+    private void removeAppointmentWithId(int id) {
         // Go through appointments to find specific appointment
         for (int i=0; i<appointments.size(); i++) {
             // WHen found

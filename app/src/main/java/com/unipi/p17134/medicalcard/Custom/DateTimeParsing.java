@@ -20,4 +20,9 @@ public class DateTimeParsing {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         return dateFormat.format(date);
     }
+
+    public static String dateToDay(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM");
+        return dateFormat.format(date);
+    }
 }

@@ -110,4 +110,14 @@
     <string name="appointment_details_activity">Λεπτομέρειες Ραντεβού</string>
     <string name="doctor_list_activity">Λίστα Γιατρών</string>
     <string name="doctor_details_activity">Πληροφορίες Γιατρού</string>
+    <string name="doctor_appointments_display_activity">Διαθέσιμα Ραντεβού</string>
+
+    <!-- Days -->
+    <string name="mon">Δευτέρα</string>
+    <string name="tue">Τρίτη</string>
+    <string name="wed">Τετάρτη</string>
+    <string name="thu">Πέμπτη</string>
+    <string name="fri">Παρασκευή</string>
+    <string name="sat">Σάββατο</string>
+    <string name="sun">Κυριακή</string>
 </resources>

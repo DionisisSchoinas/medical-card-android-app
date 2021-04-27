@@ -36,17 +36,12 @@ import java.util.Map;
 
 public class PatientDAO extends BaseDAO {
     private static final SimpleDateFormat formatter = new SimpleDateFormat(APPOINTMENT_TIME_FORMAT);
-    private static int totalPages = -1;
     private static int currentPage = 0;
     private static int queueItems = 0;
 
     public static void appointments(Activity activity, int page, DAOResponseListener responseListener) {
         // Already loading appointments
         if (queueItems > 0)
-            return;
-
-        // If not the first request and the page is out of bounds return
-        if (totalPages != -1 && page > totalPages)
             return;
 
         // If page not specifically given (go to next page)
@@ -67,7 +62,6 @@ public class PatientDAO extends BaseDAO {
 
                     if (appointments.length() != 0)
                         currentPage = meta.getInt("current_page");
-                    totalPages = meta.getInt("total_pages");
 
                     // Fill list with appointments
                     JSONObject object;

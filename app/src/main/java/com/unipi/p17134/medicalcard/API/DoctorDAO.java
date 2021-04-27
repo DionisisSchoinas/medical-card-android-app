@@ -19,24 +19,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DoctorDAO extends BaseDAO {
-    private static int totalPages = -1;
+    private static final SimpleDateFormat formatter = new SimpleDateFormat(APPOINTMENT_TIME_FORMAT);
+
     private static int currentPage = 0;
     private static int queueItems = 0;
+
+    private static int appointmentCurrentPage = 0;
+    private static int appointmentQueueItems = 0;
 
     private static boolean hasQuery = false;
 
     public static void doctors(Activity activity, int page, String specialityQuery, DAOResponseListener responseListener) {
         // Already loading appointments
         if (queueItems > 0)
-            return;
-
-        // If not the first request and the page is out of bounds return
-        if (totalPages != -1 && page > totalPages)
             return;
 
         // If page not specifically given (go to next page)
@@ -66,7 +67,6 @@ public class DoctorDAO extends BaseDAO {
 
                     if (doctors.length() != 0)
                         currentPage = meta.getInt("current_page");
-                    totalPages = meta.getInt("total_pages");
 
                     // Fill list with appointments
                     JSONObject object;
@@ -160,5 +160,74 @@ public class DoctorDAO extends BaseDAO {
             }
         };
         MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
+    }
+
+    public static void simple_appointments(Activity activity, int page, int doctor_id, DAOResponseListener responseListener) {
+        // Already loading appointments
+        if (appointmentQueueItems > 0)
+            return;
+
+        // If page not specifically given (go to next page)
+        if (page == -1) {
+            // If last read page and total pages are the same (we are at the last page)
+            page = appointmentCurrentPage + 1;
+        }
+
+        String appointmentsUrl = url + "/doctors/"+doctor_id+"/appointments_simple?per_page=40&page="+page;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, appointmentsUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject meta = response.getJSONObject("meta");
+
+                    // Get appointments array
+                    JSONArray appointments = response.getJSONArray("appointments");
+
+                    if (appointments.length() != 0)
+                        appointmentCurrentPage = meta.getInt("current_page");
+
+                    // Fill list with appointments
+                    JSONObject object;
+
+                    ArrayList<Appointment> appointmentsList = new ArrayList<>();
+                    for (int i=0; i<appointments.length(); i++) {
+                        object = appointments.getJSONObject(i);
+                        appointmentsList.add(
+                                new Appointment(
+                                        object.getInt("id"),
+                                        null,
+                                        null,
+                                        formatter.parse(object.getString("appointment_date_time_start")),
+                                        formatter.parse(object.getString("appointment_date_time_end"))
+                                )
+                        );
+                    }
+                    responseListener.onResponse(appointmentsList);
+                }
+                catch (JSONException | ParseException e) {
+                    //Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+                    responseListener.onErrorResponse(e);
+                }
+                appointmentQueueItems--;
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                appointmentQueueItems--;
+                //errorResponse(activity, error);
+                responseListener.onErrorResponse(error);
+            }
+        })
+        {    //this is the part, that adds the header to the request
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("AuthorizationToken", MyPrefs.getToken(activity));
+                params.put("content-type", "application/json");
+                return params;
+            }
+        };
+        MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
+        appointmentQueueItems++;
     }
 }
