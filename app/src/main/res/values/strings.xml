@@ -120,4 +120,32 @@
     <string name="fri">Παρασκευή</string>
     <string name="sat">Σάββατο</string>
     <string name="sun">Κυριακή</string>
+
+    <!-- Date picker -->
+    <string name="material_calendar_monday">Δ</string>
+    <string name="material_calendar_tuesday">Τ</string>
+    <string name="material_calendar_wednesday">Τ</string>
+    <string name="material_calendar_thursday">Π</string>
+    <string name="material_calendar_friday">Π</string>
+    <string name="material_calendar_saturday">Σ</string>
+    <string name="material_calendar_sunday">Κ</string>
+
+    <array name="material_calendar_months_array">
+        <item>Ιανουάριος</item>
+        <item>Φεβρουάριος</item>
+        <item>Μάρτιος</item>
+        <item>Απρίλιος</item>
+        <item>Μάιος</item>
+        <item>Ιούνιος</item>
+        <item>Ιούλιος</item>
+        <item>Αύγουστος</item>
+        <item>Σεπτέμβριος</item>
+        <item>Οκτώμβριος</item>
+        <item>Νοέμβριος</item>
+        <item>Δεκέμβριος</item>
+    </array>
+
+    <string name="material_calendar_today_button">Σήμερα</string>
+    <string name="material_calendar_positive_button">ΟΚ</string>
+    <string name="material_calendar_negative_button">Ακύρωση</string>
 </resources>

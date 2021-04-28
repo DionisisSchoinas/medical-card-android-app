@@ -1,7 +1,5 @@
 package com.unipi.p17134.medicalcard.Singletons;
 
-import com.alamkanak.weekview.WeekViewEvent;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -69,13 +67,5 @@ public class Appointment {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public WeekViewEvent toWeekViewEvent() {
-        Calendar startDate = Calendar.getInstance();
-        startDate.setTime(this.startDate);
-        Calendar endDate = Calendar.getInstance();
-        endDate.setTime(this.endDate);
-        return new WeekViewEvent(id, "", startDate, endDate);
     }
 }
