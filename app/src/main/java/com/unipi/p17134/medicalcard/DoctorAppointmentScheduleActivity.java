@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.icu.text.UnicodeSetSpanner;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -39,8 +40,10 @@ import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyRequestHandler;
 import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
+import com.unipi.p17134.medicalcard.Custom.VerificationPopup;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
+import com.unipi.p17134.medicalcard.Listeners.VerificationPopupListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
 
@@ -50,16 +53,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Objects;
 
 public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
     private int id;
     private Doctor doctor;
 
     private HashMap<String, HashMap<String, ArrayList<Appointment>>> appointmentsMap;
-
-    private ArrayList<Appointment> appointments;
-    private ArrayList<Appointment> allAvailableAppointments;
-    private ArrayList<Appointment> visibleAppointments;
+    private ArrayList<RecycleViewItem> visibleAppointments;
     private DAOResponseListener responseListener;
 
     private Calendar currentDay;
@@ -114,13 +115,11 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
         maxDay = (Calendar) max.clone();
 
         appointmentsMap = new HashMap<>();
-        appointments = new ArrayList<>();
-        allAvailableAppointments = generateAvailableAppointments();
-        visibleAppointments = getVisibleAppointments();
+        visibleAppointments = generateVisibleItems();
 
         recyclerView = findViewById(R.id.appointmentDisplay);
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), calculateNoOfColumns(120)));
-        mAdapter = new DoctorAppointmentsAdapter(visibleAppointments, new ClickListener() {
+        mAdapter = new DoctorAppointmentsAdapter(this, visibleAppointments, new ClickListener() {
             @Override
             public void onClick(int index) {
                 bookAppointment(index);
@@ -211,15 +210,44 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
 
         currentDay = (Calendar)newDate.clone();
         dateDisplay.setText(DateTimeParsing.dateToDateString(currentDay.getTime()));
+
+        updateAppointmentsView();
     }
 
     private void bookAppointment(int index) {
+        RecycleViewItem item = visibleAppointments.get(index);
+        if (item.isBooked())
+            return;
 
+        String message =
+                getResources().getString(R.string.book_appointment_popup_message) + "\n\n" +
+                doctor.getUser().getFullname() + "\n" +
+                doctor.getOfficeAddress() + "\n\n" +
+                DateTimeParsing.dateToDateString(currentDay.getTime()) + ", " +
+                DateTimeParsing.dateToTimeString(item.getAppointmentData().getStartDate()) + "-" +
+                DateTimeParsing.dateToTimeString(item.getAppointmentData().getEndDate());
+
+        VerificationPopup.showPopup(
+                this,
+                getResources().getString(R.string.book_appointment_popup_title),
+                message,
+                getResources().getString(R.string.popup_positive_confirm),
+                getResources().getString(R.string.popup_negative_cancel),
+                new VerificationPopupListener() {
+                    @Override
+                    public void onPositive() {
+
+                    }
+
+                    @Override
+                    public void onNegative() {
+                        Toast.makeText(getApplicationContext(), R.string.book_appointment_failure, Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
 
     private void monthChanged(Calendar newMonth) {
-        Toast.makeText(this, "Before read : " + appointmentsMap.keySet().toString(), Toast.LENGTH_LONG).show();
-
         // Previous month
         Calendar prevCal = (Calendar) newMonth.clone();
         prevCal.add(Calendar.MONTH, -1);
@@ -264,8 +292,6 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
             appointmentsMap.put(nextMonthString, new HashMap<>());
             DoctorDAO.simple_appointments(this, 1, id, nextCal, true, responseListener);
         }
-
-        Toast.makeText(this, "After add : " + appointmentsMap.keySet().toString(), Toast.LENGTH_LONG).show();
     }
 
     private boolean isDuplicate(ArrayList<Appointment> appointments, Appointment newAppointment) {
@@ -280,6 +306,7 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
         String monthString = "";
         String dayString = "";
         Appointment appointment;
+        boolean updateView = false;
         for (int i=0; i<newAppointments.size(); i++) {
             // Get appointment
             appointment = newAppointments.get(i);
@@ -299,11 +326,14 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
                 continue;
 
             appointmentsMap.get(monthString).get(dayString).add(appointment);
+
+            // If the any of the appointments added have the same date as the currently displayed date, update the view
+            if (DateTimeParsing.dateToDateString(appointment.getStartDate()).equals(DateTimeParsing.dateToDateString(currentDay.getTime())))
+                updateView = true;
         }
-/*
-        visibleAppointments = getVisibleAppointments();
-        mAdapter.notifyDataSetChanged();
- */
+
+        if (updateView)
+            updateAppointmentsView();
     }
 
     private ArrayList<Appointment> generateAvailableAppointments() {
@@ -313,7 +343,17 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
         calendar.set(Calendar.SECOND, 0);
 
         ArrayList<Appointment> appointments = new ArrayList<>();
-        for (int i=0; i<10; i++) {
+        for (int i=0; i<4; i++) {
+            Appointment appointment = new Appointment();
+            appointment.setStartDate(calendar.getTime());
+            calendar.add(Calendar.HOUR_OF_DAY, 1);
+            appointment.setEndDate(calendar.getTime());
+
+            appointments.add(appointment);
+        }
+
+        calendar.set(Calendar.HOUR_OF_DAY, 15);
+        for (int i=0; i<6; i++) {
             Appointment appointment = new Appointment();
             appointment.setStartDate(calendar.getTime());
             calendar.add(Calendar.HOUR_OF_DAY, 1);
@@ -325,10 +365,47 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
         return appointments;
     }
 
-    private ArrayList<Appointment> getVisibleAppointments() {
+    private ArrayList<RecycleViewItem> generateVisibleItems() {
+        ArrayList<Appointment> appointments = generateAvailableAppointments();
 
+        ArrayList<RecycleViewItem> items = new ArrayList<>();
+        for (Appointment appointment : appointments) {
+            RecycleViewItem item = new RecycleViewItem();
+            item.setDoctorScheduleItem(appointment, false);
+            items.add(item);
+        }
+        return items;
+    }
 
-        return allAvailableAppointments;
+    private void updateAppointmentsView() {
+        String month = DateTimeParsing.dateToMonthString(currentDay.getTime());
+        String day = DateTimeParsing.dateToDayString(currentDay.getTime());
+
+        ArrayList<Appointment> bookedAppointments = appointmentsMap.get(month).get(day);
+
+        Calendar testCal1 = Calendar.getInstance();
+        Calendar testCal2 = Calendar.getInstance();
+        for (int i=0; i<visibleAppointments.size(); i++) {
+            RecycleViewItem item = visibleAppointments.get(i);
+            item.isBooked(false);
+            if (bookedAppointments == null)
+                continue;
+
+            testCal1.setTime(item.getAppointmentData().getStartDate());
+            int itemTime = testCal1.get(Calendar.HOUR_OF_DAY);
+
+            for (Appointment appointment : bookedAppointments) {
+                testCal2.setTime(appointment.getStartDate());
+                int appointmentTime = testCal2.get(Calendar.HOUR_OF_DAY);
+
+                if (itemTime == appointmentTime) {
+                    item.isBooked(true);
+                    break;
+                }
+            }
+        }
+
+        mAdapter.notifyDataSetChanged();
     }
 
     private int calculateNoOfColumns(float columnWidthDp) { // For example columnWidthdp=180

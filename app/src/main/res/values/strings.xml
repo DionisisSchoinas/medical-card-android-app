@@ -17,15 +17,22 @@
     <string name="cancel_appointment_success">Επιτυχής ακύρωση ραντεβού</string>
     <string name="cancel_appointment_failure">Δεν έγινε ακύρωση του ραντεβού</string>
 
+    <string name="book_appointment_success">Επιτυχής κράτηση ραντεβού</string>
+    <string name="book_appointment_failure">Δεν έγινε κράτηση του ραντεβού</string>
+
     <!-- Popups -->
-    <string name="popup_positive">Ναι</string>
-    <string name="popup_negative">Όχι</string>
+    <string name="popup_positive_yes">Ναι</string>
+    <string name="popup_negative_no">Όχι</string>
+    <string name="popup_positive_confirm">Επιβεβαίωση</string>
+    <string name="popup_negative_cancel">Ακύρωση</string>
     <string name="logout_popup_title">Αποσύνδεση</string>
     <string name="logout_popup_message">Είσαι σίγουρος ότι θες να αποσυνδεθείς ;</string>
     <string name="cancel_appointment_popup_title_1">Ακύρωση Ραντεβού</string>
     <string name="cancel_appointment_popup_message_1">Είσαι σίγουρος ότι θες να ακυρώσεις αυτό το ραντεβού ;</string>
     <string name="cancel_appointment_popup_title_2">Επιβεβαίωση Ακύρωσης Ραντεβού</string>
     <string name="cancel_appointment_popup_message_2">Είσαι σίγουρος ότι θες να ακυρώσεις το ραντεβού ;</string>
+    <string name="book_appointment_popup_title">Επιβεβαίωση Κράτησης Ραντεβού</string>
+    <string name="book_appointment_popup_message">Θα κλέισετε το ακόλουθρο ραντεβού ;</string>
 
     <!-- Global -->
     <string name="action_settings">Ρυθμίσεις</string>

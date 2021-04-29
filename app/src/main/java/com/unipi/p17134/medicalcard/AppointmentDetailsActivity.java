@@ -86,8 +86,8 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
                 this,
                 getResources().getString(R.string.cancel_appointment_popup_title_1),
                 getResources().getString(R.string.cancel_appointment_popup_message_1) + appointment,
-                getResources().getString(R.string.popup_positive),
-                getResources().getString(R.string.popup_negative),
+                getResources().getString(R.string.popup_positive_yes),
+                getResources().getString(R.string.popup_negative_no),
                 new VerificationPopupListener() {
                     @Override
                     public void onPositive() {
@@ -95,8 +95,8 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
                                 activity,
                                 getResources().getString(R.string.cancel_appointment_popup_title_2),
                                 getResources().getString(R.string.cancel_appointment_popup_message_2),
-                                getResources().getString(R.string.popup_positive),
-                                getResources().getString(R.string.popup_negative),
+                                getResources().getString(R.string.popup_positive_yes),
+                                getResources().getString(R.string.popup_negative_no),
                                 new VerificationPopupListener() {
                                     @Override
                                     public void onPositive() {

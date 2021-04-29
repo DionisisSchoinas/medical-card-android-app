@@ -187,8 +187,8 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         VerificationPopup.showPopup(this,
                 getResources().getString(R.string.logout_popup_title),
                 getResources().getString(R.string.logout_popup_message),
-                getResources().getString(R.string.popup_positive),
-                getResources().getString(R.string.popup_negative),
+                getResources().getString(R.string.popup_positive_yes),
+                getResources().getString(R.string.popup_negative_no),
                 new VerificationPopupListener() {
                     @Override
                     public void onPositive() {
