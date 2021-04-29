@@ -44,6 +44,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
     private ArrayList<Appointment> appointments;
     private ArrayList<RecycleViewItem> recycleViewItems;
+    private DAOResponseListener responseListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +93,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         appointmentsDisplay.setAdapter(mAdapter);
 
         Activity activity = this;
-        DAOResponseListener responseListener = new DAOResponseListener() {
+        responseListener = new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
                 processNewAppointments((ArrayList<Appointment>)object);
@@ -249,10 +250,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             removeAppointmentWithId(id);
         }
         else if (requestCode == MyPermissions.RESPONSE_FROM_DOCTOR_LIST && resultCode == RESULT_OK) {
-
-            // Refill appointments list
-            // since new appointment has been registered
-
+            recreate();
         }
     }
 

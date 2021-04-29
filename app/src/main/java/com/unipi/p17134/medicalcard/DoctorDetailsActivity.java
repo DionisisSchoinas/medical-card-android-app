@@ -83,8 +83,7 @@ public class DoctorDetailsActivity extends ConnectedBaseClass {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MyPermissions.RESPONSE_FROM_DOCTOR_SCHEDULE && resultCode == RESULT_OK) {
-            Intent intent = new Intent();
-            setResult(RESULT_OK, intent);
+            setResult(RESULT_OK, new Intent());
             finish();
         }
     }

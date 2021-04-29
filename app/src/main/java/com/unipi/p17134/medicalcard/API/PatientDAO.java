@@ -11,6 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Custom.BitmapConversion;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
@@ -22,6 +23,7 @@ import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.R;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
+import com.unipi.p17134.medicalcard.Singletons.LoginResponse;
 import com.unipi.p17134.medicalcard.Singletons.User;
 
 import org.json.JSONArray;
@@ -207,5 +209,47 @@ public class PatientDAO extends BaseDAO {
             }
         };
         MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
+    }
+
+    public static void bookAppointment(Activity activity, Appointment appointment, DAOResponseListener responseListener) {
+        JSONObject postData = new JSONObject();
+        try {
+            if (appointment.getDoctor().getId() != 0)
+                postData.put("doctor_id", appointment.getDoctor().getId());
+            if (appointment.getStartDate() != null)
+                postData.put("appointment_date_time_start", DateTimeParsing.dateToAPIDate(appointment.getStartDate()));
+            if (appointment.getEndDate() != null)
+                postData.put("appointment_date_time_end", DateTimeParsing.dateToAPIDate(appointment.getEndDate()));
+        }
+        catch (JSONException e) {
+            postData = null;
+        }
+
+        if (postData == null) {
+            responseListener.onErrorResponse(null);
+        } else {
+            String appointmentUrl = url + "/appointments";
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, appointmentUrl, postData, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    responseListener.onResponse(null);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    //errorResponse(activity, error);
+                    responseListener.onErrorResponse(error);
+                }
+            }) {    //this is the part, that adds the header to the request
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("AuthorizationToken", MyPrefs.getToken(activity));
+                    params.put("content-type", "application/json");
+                    return params;
+                }
+            };
+            MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
+        }
     }
 }

@@ -175,7 +175,7 @@ public class DoctorDAO extends BaseDAO {
     }
 
     public static void simple_appointments(Activity activity, int page, int doctor_id, Calendar month, boolean readMorePages, DAOResponseListener responseListener) {
-        String monthString = DateTimeParsing.dateToMonthString(month.getTime());// month.get(Calendar.MONTH)+1) + "-" + month.get(Calendar.YEAR);
+        String monthString = DateTimeParsing.dateToMonthString(month.getTime());
         String appointmentsUrl = url + "/doctors/"+doctor_id+"/appointments_simple?per_page=50&page="+page+"&month="+monthString;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, appointmentsUrl, null, new Response.Listener<JSONObject>() {
             @Override

@@ -1,5 +1,7 @@
 package com.unipi.p17134.medicalcard.Custom;
 
+import com.unipi.p17134.medicalcard.API.BaseDAO;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -28,6 +30,11 @@ public class DateTimeParsing {
 
     public static String dateToMonthString(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
+        return dateFormat.format(date);
+    }
+
+    public static String dateToAPIDate(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(BaseDAO.APPOINTMENT_TIME_FORMAT);
         return dateFormat.format(date);
     }
 }

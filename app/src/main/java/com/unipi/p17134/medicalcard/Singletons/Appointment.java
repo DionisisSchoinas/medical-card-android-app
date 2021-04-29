@@ -1,5 +1,8 @@
 package com.unipi.p17134.medicalcard.Singletons;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;

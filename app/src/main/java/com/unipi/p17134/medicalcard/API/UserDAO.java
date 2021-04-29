@@ -40,7 +40,7 @@ public class UserDAO extends BaseDAO {
     public static void login(Activity activity, User user, DAOResponseListener responseListener) {
         JSONObject postData = user.toJson();
         if (postData == null) {
-            Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+            responseListener.onErrorResponse(null);
         }
         else {
             String loginUrl = url + "/auth/login";
@@ -78,7 +78,7 @@ public class UserDAO extends BaseDAO {
     public static void register(Activity activity, User user, DAOResponseListener responseListener) {
         JSONObject postData = user.toJson();
         if (postData == null) {
-            Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+            responseListener.onErrorResponse(null);
         }
         else {
             String signupUrl = url + "/signup";
@@ -112,7 +112,7 @@ public class UserDAO extends BaseDAO {
     public static void registerDoctor(Activity activity, Doctor doctor, DAOResponseListener responseListener) {
         JSONObject postData = doctor.toJson();
         if (postData == null) {
-            Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+            responseListener.onErrorResponse(null);
         }
         else {
             String signupUrl = url + "/doctors";
