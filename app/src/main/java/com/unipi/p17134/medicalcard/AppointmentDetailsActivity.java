@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,11 +25,12 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
     private int id;
     private ImageView image;
     private TextView fullname, speciality, cost, date, address, phone, email;
+    private Button cancelButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_appointment_details_activity);
+        setContentView(R.layout.activity_appointment_details);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -42,6 +44,8 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
         address = findViewById(R.id.appointment_details_doctor_address);
         phone = findViewById(R.id.appointment_details_doctor_phone);
         email = findViewById(R.id.appointment_details_doctor_email);
+        cancelButton = findViewById(R.id.cancel_appointment_button);
+        cancelButton.setEnabled(false);
 
         id = getIntent().getIntExtra("id", 0);
         PatientDAO.appointment(this, id, new DAOResponseListener() {
@@ -70,6 +74,8 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
         address.setText(appointment.getDoctor().getOfficeAddress());
         phone.setText(appointment.getDoctor().getPhone());
         email.setText(appointment.getDoctor().getEmail());
+
+        cancelButton.setEnabled(true);
     }
 
     public void cancelAppointment(View view) {

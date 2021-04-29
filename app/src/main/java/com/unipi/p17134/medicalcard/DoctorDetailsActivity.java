@@ -10,6 +10,7 @@ import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ public class DoctorDetailsActivity extends ConnectedBaseClass {
     private int id;
     private ImageView image;
     private TextView fullname, speciality, cost, address, phone, email;
+    private Button scheduleButton;
 
     private Doctor doctor;
 
@@ -43,6 +45,8 @@ public class DoctorDetailsActivity extends ConnectedBaseClass {
         address = findViewById(R.id.doctor_details_address);
         phone = findViewById(R.id.doctor_details_phone);
         email = findViewById(R.id.doctor_details_email);
+        scheduleButton = findViewById(R.id.doctor_schedule_button);
+        scheduleButton.setEnabled(false);
 
         id = getIntent().getIntExtra("id", 0);
         DoctorDAO.doctor(this, id, new DAOResponseListener() {
@@ -71,6 +75,8 @@ public class DoctorDetailsActivity extends ConnectedBaseClass {
         email.setText(doctor.getEmail());
 
         this.doctor = doctor;
+
+        scheduleButton.setEnabled(true);
     }
 
     @Override

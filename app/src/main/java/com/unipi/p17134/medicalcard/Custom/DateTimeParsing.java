@@ -20,4 +20,14 @@ public class DateTimeParsing {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         return dateFormat.format(date);
     }
+
+    public static String dateToDayString(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
+        return dateFormat.format(date);
+    }
+
+    public static String dateToMonthString(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
+        return dateFormat.format(date);
+    }
 }

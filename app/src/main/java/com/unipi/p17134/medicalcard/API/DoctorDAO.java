@@ -7,6 +7,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.unipi.p17134.medicalcard.Custom.BitmapConversion;
+import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 import com.unipi.p17134.medicalcard.Custom.MyRequestHandler;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
@@ -21,6 +22,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -172,29 +174,15 @@ public class DoctorDAO extends BaseDAO {
         MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
     }
 
-    public static void simple_appointments(Activity activity, int page, int doctor_id, DAOResponseListener responseListener) {
-        // Already loading appointments
-        if (appointmentQueueItems > 0)
-            return;
-
-        // If page not specifically given (go to next page)
-        if (page == -1) {
-            // If last read page and total pages are the same (we are at the last page)
-            page = appointmentCurrentPage + 1;
-        }
-
-        String appointmentsUrl = url + "/doctors/"+doctor_id+"/appointments_simple?per_page=40&page="+page;
+    public static void simple_appointments(Activity activity, int page, int doctor_id, Calendar month, boolean readMorePages, DAOResponseListener responseListener) {
+        String monthString = DateTimeParsing.dateToMonthString(month.getTime());// month.get(Calendar.MONTH)+1) + "-" + month.get(Calendar.YEAR);
+        String appointmentsUrl = url + "/doctors/"+doctor_id+"/appointments_simple?per_page=50&page="+page+"&month="+monthString;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, appointmentsUrl, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    JSONObject meta = response.getJSONObject("meta");
-
                     // Get appointments array
                     JSONArray appointments = response.getJSONArray("appointments");
-
-                    if (appointments.length() != 0)
-                        appointmentCurrentPage = meta.getInt("current_page");
 
                     // Fill list with appointments
                     JSONObject object;
@@ -213,17 +201,25 @@ public class DoctorDAO extends BaseDAO {
                         );
                     }
                     responseListener.onResponse(appointmentsList);
+
+                    // Read all available pages for this month
+                    if (readMorePages) {
+                        JSONObject meta = response.getJSONObject("meta");
+                        int currentPage = meta.getInt("current_page");
+                        int totalPages = meta.getInt("total_pages");
+                        for (int i = currentPage+1; i <= totalPages; i++) {
+                            simple_appointments(activity, i, doctor_id, month, false, responseListener);
+                        }
+                    }
                 }
                 catch (JSONException | ParseException e) {
                     //Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
                     responseListener.onErrorResponse(e);
                 }
-                appointmentQueueItems--;
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                appointmentQueueItems--;
                 //errorResponse(activity, error);
                 responseListener.onErrorResponse(error);
             }
@@ -237,9 +233,7 @@ public class DoctorDAO extends BaseDAO {
                 return params;
             }
         };
-
-        // Item successfully added to queue
-        if (MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest))
-            appointmentQueueItems++;
+        jsonObjectRequest.setTag(monthString);
+        MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
     }
 }

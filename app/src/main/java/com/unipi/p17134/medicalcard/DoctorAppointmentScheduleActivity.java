@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.text.UnicodeSetSpanner;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
@@ -36,6 +37,7 @@ import com.unipi.p17134.medicalcard.API.DoctorDAO;
 import com.unipi.p17134.medicalcard.Adapters.DoctorAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
+import com.unipi.p17134.medicalcard.Custom.MyRequestHandler;
 import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
@@ -45,17 +47,20 @@ import com.unipi.p17134.medicalcard.Singletons.Doctor;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
 public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
-
     private int id;
     private Doctor doctor;
+
+    private HashMap<String, HashMap<String, ArrayList<Appointment>>> appointmentsMap;
 
     private ArrayList<Appointment> appointments;
     private ArrayList<Appointment> allAvailableAppointments;
     private ArrayList<Appointment> visibleAppointments;
+    private DAOResponseListener responseListener;
 
     private Calendar currentDay;
     private Calendar minDay;
@@ -89,7 +94,6 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
         minDay.set(Calendar.HOUR_OF_DAY, 0);
         minDay.set(Calendar.MINUTE, 0);
         minDay.set(Calendar.SECOND, 0);
-        currentDay = (Calendar)minDay.clone();
 
         ArrayList<Calendar> disabledDays = new ArrayList<>();
         Calendar test = (Calendar)minDay.clone();
@@ -108,6 +112,35 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
         max.set(Calendar.MONTH, Calendar.DECEMBER);
         max.set(Calendar.DAY_OF_MONTH, 25);
         maxDay = (Calendar) max.clone();
+
+        appointmentsMap = new HashMap<>();
+        appointments = new ArrayList<>();
+        allAvailableAppointments = generateAvailableAppointments();
+        visibleAppointments = getVisibleAppointments();
+
+        recyclerView = findViewById(R.id.appointmentDisplay);
+        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), calculateNoOfColumns(120)));
+        mAdapter = new DoctorAppointmentsAdapter(visibleAppointments, new ClickListener() {
+            @Override
+            public void onClick(int index) {
+                bookAppointment(index);
+            }
+        });
+        // Attach the adapter to the recyclerview to populate items
+        recyclerView.setAdapter(mAdapter);
+
+        responseListener = new DAOResponseListener() {
+            @Override
+            public <T> void onResponse(T object) {
+                ArrayList<Appointment> appointments = (ArrayList<Appointment>) object;
+                newAppointments(appointments);
+            }
+
+            @Override
+            public <T> void onErrorResponse(T error) {
+                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+            }
+        };
 
         setDate(minDay);
 
@@ -136,35 +169,6 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
                 datePicker.show();
             }
         });
-
-        appointments = new ArrayList<>();
-        allAvailableAppointments = generateAvailableAppointments();
-        visibleAppointments = getVisibleAppointments();
-
-        recyclerView = findViewById(R.id.appointmentDisplay);
-        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), calculateNoOfColumns(120)));
-        mAdapter = new DoctorAppointmentsAdapter(visibleAppointments, new ClickListener() {
-            @Override
-            public void onClick(int index) {
-                bookAppointment(index);
-            }
-        });
-        // Attach the adapter to the recyclerview to populate items
-        recyclerView.setAdapter(mAdapter);
-
-        DAOResponseListener responseListener = new DAOResponseListener() {
-            @Override
-            public <T> void onResponse(T object) {
-                ArrayList<Appointment> appointments = (ArrayList<Appointment>) object;
-                newAppointments(appointments);
-            }
-
-            @Override
-            public <T> void onErrorResponse(T error) {
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
-            }
-        };
-        DoctorDAO.simple_appointments(this, 1, id, responseListener);
     }
 
     public void prevDay(View view) {
@@ -189,6 +193,11 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
             newDate.add(Calendar.DAY_OF_WEEK, -2);
         }
 
+        // Check if month has been changed
+        if (currentDay == null || newDate.get(Calendar.MONTH) != currentDay.get(Calendar.MONTH)) {
+            monthChanged(newDate);
+        }
+
         prev.setEnabled(newDate.getTimeInMillis() > minDay.getTimeInMillis());
 
         Calendar maxCheck = (Calendar) newDate.clone();
@@ -208,8 +217,59 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
 
     }
 
+    private void monthChanged(Calendar newMonth) {
+        Toast.makeText(this, "Before read : " + appointmentsMap.keySet().toString(), Toast.LENGTH_LONG).show();
+
+        // Previous month
+        Calendar prevCal = (Calendar) newMonth.clone();
+        prevCal.add(Calendar.MONTH, -1);
+        // next month
+        Calendar nextCal = (Calendar) newMonth.clone();
+        nextCal.add(Calendar.MONTH, 1);
+
+        String newMonthString = DateTimeParsing.dateToMonthString(newMonth.getTime());
+        String prevMonthString = DateTimeParsing.dateToMonthString(prevCal.getTime());
+        String nextMonthString = DateTimeParsing.dateToMonthString(nextCal.getTime());
+
+        // If a registered month doesn't match any of the new months, remove it
+        List<String> keys = new ArrayList<>(appointmentsMap.keySet());
+        for (String key : keys) {
+            if (key.equals(newMonthString))
+                continue;
+
+            if (key.equals(prevMonthString))
+                continue;
+
+            if (key.equals(nextMonthString))
+                continue;
+
+            MyRequestHandler.getInstance(this).getRequestQueue(this).cancelAll(key);
+            appointmentsMap.remove(key);
+        }
+
+        // Current month - if not already registered
+        if (!appointmentsMap.containsKey(newMonthString)) {
+            appointmentsMap.put(newMonthString, new HashMap<>());
+            DoctorDAO.simple_appointments(this, 1, id, newMonth, true, responseListener);
+        }
+
+        // Previous month - if not already registered
+        if (!appointmentsMap.containsKey(prevMonthString)) {
+            appointmentsMap.put(prevMonthString, new HashMap<>());
+            DoctorDAO.simple_appointments(this, 1, id, prevCal, true, responseListener);
+        }
+
+        // Next month - if not already registered
+        if (!appointmentsMap.containsKey(nextMonthString)) {
+            appointmentsMap.put(nextMonthString, new HashMap<>());
+            DoctorDAO.simple_appointments(this, 1, id, nextCal, true, responseListener);
+        }
+
+        Toast.makeText(this, "After add : " + appointmentsMap.keySet().toString(), Toast.LENGTH_LONG).show();
+    }
+
     private boolean isDuplicate(ArrayList<Appointment> appointments, Appointment newAppointment) {
-        for (Appointment app:appointments) {
+        for (Appointment app : appointments) {
             if (app.getId() == newAppointment.getId())
                 return true;
         }
@@ -217,18 +277,33 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
     }
 
     private void newAppointments(ArrayList<Appointment> newAppointments) {
+        String monthString = "";
+        String dayString = "";
         Appointment appointment;
         for (int i=0; i<newAppointments.size(); i++) {
+            // Get appointment
             appointment = newAppointments.get(i);
-            // If appointment already exists skip it
-            if (isDuplicate(appointments, appointment))
+            // Get date strings
+            monthString = DateTimeParsing.dateToMonthString(appointment.getStartDate());
+            dayString = DateTimeParsing.dateToDayString(appointment.getStartDate());
+
+            // Add day if not already registered
+            if (!appointmentsMap.get(monthString).containsKey(dayString)) {
+                appointmentsMap
+                        .get(monthString)
+                        .put(dayString, new ArrayList<>());
+            }
+
+            // If appointment already registered
+            if (isDuplicate(appointmentsMap.get(monthString).get(dayString), appointment))
                 continue;
 
-            appointments.add(appointment);
+            appointmentsMap.get(monthString).get(dayString).add(appointment);
         }
-
+/*
         visibleAppointments = getVisibleAppointments();
         mAdapter.notifyDataSetChanged();
+ */
     }
 
     private ArrayList<Appointment> generateAvailableAppointments() {
