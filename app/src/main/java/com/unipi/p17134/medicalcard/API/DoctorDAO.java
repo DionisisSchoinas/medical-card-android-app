@@ -35,6 +35,14 @@ public class DoctorDAO extends BaseDAO {
 
     private static boolean hasQuery = false;
 
+    public static void resetCounters() {
+        currentPage = 0;
+        queueItems = 0;
+
+        appointmentCurrentPage = 0;
+        appointmentQueueItems = 0;
+    }
+
     public static void doctors(Activity activity, int page, String specialityQuery, DAOResponseListener responseListener) {
         // Already loading appointments
         if (queueItems > 0)
@@ -110,8 +118,10 @@ public class DoctorDAO extends BaseDAO {
                 return params;
             }
         };
-        MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
-        queueItems++;
+
+        // Item successfully added to queue
+        if (MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest))
+            queueItems++;
     }
 
     public static void doctor(Activity activity, int id, DAOResponseListener responseListener) {
@@ -227,7 +237,9 @@ public class DoctorDAO extends BaseDAO {
                 return params;
             }
         };
-        MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
-        appointmentQueueItems++;
+
+        // Item successfully added to queue
+        if (MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest))
+            appointmentQueueItems++;
     }
 }

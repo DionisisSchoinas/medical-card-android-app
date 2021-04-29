@@ -39,6 +39,11 @@ public class PatientDAO extends BaseDAO {
     private static int currentPage = 0;
     private static int queueItems = 0;
 
+    public static void resetCounters() {
+        currentPage = 0;
+        queueItems = 0;
+    }
+
     public static void appointments(Activity activity, int page, DAOResponseListener responseListener) {
         // Already loading appointments
         if (queueItems > 0)
@@ -111,8 +116,10 @@ public class PatientDAO extends BaseDAO {
                 return params;
             }
         };
-        MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
-        queueItems++;
+
+        // Item successfully added to queue
+        if (MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest))
+            queueItems++;
     }
 
     public static void appointment(Activity activity, int id, DAOResponseListener responseListener) {

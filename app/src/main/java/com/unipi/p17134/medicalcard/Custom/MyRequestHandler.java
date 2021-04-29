@@ -38,19 +38,20 @@ public class MyRequestHandler {
         return requestQueue;
     }
 
-    public <T> void addToRequestQueue(Activity activity, Request<T> req) {
+    public <T> boolean addToRequestQueue(Activity activity, Request<T> req) {
         if (InternetAccessController.noInternetAccess(activity)) {
             Toast.makeText(activity, activity.getResources().getString(R.string.enable_internet_connection), Toast.LENGTH_LONG).show();
-            return;
+            return false;
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.INTERNET}, MyPermissions.INTERNET_ACCESS_REQUEST);
-                return;
+                return false;
             }
         }
 
         getRequestQueue(activity).add(req);
+        return true;
     }
 }

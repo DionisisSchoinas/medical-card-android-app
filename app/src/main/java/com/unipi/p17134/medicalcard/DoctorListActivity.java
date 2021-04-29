@@ -46,6 +46,8 @@ public class DoctorListActivity extends ConnectedBaseClass {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_list);
 
+        DoctorDAO.resetCounters();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

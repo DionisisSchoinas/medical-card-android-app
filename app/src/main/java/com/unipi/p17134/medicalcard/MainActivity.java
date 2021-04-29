@@ -50,6 +50,8 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        PatientDAO.resetCounters();
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getResources().getString(R.string.main_activity));
