@@ -1,9 +1,14 @@
 package com.unipi.p17134.medicalcard.Singletons;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Parcelable {
     private String email;
     private String password;
     private String passwordConfirmation;
@@ -33,6 +38,27 @@ public class User {
         this.fullname = fullname;
         this.dateOfBirth = dateOfBirth;
     }
+
+    protected User(Parcel in) {
+        email = in.readString();
+        password = in.readString();
+        passwordConfirmation = in.readString();
+        amka = in.readString();
+        fullname = in.readString();
+        dateOfBirth = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -109,5 +135,20 @@ public class User {
     public User setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
         return this;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(email);
+        dest.writeString(password);
+        dest.writeString(passwordConfirmation);
+        dest.writeString(amka);
+        dest.writeString(fullname);
+        dest.writeString(dateOfBirth);
     }
 }

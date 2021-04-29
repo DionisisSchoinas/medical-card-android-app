@@ -1,13 +1,17 @@
 package com.unipi.p17134.medicalcard.Singletons;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.unipi.p17134.medicalcard.Custom.BitmapConversion;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Doctor {
+import java.io.Serializable;
+
+public class Doctor implements Parcelable {
     private int id;
     private User user;
     private String speciality;
@@ -34,6 +38,29 @@ public class Doctor {
         this.cost = cost;
         this.image = image;
     }
+
+    protected Doctor(Parcel in) {
+        id = in.readInt();
+        user = in.readParcelable(User.class.getClassLoader());
+        speciality = in.readString();
+        office_address = in.readString();
+        phone = in.readString();
+        email = in.readString();
+        cost = in.readFloat();
+        image = in.readParcelable(Bitmap.class.getClassLoader());
+    }
+
+    public static final Creator<Doctor> CREATOR = new Creator<Doctor>() {
+        @Override
+        public Doctor createFromParcel(Parcel in) {
+            return new Doctor(in);
+        }
+
+        @Override
+        public Doctor[] newArray(int size) {
+            return new Doctor[size];
+        }
+    };
 
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -128,5 +155,22 @@ public class Doctor {
     public Doctor setUser(User user) {
         this.user = user;
         return this;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeParcelable(user, flags);
+        dest.writeString(speciality);
+        dest.writeString(office_address);
+        dest.writeString(phone);
+        dest.writeString(email);
+        dest.writeFloat(cost);
+        dest.writeParcelable(image, flags);
     }
 }

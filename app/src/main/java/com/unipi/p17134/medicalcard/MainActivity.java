@@ -159,8 +159,6 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         }
         else if (id == R.id.nav_qr_read) {
             Toast.makeText(this, "Read QR", Toast.LENGTH_SHORT).show();
-
-            startActivity(new Intent(this, DoctorAppointmentScheduleActivity.class));
         }
         else if (id == R.id.nav_my_account) {
             Toast.makeText(this, "My Account", Toast.LENGTH_SHORT).show();
@@ -249,6 +247,9 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             removeAppointmentWithId(id);
         }
         else if (requestCode == MyPermissions.RESPONSE_FROM_DOCTOR_LIST && resultCode == RESULT_OK) {
+
+            // Refill appointments list
+            // since new appointment has been registered
 
         }
     }

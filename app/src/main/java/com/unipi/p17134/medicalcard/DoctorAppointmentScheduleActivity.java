@@ -40,6 +40,7 @@ import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
+import com.unipi.p17134.medicalcard.Singletons.Doctor;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,7 +50,9 @@ import java.util.List;
 
 public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
 
-    private int id= 2;
+    private int id;
+    private Doctor doctor;
+
     private ArrayList<Appointment> appointments;
     private ArrayList<Appointment> allAvailableAppointments;
     private ArrayList<Appointment> visibleAppointments;
@@ -72,6 +75,9 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        doctor = (Doctor) getIntent().getParcelableExtra("doctor");
+        id = doctor.getId();
 
         dateDisplay = findViewById(R.id.date_display);
         prev = findViewById(R.id.previous_date_button);

@@ -142,10 +142,6 @@ public class DoctorListActivity extends ConnectedBaseClass {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MyPermissions.RESPONSE_FROM_DOCTOR_DETAILS && resultCode == RESULT_OK) {
-            int id = 0;
-            if (data != null)
-                id = data.getIntExtra("id", 0);
-
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);
             finish();
@@ -227,8 +223,7 @@ public class DoctorListActivity extends ConnectedBaseClass {
             return;
         }
 
-        Intent intent = new Intent();
-        setResult(RESULT_CANCELED, intent);
+        setResult(RESULT_CANCELED, new Intent());
         finish();
     }
 

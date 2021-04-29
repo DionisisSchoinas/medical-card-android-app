@@ -11,4 +11,5 @@ public class MyPermissions {
     public static final int RESPONSE_FROM_APPOINTMENT_INFO = 100;
     public static final int RESPONSE_FROM_DOCTOR_LIST = 101;
     public static final int RESPONSE_FROM_DOCTOR_DETAILS = 102;
+    public static final int RESPONSE_FROM_DOCTOR_SCHEDULE = 103;
 }

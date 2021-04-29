@@ -1,18 +1,22 @@
 package com.unipi.p17134.medicalcard;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.unipi.p17134.medicalcard.API.DoctorDAO;
 import com.unipi.p17134.medicalcard.API.PatientDAO;
+import com.unipi.p17134.medicalcard.Custom.MyPermissions;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
 
@@ -20,6 +24,8 @@ public class DoctorDetailsActivity extends ConnectedBaseClass {
     private int id;
     private ImageView image;
     private TextView fullname, speciality, cost, address, phone, email;
+
+    private Doctor doctor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +69,18 @@ public class DoctorDetailsActivity extends ConnectedBaseClass {
         address.setText(doctor.getOfficeAddress());
         phone.setText(doctor.getPhone());
         email.setText(doctor.getEmail());
+
+        this.doctor = doctor;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MyPermissions.RESPONSE_FROM_DOCTOR_SCHEDULE && resultCode == RESULT_OK) {
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
     @Override
@@ -99,12 +117,9 @@ public class DoctorDetailsActivity extends ConnectedBaseClass {
         finish();
     }
 
-    private void deletionComplete() {
-        Toast.makeText(getApplicationContext(), getResources().getString(R.string.cancel_appointment_success), Toast.LENGTH_LONG).show();
-
-        Intent intent = new Intent();
-        intent.putExtra("id", id);
-        setResult(RESULT_OK, intent);
-        finish();
+    public void showSchedule(View view) {
+        Intent intent = new Intent(this, DoctorAppointmentScheduleActivity.class);
+        intent.putExtra("doctor", doctor);
+        startActivityForResult(intent, MyPermissions.RESPONSE_FROM_DOCTOR_SCHEDULE);
     }
 }
