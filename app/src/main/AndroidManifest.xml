@@ -18,6 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedicalCard">
         <activity
+            android:name=".MyAccountActivity"
+            android:label="@string/doctor_update_account_activity"
+            android:theme="@style/Theme.MedicalCard.NoActionBar" />
+        <activity
             android:name=".DoctorAppointmentScheduleActivity"
             android:label="@string/doctor_appointments_display_activity"
             android:theme="@style/Theme.MedicalCard.NoActionBar" />

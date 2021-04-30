@@ -76,6 +76,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         fullnameDisplay = navigationView.getHeaderView(0).findViewById(R.id.fullnameActionBarDisplay);
         // Hide or Show functions meant only for doctors
         navigationView.getMenu().findItem(R.id.nav_qr_read).setVisible(MyPrefs.isDoctor(this));
+        navigationView.getMenu().findItem(R.id.nav_my_account).setVisible(MyPrefs.isDoctor(this));
         navigationView.getMenu().findItem(R.id.nav_my_appointments).setVisible(MyPrefs.isDoctor(this));
 
         appointments = new ArrayList<>();
@@ -164,7 +165,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             Toast.makeText(this, "Read QR", Toast.LENGTH_SHORT).show();
         }
         else if (id == R.id.nav_my_account) {
-            Toast.makeText(this, "My Account", Toast.LENGTH_SHORT).show();
+            myAccount();
         }
         else if (id == R.id.nav_my_appointments) {
             Toast.makeText(this, "My Appointments", Toast.LENGTH_SHORT).show();
@@ -243,11 +244,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MyPermissions.RESPONSE_FROM_APPOINTMENT_INFO && resultCode == RESULT_OK) {
-            int id = 0;
-            if (data != null)
-                id = data.getIntExtra("id", 0);
-
-            removeAppointmentWithId(id);
+            recreate();
         }
         else if (requestCode == MyPermissions.RESPONSE_FROM_DOCTOR_LIST && resultCode == RESULT_OK) {
             recreate();
@@ -308,7 +305,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         if (appointmentsDisplay.getAdapter() != null)
             appointmentsDisplay.getAdapter().notifyDataSetChanged();
     }
-
+/*
     private void removeAppointmentWithId(int id) {
         // Go through appointments to find specific appointment
         for (int i=0; i<appointments.size(); i++) {
@@ -347,9 +344,12 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         appointmentsDisplay.getAdapter().notifyDataSetChanged();
         Toast.makeText(this, getResources().getString(R.string.appointment_list_updated), Toast.LENGTH_SHORT).show();
     }
-
+*/
     private void doctorList() {
-        Intent intent = new Intent(getApplicationContext(), DoctorListActivity.class);
-        startActivityForResult(intent, MyPermissions.RESPONSE_FROM_DOCTOR_LIST);
+        startActivityForResult(new Intent(this, DoctorListActivity.class), MyPermissions.RESPONSE_FROM_DOCTOR_LIST);
+    }
+
+    private void myAccount() {
+        startActivity(new Intent(this, MyAccountActivity.class));
     }
 }

@@ -49,11 +49,11 @@ public class DoctorRegisterFormActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         image = findViewById(R.id.imageDoctorRegisterInput);
-        speciality = findViewById(R.id.amkaRegisterInput);
-        office = findViewById(R.id.emailRegisterInput);
-        phone = findViewById(R.id.passwordRegisterInput);
-        email = findViewById(R.id.passwordConfirmationRegisterInput);
-        cost = findViewById(R.id.fullnameRegisterInput);
+        speciality = findViewById(R.id.specialityDoctorRegisterInput);
+        office = findViewById(R.id.officeDoctorRegisterInput);
+        phone = findViewById(R.id.phoneDoctorRegisterInput);
+        email = findViewById(R.id.emailDoctorRegisterInput);
+        cost = findViewById(R.id.costDoctorRegisterInput);
 
         profilePic = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.default_profile);
         image.setImageBitmap(profilePic);

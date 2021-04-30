@@ -20,6 +20,10 @@
     <string name="book_appointment_success">Επιτυχής κράτηση ραντεβού</string>
     <string name="book_appointment_failure">Δεν έγινε κράτηση του ραντεβού</string>
 
+    <string name="update_doctor_info_success">Επιτυχής ανανέωση στοιχείων</string>
+    <string name="update_doctor_info_failure">Δεν έγινε ανανέωση στοιχείων</string>
+    <string name="update_doctor_new_image">Νέα εικόνα</string>
+
     <!-- Popups -->
     <string name="popup_positive_yes">Ναι</string>
     <string name="popup_negative_no">Όχι</string>
@@ -33,6 +37,8 @@
     <string name="cancel_appointment_popup_message_2">Είσαι σίγουρος ότι θες να ακυρώσεις το ραντεβού ;</string>
     <string name="book_appointment_popup_title">Επιβεβαίωση Κράτησης Ραντεβού</string>
     <string name="book_appointment_popup_message">Θα κλέισετε το ακόλουθρο ραντεβού ;</string>
+    <string name="doctor_update_popup_title">Επιβεβαίωση Ανανέωσης Στοιχείων</string>
+    <string name="doctor_update_popup_message">Θα αλλάξετε τα ακόλουθα στοιχεία ;</string>
 
     <!-- Global -->
     <string name="action_settings">Ρυθμίσεις</string>
@@ -103,6 +109,7 @@
     <string name="appointment_button_cancel">Ακυρωση ραντεβου</string>
     <string name="doctors_list_search_button">Αναζητηση</string>
     <string name="doctors_details_book_button">Κλεισιμο Ραντεβου</string>
+    <string name="update_doctor_info_button">Ανανέωση Στοιχείων</string>
 
     <!-- Doctors List -->
     <string name="doctors_list_speciality_search_hint">Ειδικότητα</string>
@@ -118,6 +125,7 @@
     <string name="doctor_list_activity">Λίστα Γιατρών</string>
     <string name="doctor_details_activity">Πληροφορίες Γιατρού</string>
     <string name="doctor_appointments_display_activity">Διαθέσιμα Ραντεβού</string>
+    <string name="doctor_update_account_activity">Ο Λογαριασμός Μου</string>
 
     <!-- Days -->
     <string name="mon">Δευτέρα</string>

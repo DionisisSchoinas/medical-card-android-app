@@ -126,6 +126,54 @@ public class DoctorDAO extends BaseDAO {
             queueItems++;
     }
 
+    public static void doctor(Activity activity, DAOResponseListener responseListener) {
+        String doctorUrl = url + "/doctor";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, doctorUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    // Get appointment
+                    JSONObject object = response.getJSONObject("doctor");
+                    // Parse appointment data
+                    Doctor doctor = new Doctor(
+                            object.getString("speciality"),
+                            object.getString("office_address"),
+                            object.getString("phone"),
+                            object.getString("email"),
+                            object.getLong("cost"),
+                            BitmapConversion.base64ToBitmap(object.getJSONObject("image").getString("image_base64"))
+                    )
+                            .setId(object.getInt("id"))
+                            .setUser(new User()
+                                    .setFullname(object.getJSONObject("user").getString("fullname"))
+                            );
+                    // Send appointment back to caller
+                    responseListener.onResponse(doctor);
+                }
+                catch (JSONException e) {
+                    responseListener.onErrorResponse(e);
+                    //Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //errorResponse(activity, error);
+                responseListener.onErrorResponse(error);
+            }
+        })
+        {    //this is the part, that adds the header to the request
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("AuthorizationToken", MyPrefs.getToken(activity));
+                params.put("content-type", "application/json");
+                return params;
+            }
+        };
+        MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
+    }
+
     public static void doctor(Activity activity, int id, DAOResponseListener responseListener) {
         String doctorUrl = url + "/doctors/" + id;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, doctorUrl, null, new Response.Listener<JSONObject>() {
@@ -172,6 +220,38 @@ public class DoctorDAO extends BaseDAO {
             }
         };
         MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
+    }
+
+    public static void updateDoctor(Activity activity, Doctor doctor, DAOResponseListener responseListener) {
+        JSONObject postData = doctor.toJson();
+        if (postData == null) {
+            responseListener.onErrorResponse(null);
+        }
+        else {
+            String updateUrl = url + "/doctor";
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, updateUrl, postData, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    responseListener.onResponse(null);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    //errorResponse(activity, error);
+                    responseListener.onErrorResponse(error);
+                }
+            })
+            {    //this is the part, that adds the header to the request
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("AuthorizationToken", MyPrefs.getToken(activity));
+                    params.put("content-type", "application/json");
+                    return params;
+                }
+            };
+            MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
+        }
     }
 
     public static void simple_appointments(Activity activity, int page, int doctor_id, Calendar month, boolean readMorePages, DAOResponseListener responseListener) {

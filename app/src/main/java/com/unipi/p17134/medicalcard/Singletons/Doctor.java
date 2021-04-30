@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import com.unipi.p17134.medicalcard.Custom.BitmapConversion;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,6 +23,7 @@ public class Doctor implements Parcelable {
     private Bitmap image;
 
     public Doctor() {
+        this.user = null;
         this.speciality = null;
         this.office_address = null;
         this.phone = null;
@@ -31,6 +33,7 @@ public class Doctor implements Parcelable {
     }
 
     public Doctor(String speciality, String office_address, String phone, String email, float cost, Bitmap image) {
+        this.user = null;
         this.speciality = speciality;
         this.office_address = office_address;
         this.phone = phone;
@@ -156,7 +159,20 @@ public class Doctor implements Parcelable {
         this.user = user;
         return this;
     }
-
+/*
+    public Doctor clone() {
+        Doctor doctor = new Doctor();
+        doctor.setId(id);
+        doctor.setSpeciality(speciality);
+        doctor.setOfficeAddress(office_address);
+        doctor.setPhone(phone);
+        doctor.setEmail(email);
+        doctor.setCost(cost);
+        doctor.setImage(image);
+        doctor.setUser(user);
+        return doctor;
+    }
+*/
     @Override
     public int describeContents() {
         return 0;
