@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
@@ -37,7 +36,7 @@ public class GenerateQRActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_generate_q_r);
+        setContentView(R.layout.activity_generate_qr);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -63,6 +62,8 @@ public class GenerateQRActivity extends AppCompatActivity {
     }
 
     public void getNewQr(View view) {
+        if (timer != null)
+            timer.cancel();
         QrDAO.generate(this, responseListener);
     }
 
