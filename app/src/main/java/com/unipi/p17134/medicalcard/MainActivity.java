@@ -162,7 +162,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             startActivity(new Intent(this, GenerateQRActivity.class));
         }
         else if (id == R.id.nav_qr_read) {
-            Toast.makeText(this, "Read QR", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, ReadQRActivity.class));
         }
         else if (id == R.id.nav_my_account) {
             myAccount();

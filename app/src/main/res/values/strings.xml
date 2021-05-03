@@ -95,8 +95,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="menu_doctor_search">Αναζήτηση Γιατρού</string>
-    <string name="menu_qr_generate">Δημιουργία Κωδικού</string>
-    <string name="menu_qr_read">Ανάγνωση Κωδικού</string>
+    <string name="menu_qr_generate">Δημιουργία QR</string>
+    <string name="menu_qr_read">Ανάγνωση QR</string>
     <string name="menu_login_register">Σύνδεση/Εγγραφή</string>
     <string name="menu_my_account">Τα Στοιχεία Μου</string>
     <string name="menu_my_appointments">Τα Ραντεβού Μου</string>
@@ -131,6 +131,7 @@
     <string name="doctor_appointments_display_activity">Διαθέσιμα Ραντεβού</string>
     <string name="doctor_update_account_activity">Ο Λογαριασμός Μου</string>
     <string name="generate_qr_activity">Δημιουργία QR</string>
+    <string name="read_qr_activity">Ανάγνωση QR</string>
 
     <!-- Days -->
     <string name="mon">Δευτέρα</string>

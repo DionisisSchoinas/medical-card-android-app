@@ -1,15 +1,10 @@
 package com.unipi.p17134.medicalcard.Singletons;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class Appointment {
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-
     private int id;
     private Doctor doctor;
     private Patient patient;
