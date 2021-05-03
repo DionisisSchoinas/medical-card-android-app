@@ -17,6 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MedicalCard">
+        <activity android:name=".GenerateQRActivity"
+            android:label="@string/generate_qr_activity"
+            android:theme="@style/Theme.MedicalCard.NoActionBar" />
         <activity
             android:name=".MyAccountActivity"
             android:label="@string/doctor_update_account_activity"

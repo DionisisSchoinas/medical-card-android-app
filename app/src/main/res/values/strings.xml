@@ -102,6 +102,12 @@
     <string name="menu_my_appointments">Τα Ραντεβού Μου</string>
     <string name="menu_logout">Αποσύνδεση</string>
 
+    <!-- Doctors List -->
+    <string name="doctors_list_speciality_search_hint">Ειδικότητα</string>
+
+    <!-- Generate QR Activity -->
+    <string name="qr_expires_after">Λήξη QR σε :</string>
+
     <!-- Buttons -->
     <string name="register_button">Ολοκληρωση Εγγραφης</string>
     <string name="login_button_login">Συνδεση</string>
@@ -110,9 +116,7 @@
     <string name="doctors_list_search_button">Αναζητηση</string>
     <string name="doctors_details_book_button">Κλεισιμο Ραντεβου</string>
     <string name="update_doctor_info_button">Ανανέωση Στοιχείων</string>
-
-    <!-- Doctors List -->
-    <string name="doctors_list_speciality_search_hint">Ειδικότητα</string>
+    <string name="create_new_qr_code">Νεος κωδικος qr</string>
 
     <!-- Activity Names -->
     <string name="main_activity">Κεντρική Σελίδα</string>
@@ -126,6 +130,7 @@
     <string name="doctor_details_activity">Πληροφορίες Γιατρού</string>
     <string name="doctor_appointments_display_activity">Διαθέσιμα Ραντεβού</string>
     <string name="doctor_update_account_activity">Ο Λογαριασμός Μου</string>
+    <string name="generate_qr_activity">Δημιουργία QR</string>
 
     <!-- Days -->
     <string name="mon">Δευτέρα</string>

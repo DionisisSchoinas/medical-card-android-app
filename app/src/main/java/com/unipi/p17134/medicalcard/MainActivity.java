@@ -159,7 +159,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             doctorList();
         }
         else if (id == R.id.nav_qr_generate) {
-            Toast.makeText(this, "Generate QR", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, GenerateQRActivity.class));
         }
         else if (id == R.id.nav_qr_read) {
             Toast.makeText(this, "Read QR", Toast.LENGTH_SHORT).show();
