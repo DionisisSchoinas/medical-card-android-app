@@ -1,9 +1,15 @@
 package com.unipi.p17134.medicalcard;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,9 +21,11 @@ import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
 import com.unipi.p17134.medicalcard.API.QrDAO;
+import com.unipi.p17134.medicalcard.Custom.MyPermissions;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.QR;
+import com.unipi.p17134.medicalcard.Singletons.QrResponse;
 
 import java.util.ArrayList;
 
@@ -39,7 +47,7 @@ public class ReadQRActivity extends AppCompatActivity {
         responseListener = new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
-                parseData((ArrayList<Appointment>) object);
+                parseData((QrResponse) object);
             }
 
             @Override
@@ -64,7 +72,7 @@ public class ReadQRActivity extends AppCompatActivity {
         scannerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCodeScanner.startPreview();
+                startPreview();
             }
         });
     }
@@ -72,7 +80,7 @@ public class ReadQRActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mCodeScanner.startPreview();
+        startPreview();
     }
 
     @Override
@@ -81,28 +89,44 @@ public class ReadQRActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    private void startPreview() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, MyPermissions.ACCESS_CAMERA_REQUEST);
+                return;
+            }
+        }
+
+        mCodeScanner.startPreview();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MyPermissions.ACCESS_CAMERA_REQUEST && resultCode == RESULT_OK) {
+            startPreview();
+        }
+    }
+
     private void manageDecodedQR(Result result) {
         QR qr = new QR(result.getText());
         QrDAO.read(this, qr, responseListener);
     }
 
-    private void parseData(ArrayList<Appointment> appointments) {
-        Appointment current;
-        Appointment previous;
+    private void parseData(QrResponse response) {
+        Intent intent = new Intent(this, QRAppointmentInfoActivity.class);
 
-        if (appointments.get(0).getId() == 0)
-            current = null;
-        else
-            current = appointments.get(0);
+        if (response.getCurrentAppointment() != null)
+            intent.putExtra("current", response.getCurrentAppointment());
 
-        if (appointments.get(1).getStartDate() == null)
-            previous = null;
-        else
-            previous = appointments.get(1);
+        if (response.getPreviousAppointment() != null)
+            intent.putExtra("previous", response.getPreviousAppointment());
 
-        //
-        // Start activity with results
-        //
+        if (response.getPatient() != null)
+            intent.putExtra("patient", response.getPatient());
+
+        startActivity(intent);
+        finish();
     }
 
     @Override

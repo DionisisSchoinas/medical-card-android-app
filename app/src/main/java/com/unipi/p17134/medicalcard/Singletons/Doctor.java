@@ -159,20 +159,7 @@ public class Doctor implements Parcelable {
         this.user = user;
         return this;
     }
-/*
-    public Doctor clone() {
-        Doctor doctor = new Doctor();
-        doctor.setId(id);
-        doctor.setSpeciality(speciality);
-        doctor.setOfficeAddress(office_address);
-        doctor.setPhone(phone);
-        doctor.setEmail(email);
-        doctor.setCost(cost);
-        doctor.setImage(image);
-        doctor.setUser(user);
-        return doctor;
-    }
-*/
+
     @Override
     public int describeContents() {
         return 0;

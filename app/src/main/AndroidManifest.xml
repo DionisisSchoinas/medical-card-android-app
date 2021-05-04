@@ -17,7 +17,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MedicalCard">
-        <activity android:name=".ReadQRActivity"
+        <activity android:name=".QRAppointmentInfoActivity"
+            android:label="@string/qr_result_activity"
+            android:theme="@style/Theme.MedicalCard.NoActionBar" />
+        <activity
+            android:name=".ReadQRActivity"
             android:label="@string/read_qr_activity"
             android:theme="@style/Theme.MedicalCard.NoActionBar" />
         <activity

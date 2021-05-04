@@ -108,6 +108,16 @@
     <!-- Generate QR Activity -->
     <string name="qr_expires_after">Λήξη QR σε :</string>
 
+    <!-- QR Appointment Information -->
+    <string name="not_found_message">Δεν υπάρχει</string>
+    <string name="not_booked_message">Δεν έχει κλείσει ραντεβού</string>
+    <string name="patient_label">Ασθενής</string>
+    <string name="patient_name_label">Ονοματεπώνυμο</string>
+    <string name="patient_birth_label">Ημερομηνία Γέννησης</string>
+    <string name="today_appointment_label">Τωρινό/Επόμενο Ραντεβού</string>
+    <string name="previous_appointment_label">Προηγούμενο Ραντεβού</string>
+    <string name="appointment_details_date_only">Ημερομηνία Ραντεβού</string>
+
     <!-- Buttons -->
     <string name="register_button">Ολοκληρωση Εγγραφης</string>
     <string name="login_button_login">Συνδεση</string>
@@ -132,6 +142,7 @@
     <string name="doctor_update_account_activity">Ο Λογαριασμός Μου</string>
     <string name="generate_qr_activity">Δημιουργία QR</string>
     <string name="read_qr_activity">Ανάγνωση QR</string>
+    <string name="qr_result_activity">Αποτέλεσμα QR</string>
 
     <!-- Days -->
     <string name="mon">Δευτέρα</string>
