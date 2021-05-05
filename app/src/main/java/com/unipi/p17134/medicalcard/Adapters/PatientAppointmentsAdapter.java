@@ -130,4 +130,3 @@ public class PatientAppointmentsAdapter extends RecyclerView.Adapter<RecyclerVie
         return mDataset;
     }
 }
-

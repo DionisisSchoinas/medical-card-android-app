@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
@@ -17,78 +15,81 @@ import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.R;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class DoctorAppointmentsAdapter extends RecyclerView.Adapter<DoctorAppointmentsAdapter.TimeViewHolder> {
-    private Context context;
+public class DoctorAppointmentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<RecycleViewItem> mDataset;
-    private ClickListener listener;
+    private Context context;
 
     // Constructor of Adapter class
-    public DoctorAppointmentsAdapter(Context context, ArrayList<RecycleViewItem> mDataset, ClickListener listener) {
+    public DoctorAppointmentsAdapter(Context context, ArrayList<RecycleViewItem> mDataset) {
         this.context = context;
         this.mDataset = mDataset;
-        this.listener = listener;
     }
 
     // Static class used to hold the ids of each useful element in the view
-    public static class TimeViewHolder extends RecyclerView.ViewHolder {
-        CardView cardView;
-        TextView time;
-        ConstraintLayout constraintLayout;
-        private WeakReference<ClickListener> listenerRef;
+    public static class DateSplitterViewHolder extends RecyclerView.ViewHolder {
+        TextView dateString;
 
-        public TimeViewHolder(View v, ClickListener listener) {
+        public DateSplitterViewHolder(View v) {
             super(v);
-            cardView = v.findViewById(R.id.appointment_time_view);
-            time = v.findViewById(R.id.time_display);
-            constraintLayout = v.findViewById(R.id.appointment_time_constraint);
-
-            listenerRef = new WeakReference<>(listener);
-            // OnClickListeners to trigger the Listener given in the constructor
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listenerRef.get().onClick(getAdapterPosition());
-                }
-            });
-            time.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listenerRef.get().onClick(getAdapterPosition());
-                }
-            });
-            constraintLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listenerRef.get().onClick(getAdapterPosition());
-                }
-            });
+            dateString = v.findViewById(R.id.date_splitter_date);
         }
     }
+
+    // Static class used to hold the ids of each useful element in the view
+    public static class DoctorViewHolder extends RecyclerView.ViewHolder {
+        TextView name, time;
+
+        public DoctorViewHolder(View v) {
+            super(v);
+            name = v.findViewById(R.id.patient_row_patientName);
+            time = v.findViewById(R.id.patient_row_time);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        RecycleViewItem item = mDataset.get(position);
+        if (item.getItemType() == RecycleViewItem.DATE_SPLITTER)
+            return 0;
+        else
+            return 1;
+    }
+
 
     // Create new views (invoked by the layout manager)
     @Override
-    public TimeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.appointment_time_card, parent, false);
-        return new TimeViewHolder(view, listener);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == 0) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.date_row_splitter, parent, false);
+            return new DateSplitterViewHolder(view);
+        }
+
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_appointment_row, parent, false);
+        return new DoctorViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TimeViewHolder holder, int position) {
-        Appointment appointment = mDataset.get(position).getAppointmentData();
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        RecycleViewItem item = mDataset.get(position);
 
-        String time = DateTimeParsing.dateToTimeString(appointment.getStartDate()) + " - " + DateTimeParsing.dateToTimeString(appointment.getEndDate());
-        holder.time.setText(time);
+        switch (item.getItemType()) {
+            // Set date splitter's date
+            case RecycleViewItem.DATE_SPLITTER:
+                DateSplitterViewHolder dateHolder = (DateSplitterViewHolder)holder;
+                dateHolder.dateString.setText(mDataset.get(position).getDateString());
+                break;
+            // Set appointment's data
+            case RecycleViewItem.DOCTOR_APPOINTMENT:
+                DoctorViewHolder patientHolder = (DoctorViewHolder)holder;
+                Appointment appointment = mDataset.get(position).getAppointmentData();
 
-        if (mDataset.get(position).isBooked()) {
-            holder.constraintLayout.setBackgroundColor(context.getResources().getColor(R.color.red_transparent));
-            holder.time.setTextColor(context.getResources().getColor(R.color.white));
-        }
-        else {
-            holder.constraintLayout.setBackgroundColor(context.getResources().getColor(R.color.white));
-            holder.time.setTextColor(context.getResources().getColor(R.color.black));
+                patientHolder.name.setText(appointment.getPatient().getUser().getFullname());
+                String time = DateTimeParsing.dateToTimeString(appointment.getStartDate());
+                time += "-" + DateTimeParsing.dateToTimeString(appointment.getEndDate());
+                patientHolder.time.setText(time);
+                break;
         }
     }
 
@@ -98,10 +99,14 @@ public class DoctorAppointmentsAdapter extends RecyclerView.Adapter<DoctorAppoin
         return mDataset.size();
     }
 
+    // Clear the dataset and notify the adapter about the change
+    public void clear() {
+        int size = mDataset.size();
+        mDataset.clear();
+        notifyItemRangeRemoved(0, size);
+    }
+
     public ArrayList<RecycleViewItem> getDataset() {
         return mDataset;
     }
 }
-
-
-

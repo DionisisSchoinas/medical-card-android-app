@@ -3,41 +3,27 @@ package com.unipi.p17134.medicalcard;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.icu.text.UnicodeSetSpanner;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import com.applandeo.materialcalendarview.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.applandeo.materialcalendarview.DatePicker;
-import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.builders.DatePickerBuilder;
-import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
-import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener;
-import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
-import com.applandeo.materialcalendarview.utils.SelectedDay;
 import com.unipi.p17134.medicalcard.API.DoctorDAO;
 import com.unipi.p17134.medicalcard.API.PatientDAO;
-import com.unipi.p17134.medicalcard.Adapters.DoctorAppointmentsAdapter;
-import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
+import com.unipi.p17134.medicalcard.Adapters.DoctorScheduleAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyRequestHandler;
 import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
@@ -50,11 +36,8 @@ import com.unipi.p17134.medicalcard.Singletons.Doctor;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Objects;
 
 public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
     private int id;
@@ -72,7 +55,7 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
     private Button prev;
     private Button next;
     private RecyclerView recyclerView;
-    private DoctorAppointmentsAdapter mAdapter;
+    private DoctorScheduleAppointmentsAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +104,7 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.appointmentDisplay);
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), calculateNoOfColumns(120)));
-        mAdapter = new DoctorAppointmentsAdapter(this, visibleAppointments, new ClickListener() {
+        mAdapter = new DoctorScheduleAppointmentsAdapter(this, visibleAppointments, new ClickListener() {
             @Override
             public void onClick(int index) {
                 bookAppointment(index);

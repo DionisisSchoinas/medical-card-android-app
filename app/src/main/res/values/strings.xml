@@ -43,6 +43,7 @@
     <!-- Global -->
     <string name="action_settings">Ρυθμίσεις</string>
     <string name="action_filter">Φιλτράρισμα</string>
+    <string name="today">Σήμερα</string>
 
     <!-- Main Activity -->
     <string name="connected_as_subtitle">Συνδεδεμένος ως :</string>
@@ -143,6 +144,7 @@
     <string name="generate_qr_activity">Δημιουργία QR</string>
     <string name="read_qr_activity">Ανάγνωση QR</string>
     <string name="qr_result_activity">Αποτέλεσμα QR</string>
+    <string name="doctor_appointments_list_activity">Τα Ραντεβού Μου</string>
 
     <!-- Days -->
     <string name="mon">Δευτέρα</string>

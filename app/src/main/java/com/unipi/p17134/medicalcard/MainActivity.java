@@ -37,11 +37,11 @@ import java.util.ArrayList;
 public class MainActivity extends ConnectedBaseClass implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private TextView fullnameDisplay;
+
     private RecyclerView appointmentsDisplay;
     private LinearLayoutManager layoutManager;
     private int currentDisplayState;
     private PatientAppointmentsAdapter mAdapter;
-
     private ArrayList<Appointment> appointments;
     private ArrayList<RecycleViewItem> recycleViewItems;
     private DAOResponseListener responseListener;
@@ -165,10 +165,10 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             startActivity(new Intent(this, ReadQRActivity.class));
         }
         else if (id == R.id.nav_my_account) {
-            myAccount();
+            startActivity(new Intent(this, MyAccountActivity.class));
         }
         else if (id == R.id.nav_my_appointments) {
-            Toast.makeText(this, "My Appointments", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, DoctorAppointmentListActivity.class));
         }
         else if (id == R.id.nav_login_register) {
             logout();
@@ -285,7 +285,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             if (!currentDate.equals(lastDate)) {
                 RecycleViewItem item = new RecycleViewItem();
                 if (DateTimeParsing.currentDate().equals(currentDate)) {
-                    item.setDateSplitterType("Today");
+                    item.setDateSplitterType(getResources().getString(R.string.today));
                 }
                 else {
                     item.setDateSplitterType(currentDate);
@@ -346,10 +346,5 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
     }
 */
     private void doctorList() {
-        startActivityForResult(new Intent(this, DoctorListActivity.class), MyPermissions.RESPONSE_FROM_DOCTOR_LIST);
-    }
-
-    private void myAccount() {
-        startActivity(new Intent(this, MyAccountActivity.class));
     }
 }

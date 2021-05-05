@@ -13,6 +13,7 @@ import com.unipi.p17134.medicalcard.Custom.MyRequestHandler;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
+import com.unipi.p17134.medicalcard.Singletons.Patient;
 import com.unipi.p17134.medicalcard.Singletons.User;
 
 import org.json.JSONArray;
@@ -315,5 +316,82 @@ public class DoctorDAO extends BaseDAO {
         };
         jsonObjectRequest.setTag(monthString);
         MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest);
+    }
+
+
+    public static void appointments(Activity activity, int page, DAOResponseListener responseListener) {
+        // Already loading appointments
+        if (appointmentQueueItems > 0)
+            return;
+
+        // If page not specifically given (go to next page)
+        if (page == -1) {
+            // If last read page and total pages are the same (we are at the last page)
+            page = appointmentCurrentPage + 1;
+        }
+
+        String appointmentsUrl = url + "/doctor/appointments?page="+page;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, appointmentsUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject meta = response.getJSONObject("meta");
+
+                    // Get appointments array
+                    JSONArray appointments = response.getJSONArray("appointments");
+
+                    if (appointments.length() != 0)
+                        appointmentCurrentPage = meta.getInt("current_page");
+
+                    // Fill list with appointments
+                    JSONObject object;
+
+                    ArrayList<Appointment> appointmentsList = new ArrayList<>();
+                    for (int i=0; i<appointments.length(); i++) {
+                        object = appointments.getJSONObject(i);
+                        appointmentsList.add(
+                                new Appointment(
+                                        object.getInt("id"),
+                                        null,
+                                        new Patient(
+                                                object.getJSONObject("patient").getInt("id"),
+                                                new User()
+                                                        .setFullname(object.getJSONObject("patient").getJSONObject("user").getString("fullname"))
+                                                        .setDateOfBirth(object.getJSONObject("patient").getJSONObject("user").getString("date_of_birth"))
+                                        ),
+                                        formatter.parse(object.getString("appointment_date_time_start")),
+                                        formatter.parse(object.getString("appointment_date_time_end"))
+                                )
+                        );
+                    }
+                    responseListener.onResponse(appointmentsList);
+                }
+                catch (JSONException | ParseException e) {
+                    //Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+                    responseListener.onErrorResponse(e);
+                }
+                appointmentQueueItems--;
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                appointmentQueueItems--;
+                //errorResponse(activity, error);
+                responseListener.onErrorResponse(error);
+            }
+        })
+        {    //this is the part, that adds the header to the request
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("AuthorizationToken", MyPrefs.getToken(activity));
+                params.put("content-type", "application/json");
+                return params;
+            }
+        };
+
+        // Item successfully added to queue
+        if (MyRequestHandler.getInstance(activity).addToRequestQueue(activity, jsonObjectRequest))
+            appointmentQueueItems++;
     }
 }
