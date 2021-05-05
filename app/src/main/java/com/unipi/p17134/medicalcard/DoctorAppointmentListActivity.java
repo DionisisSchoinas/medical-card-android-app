@@ -1,7 +1,6 @@
 package com.unipi.p17134.medicalcard;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +21,7 @@ import com.unipi.p17134.medicalcard.Singletons.Appointment;
 
 import java.util.ArrayList;
 
-public class DoctorAppointmentListActivity extends AppCompatActivity {
+public class DoctorAppointmentListActivity extends ConnectedBaseClass {
     private RecyclerView appointmentsDisplay;
     private LinearLayoutManager layoutManager;
     private int currentDisplayState;

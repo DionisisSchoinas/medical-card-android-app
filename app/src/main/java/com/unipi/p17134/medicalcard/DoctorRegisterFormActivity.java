@@ -1,10 +1,5 @@
 package com.unipi.p17134.medicalcard;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -24,6 +19,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+
 import com.unipi.p17134.medicalcard.API.UserDAO;
 import com.unipi.p17134.medicalcard.Custom.MyPermissions;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
@@ -34,7 +33,7 @@ import com.unipi.p17134.medicalcard.Singletons.User;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class DoctorRegisterFormActivity extends AppCompatActivity {
+public class DoctorRegisterFormActivity extends BaseClass {
     ImageView image;
     EditText speciality, office, phone, email, cost;
     Bitmap profilePic;

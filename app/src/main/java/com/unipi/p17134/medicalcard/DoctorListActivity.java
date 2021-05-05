@@ -17,13 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unipi.p17134.medicalcard.API.DoctorDAO;
-import com.unipi.p17134.medicalcard.Adapters.DoctorAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Adapters.DoctorListAdapter;
 import com.unipi.p17134.medicalcard.Custom.MyPermissions;
 import com.unipi.p17134.medicalcard.Custom.RecyclerViewItem;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
-import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
 
 import java.util.ArrayList;

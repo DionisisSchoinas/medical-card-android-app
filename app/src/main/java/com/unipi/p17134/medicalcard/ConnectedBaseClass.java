@@ -2,14 +2,10 @@ package com.unipi.p17134.medicalcard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.unipi.p17134.medicalcard.API.UserDAO;
 
-public class ConnectedBaseClass extends AppCompatActivity {
+public class ConnectedBaseClass extends BaseClass {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

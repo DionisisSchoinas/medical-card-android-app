@@ -1,10 +1,5 @@
 package com.unipi.p17134.medicalcard;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.appcompat.widget.Toolbar;
-
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
@@ -17,6 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.Toolbar;
+
 import com.google.zxing.WriterException;
 import com.unipi.p17134.medicalcard.API.QrDAO;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
@@ -25,7 +24,7 @@ import com.unipi.p17134.medicalcard.Singletons.QR;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
-public class GenerateQRActivity extends AppCompatActivity {
+public class GenerateQRActivity extends ConnectedBaseClass {
     private Button newQr;
     private TextView expireCountdown;
     private ImageView qrDisplay;

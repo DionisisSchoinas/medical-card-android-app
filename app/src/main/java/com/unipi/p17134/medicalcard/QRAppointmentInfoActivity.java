@@ -1,9 +1,5 @@
 package com.unipi.p17134.medicalcard;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,11 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.Patient;
 
-public class QRAppointmentInfoActivity extends AppCompatActivity {
+public class QRAppointmentInfoActivity extends ConnectedBaseClass {
     private Appointment current;
     private Appointment previous;
     private Patient patient;

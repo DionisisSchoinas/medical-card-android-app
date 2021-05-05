@@ -1,11 +1,5 @@
 package com.unipi.p17134.medicalcard;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
@@ -23,13 +22,10 @@ import com.google.zxing.Result;
 import com.unipi.p17134.medicalcard.API.QrDAO;
 import com.unipi.p17134.medicalcard.Custom.MyPermissions;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
-import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.QR;
 import com.unipi.p17134.medicalcard.Singletons.QrResponse;
 
-import java.util.ArrayList;
-
-public class ReadQRActivity extends AppCompatActivity {
+public class ReadQRActivity extends ConnectedBaseClass {
     private CodeScannerView scannerView;
     private CodeScanner mCodeScanner;
 

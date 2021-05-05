@@ -1,9 +1,5 @@
 package com.unipi.p17134.medicalcard;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,7 +7,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-public class DoctorRegisterPickActivity extends AppCompatActivity {
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+
+public class DoctorRegisterPickActivity extends BaseClass {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

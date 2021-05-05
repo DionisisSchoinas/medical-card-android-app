@@ -1,7 +1,6 @@
 package com.unipi.p17134.medicalcard;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,7 +38,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
+public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
     private int id;
     private Doctor doctor;
 
