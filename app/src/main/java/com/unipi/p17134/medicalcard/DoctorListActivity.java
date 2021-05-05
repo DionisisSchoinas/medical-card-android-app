@@ -210,19 +210,9 @@ public class DoctorListActivity extends ConnectedBaseClass {
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        backButton();
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        else if (id == R.id.action_filter) {
+        if (id == R.id.action_filter) {
             if (searchView.getVisibility() == View.VISIBLE)
                 hideSearchView();
             else
@@ -238,7 +228,8 @@ public class DoctorListActivity extends ConnectedBaseClass {
         backButton();
     }
 
-    private void backButton() {
+    @Override
+    protected void backButton() {
         if (searchView.getVisibility() == View.VISIBLE) {
             hideSearchView();
             return;
