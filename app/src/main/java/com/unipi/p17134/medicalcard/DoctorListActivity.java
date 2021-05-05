@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -134,6 +135,7 @@ public class DoctorListActivity extends ConnectedBaseClass {
                 Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
             }
         };
+        DoctorDAO.resetCounters();
         DoctorDAO.doctors(this, 1, specialitySearch.getText().toString(), filterResponseListener);
         currentFilter = specialitySearch.getText().toString();
         hideSearchView();
@@ -198,6 +200,7 @@ public class DoctorListActivity extends ConnectedBaseClass {
     }
 
     private void filterDoctors(ArrayList<Doctor> filteredDoctors) {
+        doctors.clear();
         recyclerViewItems.clear();
         processNewDoctors(filteredDoctors);
     }
@@ -247,5 +250,8 @@ public class DoctorListActivity extends ConnectedBaseClass {
         searchView.setVisibility(View.GONE);
         if (currentFilter != null)
             specialitySearch.setText(currentFilter);
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchView.getRootView().getWindowToken(), 0);
     }
 }
