@@ -7,20 +7,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.unipi.p17134.medicalcard.API.DoctorDAO;
-import com.unipi.p17134.medicalcard.API.PatientDAO;
 import com.unipi.p17134.medicalcard.Adapters.DoctorAppointmentsAdapter;
-import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
-import com.unipi.p17134.medicalcard.Custom.MyPermissions;
-import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
+import com.unipi.p17134.medicalcard.Custom.RecyclerViewItem;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
@@ -33,7 +28,7 @@ public class DoctorAppointmentListActivity extends AppCompatActivity {
     private int currentDisplayState;
     private DoctorAppointmentsAdapter mAdapter;
     private ArrayList<Appointment> appointments;
-    private ArrayList<RecycleViewItem> recycleViewItems;
+    private ArrayList<RecyclerViewItem> recyclerViewItems;
     private DAOResponseListener responseListener;
 
     @Override
@@ -47,15 +42,6 @@ public class DoctorAppointmentListActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        appointments = new ArrayList<>();
-        recycleViewItems = new ArrayList<>();
-        appointmentsDisplay = findViewById(R.id.doctor_appointment_list_display);
-        appointmentsDisplay.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        layoutManager = (LinearLayoutManager)appointmentsDisplay.getLayoutManager();
-        mAdapter = new DoctorAppointmentsAdapter(this, recycleViewItems);
-        // Attach the adapter to the recyclerview to populate items
-        appointmentsDisplay.setAdapter(mAdapter);
-
         Activity activity = this;
         responseListener = new DAOResponseListener() {
             @Override
@@ -68,6 +54,20 @@ public class DoctorAppointmentListActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
             }
         };
+
+        appointments = new ArrayList<>();
+        recyclerViewItems = new ArrayList<>();
+        appointmentsDisplay = findViewById(R.id.doctor_appointment_list_display);
+        appointmentsDisplay.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        layoutManager = (LinearLayoutManager)appointmentsDisplay.getLayoutManager();
+        mAdapter = new DoctorAppointmentsAdapter(recyclerViewItems, new ClickListener() {
+            @Override
+            public void onClick(int index) {
+                DoctorDAO.appointments(activity, -2, responseListener);
+            }
+        });
+        // Attach the adapter to the recyclerview to populate items
+        appointmentsDisplay.setAdapter(mAdapter);
 
         appointmentsDisplay.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -98,6 +98,8 @@ public class DoctorAppointmentListActivity extends AppCompatActivity {
                 }
             }
         });
+
+        processNewAppointments(new ArrayList<>());
         DoctorDAO.appointments(activity, 1, responseListener);
     }
 
@@ -110,15 +112,16 @@ public class DoctorAppointmentListActivity extends AppCompatActivity {
     }
 
     private void processNewAppointments(ArrayList<Appointment> newAppointments) {
-        if (newAppointments.size() == 0)
-            return;
+        // Remove the end of list row
+        if (recyclerViewItems.size() != 0 && recyclerViewItems.get(recyclerViewItems.size()-1).getItemType() == RecyclerViewItem.END_OF_LIST)
+            recyclerViewItems.remove(recyclerViewItems.size()-1);
 
         // Find last date if it exists
         String lastDate;
-        if (recycleViewItems.size() == 0)
+        if (recyclerViewItems.size() == 0)
             lastDate = "";
         else
-            lastDate = DateTimeParsing.dateToDateString(recycleViewItems.get(recycleViewItems.size()-1).getAppointmentData().getStartDate());
+            lastDate = DateTimeParsing.dateToDateString(recyclerViewItems.get(recyclerViewItems.size()-1).getAppointmentData().getStartDate());
 
         Appointment appointment;
         for (int i=0; i<newAppointments.size(); i++) {
@@ -133,21 +136,28 @@ public class DoctorAppointmentListActivity extends AppCompatActivity {
             // If it has add a date splitter
             String currentDate = DateTimeParsing.dateToDateString(appointment.getStartDate());
             if (!currentDate.equals(lastDate)) {
-                RecycleViewItem item = new RecycleViewItem();
+                RecyclerViewItem item = new RecyclerViewItem();
                 if (DateTimeParsing.currentDate().equals(currentDate)) {
                     item.setDateSplitterType(getResources().getString(R.string.today));
                 }
                 else {
                     item.setDateSplitterType(currentDate);
                 }
-                recycleViewItems.add(item);
+                recyclerViewItems.add(item);
                 lastDate = currentDate;
             }
 
             // Add appointment item
-            RecycleViewItem item = new RecycleViewItem();
+            RecyclerViewItem item = new RecyclerViewItem();
             item.setDoctorAppointmentType(appointment);
-            recycleViewItems.add(item);
+            recyclerViewItems.add(item);
+        }
+
+        // Add end of list row
+        if (recyclerViewItems.size() == 0) {
+            RecyclerViewItem endOfList = new RecyclerViewItem();
+            endOfList.setEndOfListType();
+            recyclerViewItems.add(endOfList);
         }
 
         // Fill display with appointments

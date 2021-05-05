@@ -26,7 +26,7 @@ import com.unipi.p17134.medicalcard.API.PatientDAO;
 import com.unipi.p17134.medicalcard.Adapters.DoctorScheduleAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyRequestHandler;
-import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
+import com.unipi.p17134.medicalcard.Custom.RecyclerViewItem;
 import com.unipi.p17134.medicalcard.Custom.VerificationPopup;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
@@ -44,7 +44,7 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
     private Doctor doctor;
 
     private HashMap<String, HashMap<String, ArrayList<Appointment>>> appointmentsMap;
-    private ArrayList<RecycleViewItem> visibleAppointments;
+    private ArrayList<RecyclerViewItem> visibleAppointments;
     private DAOResponseListener responseListener;
 
     private Calendar currentDay;
@@ -200,7 +200,7 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
     }
 
     private void bookAppointment(int index) {
-        RecycleViewItem item = visibleAppointments.get(index);
+        RecyclerViewItem item = visibleAppointments.get(index);
         if (item.isBooked())
             return;
 
@@ -396,7 +396,7 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
         visibleAppointments.clear();
         for (Appointment appointment : appointments) {
             if (appointment.getStartDate().after(calendar.getTime())) {
-                RecycleViewItem item = new RecycleViewItem();
+                RecyclerViewItem item = new RecyclerViewItem();
                 item.setDoctorScheduleItem(appointment, false);
                 visibleAppointments.add(item);
             }
@@ -408,7 +408,7 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
 
         visibleAppointments.clear();;
         for (Appointment appointment : appointments) {
-            RecycleViewItem item = new RecycleViewItem();
+            RecyclerViewItem item = new RecyclerViewItem();
             item.setDoctorScheduleItem(appointment, false);
             visibleAppointments.add(item);
         }
@@ -435,7 +435,7 @@ public class DoctorAppointmentScheduleActivity extends AppCompatActivity {
             generateVisibleItems();
 
         for (int i=0; i<visibleAppointments.size(); i++) {
-            RecycleViewItem item = visibleAppointments.get(i);
+            RecyclerViewItem item = visibleAppointments.get(i);
             item.isBooked(false);
             if (bookedAppointments == null)
                 continue;

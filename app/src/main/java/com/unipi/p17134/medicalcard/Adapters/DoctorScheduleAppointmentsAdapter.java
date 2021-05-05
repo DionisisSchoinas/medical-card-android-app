@@ -12,7 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
-import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
+import com.unipi.p17134.medicalcard.Custom.RecyclerViewItem;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.R;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
@@ -22,11 +22,11 @@ import java.util.ArrayList;
 
 public class DoctorScheduleAppointmentsAdapter extends RecyclerView.Adapter<DoctorScheduleAppointmentsAdapter.TimeViewHolder> {
     private Context context;
-    private ArrayList<RecycleViewItem> mDataset;
+    private ArrayList<RecyclerViewItem> mDataset;
     private ClickListener listener;
 
     // Constructor of Adapter class
-    public DoctorScheduleAppointmentsAdapter(Context context, ArrayList<RecycleViewItem> mDataset, ClickListener listener) {
+    public DoctorScheduleAppointmentsAdapter(Context context, ArrayList<RecyclerViewItem> mDataset, ClickListener listener) {
         this.context = context;
         this.mDataset = mDataset;
         this.listener = listener;
@@ -98,7 +98,7 @@ public class DoctorScheduleAppointmentsAdapter extends RecyclerView.Adapter<Doct
         return mDataset.size();
     }
 
-    public ArrayList<RecycleViewItem> getDataset() {
+    public ArrayList<RecyclerViewItem> getDataset() {
         return mDataset;
     }
 }

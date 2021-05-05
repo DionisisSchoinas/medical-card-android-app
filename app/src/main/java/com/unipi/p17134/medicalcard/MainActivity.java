@@ -16,7 +16,7 @@ import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyPermissions;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
-import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
+import com.unipi.p17134.medicalcard.Custom.RecyclerViewItem;
 import com.unipi.p17134.medicalcard.Custom.VerificationPopup;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
@@ -43,7 +43,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
     private int currentDisplayState;
     private PatientAppointmentsAdapter mAdapter;
     private ArrayList<Appointment> appointments;
-    private ArrayList<RecycleViewItem> recycleViewItems;
+    private ArrayList<RecyclerViewItem> recyclerViewItems;
     private DAOResponseListener responseListener;
 
     @Override
@@ -79,19 +79,6 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         navigationView.getMenu().findItem(R.id.nav_my_account).setVisible(MyPrefs.isDoctor(this));
         navigationView.getMenu().findItem(R.id.nav_my_appointments).setVisible(MyPrefs.isDoctor(this));
 
-        appointments = new ArrayList<>();
-        recycleViewItems = new ArrayList<>();
-        appointmentsDisplay = findViewById(R.id.mainAppointmentDisplay);
-        appointmentsDisplay.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        layoutManager = (LinearLayoutManager)appointmentsDisplay.getLayoutManager();
-        mAdapter = new PatientAppointmentsAdapter(this, recycleViewItems, new ClickListener() {
-            @Override
-            public void onClick(int index) {
-                moreAppointmentInfo(index);
-            }
-        });
-        // Attach the adapter to the recyclerview to populate items
-        appointmentsDisplay.setAdapter(mAdapter);
 
         Activity activity = this;
         responseListener = new DAOResponseListener() {
@@ -105,6 +92,25 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
                 Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
             }
         };
+
+        appointments = new ArrayList<>();
+        recyclerViewItems = new ArrayList<>();
+        appointmentsDisplay = findViewById(R.id.mainAppointmentDisplay);
+        appointmentsDisplay.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        layoutManager = (LinearLayoutManager)appointmentsDisplay.getLayoutManager();
+        mAdapter = new PatientAppointmentsAdapter(recyclerViewItems, new ClickListener() {
+            @Override
+            public void onClick(int index) {
+                moreAppointmentInfo(index);
+            }
+        }, new ClickListener() {
+            @Override
+            public void onClick(int index) {
+                PatientDAO.appointments(activity, -2, responseListener);
+            }
+        });
+        // Attach the adapter to the recyclerview to populate items
+        appointmentsDisplay.setAdapter(mAdapter);
 
         appointmentsDisplay.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -135,6 +141,8 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
                 }
             }
         });
+
+        processNewAppointments(new ArrayList<>());
         PatientDAO.appointments(activity, 1, responseListener);
     }
 
@@ -231,10 +239,10 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
     }
 
     private void moreAppointmentInfo(int index) {
-        if (recycleViewItems.size() == 0)
+        if (recyclerViewItems.size() == 0)
             return;
 
-        Appointment appointment = recycleViewItems.get(index).getAppointmentData();
+        Appointment appointment = recyclerViewItems.get(index).getAppointmentData();
         Intent intent = new Intent(getApplicationContext(), AppointmentDetailsActivity.class);
         intent.putExtra("id", appointment.getId());
         startActivityForResult(intent, MyPermissions.RESPONSE_FROM_APPOINTMENT_INFO);
@@ -260,15 +268,16 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
     }
 
     private void processNewAppointments(ArrayList<Appointment> newAppointments) {
-        if (newAppointments.size() == 0)
-            return;
+        // Remove the end of list row
+        if (recyclerViewItems.size() != 0 && recyclerViewItems.get(recyclerViewItems.size()-1).getItemType() == RecyclerViewItem.END_OF_LIST)
+            recyclerViewItems.remove(recyclerViewItems.size()-1);
 
         // Find last date if it exists
         String lastDate;
-        if (recycleViewItems.size() == 0)
+        if (recyclerViewItems.size() == 0)
             lastDate = "";
         else
-            lastDate = DateTimeParsing.dateToDateString(recycleViewItems.get(recycleViewItems.size()-1).getAppointmentData().getStartDate());
+            lastDate = DateTimeParsing.dateToDateString(recyclerViewItems.get(recyclerViewItems.size()-1).getAppointmentData().getStartDate());
 
         Appointment appointment;
         for (int i=0; i<newAppointments.size(); i++) {
@@ -283,21 +292,28 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             // If it has add a date splitter
             String currentDate = DateTimeParsing.dateToDateString(appointment.getStartDate());
             if (!currentDate.equals(lastDate)) {
-                RecycleViewItem item = new RecycleViewItem();
+                RecyclerViewItem item = new RecyclerViewItem();
                 if (DateTimeParsing.currentDate().equals(currentDate)) {
                     item.setDateSplitterType(getResources().getString(R.string.today));
                 }
                 else {
                     item.setDateSplitterType(currentDate);
                 }
-                recycleViewItems.add(item);
+                recyclerViewItems.add(item);
                 lastDate = currentDate;
             }
 
             // Add appointment item
-            RecycleViewItem item = new RecycleViewItem();
+            RecyclerViewItem item = new RecyclerViewItem();
             item.setPatientAppointmentType(appointment);
-            recycleViewItems.add(item);
+            recyclerViewItems.add(item);
+        }
+
+        // Add end of list row
+        if (recyclerViewItems.size() == 0) {
+            RecyclerViewItem endOfList = new RecyclerViewItem();
+            endOfList.setEndOfListType();
+            recyclerViewItems.add(endOfList);
         }
 
         // Fill display with appointments
@@ -313,27 +329,27 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             if (appointments.get(i).getId() == id) {
                 // Go through recycle view items to find date splitter for this item's date
                 Appointment appointment = appointments.get(i);
-                for (int j=0; j<recycleViewItems.size(); j++) {
+                for (int j=0; j<recyclerViewItems.size(); j++) {
                     // When found
-                    if (recycleViewItems.get(j).getItemType() == RecycleViewItem.DATE_SPLITTER && recycleViewItems.get(j).getDateString().equals(DateTimeParsing.dateToDateString(appointment.getStartDate()))) {
+                    if (recyclerViewItems.get(j).getItemType() == RecyclerViewItem.DATE_SPLITTER && recyclerViewItems.get(j).getDateString().equals(DateTimeParsing.dateToDateString(appointment.getStartDate()))) {
                         // Go through recycle view items to find appointment display with specified id
                         int count = 0;
                         int index = j;
-                        for (int k=j+1; k<recycleViewItems.size(); k++) {
+                        for (int k=j+1; k<recyclerViewItems.size(); k++) {
                             // If finished going through this days appointments ( found another date splitter )
-                            if (recycleViewItems.get(k).getItemType() == RecycleViewItem.DATE_SPLITTER)
+                            if (recyclerViewItems.get(k).getItemType() == RecyclerViewItem.DATE_SPLITTER)
                                 break;
 
                             // When found
-                            if (recycleViewItems.get(k).getAppointmentData().getId() == id) {
+                            if (recyclerViewItems.get(k).getAppointmentData().getId() == id) {
                                 index = k;
                             }
                             count++;
                         }
-                        recycleViewItems.remove(index);
+                        recyclerViewItems.remove(index);
                         // If only one appointment existed for this date, remove the date splitter as well
                         if (count == 1)
-                            recycleViewItems.remove(j);
+                            recyclerViewItems.remove(j);
                         break;
                     }
                 }
@@ -346,5 +362,6 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
     }
 */
     private void doctorList() {
+        startActivityForResult(new Intent(this, DoctorListActivity.class), MyPermissions.RESPONSE_FROM_DOCTOR_LIST);
     }
 }

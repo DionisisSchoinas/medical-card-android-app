@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
-import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
+import com.unipi.p17134.medicalcard.Custom.RecyclerViewItem;
 import com.unipi.p17134.medicalcard.R;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 
@@ -20,15 +20,15 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class PatientAppointmentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private ArrayList<RecycleViewItem> mDataset;
-    private Context context;
+    private ArrayList<RecyclerViewItem> mDataset;
     private ClickListener listener;
+    private ClickListener endOfList;
 
     // Constructor of Adapter class
-    public PatientAppointmentsAdapter(Context context, ArrayList<RecycleViewItem> mDataset, ClickListener listener) {
-        this.context = context;
+    public PatientAppointmentsAdapter(ArrayList<RecyclerViewItem> mDataset, ClickListener listener, ClickListener endOfList) {
         this.mDataset = mDataset;
         this.listener = listener;
+        this.endOfList = endOfList;
     }
 
     // Static class used to hold the ids of each useful element in the view
@@ -66,13 +66,35 @@ public class PatientAppointmentsAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    // Static class used to hold the ids of each useful element in the view
+    public static class EndViewHolder extends RecyclerView.ViewHolder {
+        ImageButton refresh;
+        private WeakReference<ClickListener> listenerRef;
+
+        public EndViewHolder(View v, ClickListener listener) {
+            super(v);
+            refresh = v.findViewById(R.id.more_items_button);
+
+            listenerRef = new WeakReference<>(listener);
+            // OnClickListeners to trigger the Listener given in the constructor
+            refresh.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listenerRef.get().onClick(getAdapterPosition());
+                }
+            });
+        }
+    }
+
     @Override
     public int getItemViewType(int position) {
-        RecycleViewItem item = mDataset.get(position);
-        if (item.getItemType() == RecycleViewItem.DATE_SPLITTER)
+        RecyclerViewItem item = mDataset.get(position);
+        if (item.getItemType() == RecyclerViewItem.DATE_SPLITTER)
             return 0;
-        else
+        else if (item.getItemType() == RecyclerViewItem.PATIENT_APPOINTMENT)
             return 1;
+        else
+            return 2;
     }
 
 
@@ -83,23 +105,28 @@ public class PatientAppointmentsAdapter extends RecyclerView.Adapter<RecyclerVie
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.date_row_splitter, parent, false);
             return new DateSplitterViewHolder(view);
         }
-
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.patient_appointment_row, parent, false);
-        return new PatientViewHolder(view, listener);
+        else if (viewType == 1) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.patient_appointment_row, parent, false);
+            return new PatientViewHolder(view, listener);
+        }
+        else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.end_of_list_row, parent, false);
+            return new DoctorAppointmentsAdapter.EndViewHolder(view, endOfList);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        RecycleViewItem item = mDataset.get(position);
+        RecyclerViewItem item = mDataset.get(position);
 
         switch (item.getItemType()) {
             // Set date splitter's date
-            case RecycleViewItem.DATE_SPLITTER:
+            case RecyclerViewItem.DATE_SPLITTER:
                 DateSplitterViewHolder dateHolder = (DateSplitterViewHolder)holder;
                 dateHolder.dateString.setText(mDataset.get(position).getDateString());
                 break;
             // Set appointment's data
-            case RecycleViewItem.PATIENT_APPOINTMENT:
+            case RecyclerViewItem.PATIENT_APPOINTMENT:
                 PatientViewHolder patientHolder = (PatientViewHolder)holder;
                 Appointment appointment = mDataset.get(position).getAppointmentData();
 
@@ -126,7 +153,7 @@ public class PatientAppointmentsAdapter extends RecyclerView.Adapter<RecyclerVie
         notifyItemRangeRemoved(0, size);
     }
 
-    public ArrayList<RecycleViewItem> getDataset() {
+    public ArrayList<RecyclerViewItem> getDataset() {
         return mDataset;
     }
 }

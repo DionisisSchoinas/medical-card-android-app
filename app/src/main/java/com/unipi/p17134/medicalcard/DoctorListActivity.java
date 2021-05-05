@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,10 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unipi.p17134.medicalcard.API.DoctorDAO;
+import com.unipi.p17134.medicalcard.Adapters.DoctorAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Adapters.DoctorListAdapter;
-import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyPermissions;
-import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
+import com.unipi.p17134.medicalcard.Custom.RecyclerViewItem;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
@@ -30,11 +29,13 @@ import com.unipi.p17134.medicalcard.Singletons.Doctor;
 import java.util.ArrayList;
 
 public class DoctorListActivity extends ConnectedBaseClass {
-    private ArrayList<Doctor> doctors;
     private RecyclerView recyclerView;
-    private DoctorListAdapter mAdapter;
     private LinearLayoutManager layoutManager;
     private int currentDisplayState;
+    private DoctorListAdapter mAdapter;
+    private ArrayList<Doctor> doctors;
+    private ArrayList<RecyclerViewItem> recyclerViewItems;
+    private DAOResponseListener responseListener;
 
     private ConstraintLayout searchView;
     private EditText specialitySearch;
@@ -53,22 +54,6 @@ public class DoctorListActivity extends ConnectedBaseClass {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Activity activity = this;
-        searchView = findViewById(R.id.searchView);
-        specialitySearch = findViewById(R.id.specialitySearch);
-        hideSearchView();
-
-        doctors = new ArrayList<>();
-        recyclerView = findViewById(R.id.doctor_list_display);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
-        mAdapter = new DoctorListAdapter(doctors, new ClickListener() {
-            @Override
-            public void onClick(int index) {
-                addAppointment(index);
-            }
-        });
-        // Attach the adapter to the recyclerview to populate items
-        recyclerView.setAdapter(mAdapter);
 
         DAOResponseListener responseListener = new DAOResponseListener() {
             @Override
@@ -81,6 +66,28 @@ public class DoctorListActivity extends ConnectedBaseClass {
                 Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
             }
         };
+        searchView = findViewById(R.id.searchView);
+        specialitySearch = findViewById(R.id.specialitySearch);
+        hideSearchView();
+
+        doctors = new ArrayList<>();
+        recyclerViewItems = new ArrayList<>();
+        recyclerView = findViewById(R.id.doctor_list_display);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+        mAdapter = new DoctorListAdapter(recyclerViewItems, new ClickListener() {
+            @Override
+            public void onClick(int index) {
+                addAppointment(index);
+            }
+        }, new ClickListener() {
+            @Override
+            public void onClick(int index) {
+                DoctorDAO.doctors(activity, -2, specialitySearch.getText().toString(), responseListener);
+            }
+        });
+        // Attach the adapter to the recyclerview to populate items
+        recyclerView.setAdapter(mAdapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -112,6 +119,7 @@ public class DoctorListActivity extends ConnectedBaseClass {
             }
         });
 
+        processNewDoctors(new ArrayList<>());
         // Fill with 1 page of doctors
         DoctorDAO.doctors(activity, 1, specialitySearch.getText().toString(), responseListener);
     }
@@ -134,7 +142,7 @@ public class DoctorListActivity extends ConnectedBaseClass {
     }
 
     private void addAppointment(int index) {
-        Doctor doctor = doctors.get(index);
+        Doctor doctor = recyclerViewItems.get(index).getDoctorData();
         Intent intent = new Intent(getApplicationContext(), DoctorDetailsActivity.class);
         intent.putExtra("id", doctor.getId());
         startActivityForResult(intent, MyPermissions.RESPONSE_FROM_DOCTOR_DETAILS);
@@ -150,9 +158,18 @@ public class DoctorListActivity extends ConnectedBaseClass {
         }
     }
 
+    private boolean isDuplicate(ArrayList<Doctor> doctors, Doctor newDoctor) {
+        for (Doctor doc:doctors) {
+            if (doc.getId() == newDoctor.getId())
+                return true;
+        }
+        return false;
+    }
+
     private void processNewDoctors(ArrayList<Doctor> newDoctors) {
-        if (newDoctors.size() == 0)
-            return;
+        // Remove the end of list row
+        if (recyclerViewItems.size() != 0 && recyclerViewItems.get(recyclerViewItems.size()-1).getItemType() == RecyclerViewItem.END_OF_LIST)
+            recyclerViewItems.remove(recyclerViewItems.size()-1);
 
         Doctor doctor;
         for (int i=0; i<newDoctors.size(); i++) {
@@ -162,24 +179,28 @@ public class DoctorListActivity extends ConnectedBaseClass {
                 continue;
 
             doctors.add(doctor);
+
+            RecyclerViewItem item = new RecyclerViewItem();
+            item.setDoctorType(doctor);
+            recyclerViewItems.add(item);
+        }
+
+
+        // Add end of list row
+        if (recyclerViewItems.size() == 0) {
+            RecyclerViewItem endOfList = new RecyclerViewItem();
+            endOfList.setEndOfListType();
+            recyclerViewItems.add(endOfList);
         }
 
         // Fill display with appointments
         // Create adapter passing in the sample user data
-        if (mAdapter != null)
-            mAdapter.notifyDataSetChanged();
-    }
-
-    private boolean isDuplicate(ArrayList<Doctor> doctors, Doctor newDoctor) {
-        for (Doctor doc:doctors) {
-            if (doc.getId() == newDoctor.getId())
-                return true;
-        }
-        return false;
+        if (recyclerView.getAdapter() != null)
+            recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     private void filterDoctors(ArrayList<Doctor> filteredDoctors) {
-        doctors.clear();
+        recyclerViewItems.clear();
         processNewDoctors(filteredDoctors);
     }
 

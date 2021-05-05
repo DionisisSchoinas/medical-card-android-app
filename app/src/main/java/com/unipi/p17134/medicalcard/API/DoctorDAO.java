@@ -32,18 +32,22 @@ public class DoctorDAO extends BaseDAO {
 
     private static int currentPage = 0;
     private static int queueItems = 0;
+    private static boolean blockItems = false;
 
     private static int appointmentCurrentPage = 0;
     private static int appointmentQueueItems = 0;
+    private static boolean blockAppointmentItems = false;
 
     private static boolean hasQuery = false;
 
     public static void resetCounters() {
         currentPage = 0;
         queueItems = 0;
+        blockItems = false;
 
         appointmentCurrentPage = 0;
         appointmentQueueItems = 0;
+        blockAppointmentItems = false;
     }
 
     public static void doctors(Activity activity, int page, String specialityQuery, DAOResponseListener responseListener) {
@@ -56,6 +60,12 @@ public class DoctorDAO extends BaseDAO {
             // If last read page and total pages are the same (we are at the last page)
             page = currentPage + 1;
         }
+
+        // Override auto pull block
+        if (page != -2 && blockItems)
+            return;
+        else if (page == -2)
+            page = currentPage + 1;
 
         boolean withQuery = !(specialityQuery == null || specialityQuery.length() == 0);
         if (withQuery != hasQuery) {
@@ -76,8 +86,12 @@ public class DoctorDAO extends BaseDAO {
                     // Get appointments array
                     JSONArray doctors = response.getJSONArray("doctors");
 
-                    if (doctors.length() != 0)
+                    if (doctors.length() != 0) {
                         currentPage = meta.getInt("current_page");
+                        blockItems = false;
+                    }
+                    else
+                        blockItems = true;
 
                     // Fill list with appointments
                     JSONObject object;
@@ -330,6 +344,12 @@ public class DoctorDAO extends BaseDAO {
             page = appointmentCurrentPage + 1;
         }
 
+        // Override auto pull block
+        if (page != -2 && blockAppointmentItems)
+            return;
+        else if (page == -2)
+            page = appointmentCurrentPage + 1;
+
         String appointmentsUrl = url + "/doctor/appointments?page="+page;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, appointmentsUrl, null, new Response.Listener<JSONObject>() {
             @Override
@@ -340,8 +360,12 @@ public class DoctorDAO extends BaseDAO {
                     // Get appointments array
                     JSONArray appointments = response.getJSONArray("appointments");
 
-                    if (appointments.length() != 0)
+                    if (appointments.length() != 0) {
                         appointmentCurrentPage = meta.getInt("current_page");
+                        blockAppointmentItems = false;
+                    }
+                    else
+                        blockAppointmentItems = true;
 
                     // Fill list with appointments
                     JSONObject object;

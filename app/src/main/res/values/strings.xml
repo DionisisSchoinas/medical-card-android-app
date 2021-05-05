@@ -44,6 +44,7 @@
     <string name="action_settings">Ρυθμίσεις</string>
     <string name="action_filter">Φιλτράρισμα</string>
     <string name="today">Σήμερα</string>
+    <string name="no_more_items">Δεν βρέθηκαν αντικείμενα\nΔοκιμάστε ξανά</string>
 
     <!-- Main Activity -->
     <string name="connected_as_subtitle">Συνδεδεμένος ως :</string>

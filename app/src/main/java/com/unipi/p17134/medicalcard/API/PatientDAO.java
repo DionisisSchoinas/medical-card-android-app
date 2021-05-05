@@ -1,29 +1,19 @@
 package com.unipi.p17134.medicalcard.API;
 
 import android.app.Activity;
-import android.widget.Toast;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.unipi.p17134.medicalcard.Adapters.PatientAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Custom.BitmapConversion;
-import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 import com.unipi.p17134.medicalcard.Custom.MyRequestHandler;
-import com.unipi.p17134.medicalcard.Custom.RecycleViewItem;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
-import com.unipi.p17134.medicalcard.R;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
-import com.unipi.p17134.medicalcard.Singletons.LoginResponse;
 import com.unipi.p17134.medicalcard.Singletons.User;
 
 import org.json.JSONArray;
@@ -40,10 +30,12 @@ public class PatientDAO extends BaseDAO {
     private static final SimpleDateFormat formatter = new SimpleDateFormat(APPOINTMENT_TIME_FORMAT);
     private static int currentPage = 0;
     private static int queueItems = 0;
+    private static boolean blockItems = false;
 
     public static void resetCounters() {
         currentPage = 0;
         queueItems = 0;
+        blockItems = false;
     }
 
     public static void appointments(Activity activity, int page, DAOResponseListener responseListener) {
@@ -57,6 +49,12 @@ public class PatientDAO extends BaseDAO {
             page = currentPage + 1;
         }
 
+        // Override auto pull block
+        if (page != -2 && blockItems)
+            return;
+        else if (page == -2)
+            page = currentPage + 1;
+
         String appointmentsUrl = url + "/appointments?page="+page;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, appointmentsUrl, null, new Response.Listener<JSONObject>() {
             @Override
@@ -67,8 +65,12 @@ public class PatientDAO extends BaseDAO {
                     // Get appointments array
                     JSONArray appointments = response.getJSONArray("appointments");
 
-                    if (appointments.length() != 0)
+                    if (appointments.length() != 0) {
                         currentPage = meta.getInt("current_page");
+                        blockItems = false;
+                    }
+                    else
+                        blockItems = true;
 
                     // Fill list with appointments
                     JSONObject object;
