@@ -62,8 +62,10 @@ public class DoctorListActivity extends ConnectedBaseClass {
 
             @Override
             public <T> void onErrorResponse(T error) {
-                if (unauthorizedResponse(error))
+                if (errorResponse(error))
                     return;
+
+                Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         };
         searchView = findViewById(R.id.searchView);

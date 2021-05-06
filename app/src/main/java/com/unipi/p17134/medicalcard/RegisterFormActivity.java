@@ -72,7 +72,10 @@ public class RegisterFormActivity extends BaseClass {
 
             @Override
             public <T> void onErrorResponse(T error) {
+                if (errorMessage(error))
+                    return;
 
+                Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         });
     }

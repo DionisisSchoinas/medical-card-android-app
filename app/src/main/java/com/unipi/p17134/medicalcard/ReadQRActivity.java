@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -48,8 +46,10 @@ public class ReadQRActivity extends ConnectedBaseClass {
 
             @Override
             public <T> void onErrorResponse(T error) {
-                if (unauthorizedResponse(error))
+                if (errorResponse(error))
                     return;
+
+                Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         };
 

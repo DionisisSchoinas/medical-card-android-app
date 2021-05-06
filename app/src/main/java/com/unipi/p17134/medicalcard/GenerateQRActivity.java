@@ -4,15 +4,12 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 
@@ -53,8 +50,10 @@ public class GenerateQRActivity extends ConnectedBaseClass {
 
             @Override
             public <T> void onErrorResponse(T error) {
-                if (unauthorizedResponse(error))
+                if (errorResponse(error))
                     return;
+
+                Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         };
 

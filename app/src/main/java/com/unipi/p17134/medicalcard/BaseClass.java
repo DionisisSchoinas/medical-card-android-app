@@ -8,6 +8,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.VolleyError;
+
+import org.json.JSONObject;
+
 public class BaseClass extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,5 +49,19 @@ public class BaseClass extends AppCompatActivity {
 
     protected void backButton() {
         finish();
+    }
+
+    protected <T> boolean errorMessage(T error) {
+        try {
+            VolleyError volleyError = (VolleyError) error;
+            String responseBody = new String(volleyError.networkResponse.data, "utf-8");
+            JSONObject data = new JSONObject(responseBody);
+            String message = data.getString("message");
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 }

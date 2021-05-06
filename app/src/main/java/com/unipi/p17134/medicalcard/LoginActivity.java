@@ -14,11 +14,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.unipi.p17134.medicalcard.API.UserDAO;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Singletons.LoginResponse;
 import com.unipi.p17134.medicalcard.Singletons.User;
+
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
     EditText username, password;
@@ -76,9 +79,26 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public <T> void onErrorResponse(T error) {
+                if (errorMessage(error))
+                    return;
 
+                Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private <T> boolean errorMessage(T error) {
+        try {
+            VolleyError volleyError = (VolleyError) error;
+            String responseBody = new String(volleyError.networkResponse.data, "utf-8");
+            JSONObject data = new JSONObject(responseBody);
+            String message = data.getString("message");
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 
     public void register(View view) {

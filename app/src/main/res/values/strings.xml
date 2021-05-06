@@ -3,7 +3,7 @@
 
     <!-- Messages to user -->
     <string name="failed_to_speak_to_server">Δεν έγινε σύνδεση με τον server</string>
-    <string name="problem_with_request">Υπήρξε κάποιο πρόβλημα</string>
+    <string name="problem_with_request">Υπήρξε κάποιο πρόβλημα με την φόρτωση δεδομένων</string>
     <string name="fatal_error">Υπήρξε κάποιο πρόβλημα</string>
 
     <string name="enable_internet_connection">Ενεργοποιήστε την σύνδεσή σας στο διαδίκτυο</string>

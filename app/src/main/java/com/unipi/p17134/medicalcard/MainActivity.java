@@ -3,7 +3,6 @@ package com.unipi.p17134.medicalcard;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -89,8 +88,10 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
             @Override
             public <T> void onErrorResponse(T error) {
-                if (unauthorizedResponse(error))
+                if (errorResponse(error))
                     return;
+
+                Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         };
 

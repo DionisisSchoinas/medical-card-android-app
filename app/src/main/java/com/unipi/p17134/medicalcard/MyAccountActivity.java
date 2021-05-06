@@ -13,8 +13,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -23,7 +21,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
@@ -204,8 +201,10 @@ public class MyAccountActivity extends ConnectedBaseClass {
 
             @Override
             public <T> void onErrorResponse(T error) {
-                if (unauthorizedResponse(error))
+                if (errorResponse(error))
                     return;
+
+                Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         };
         DoctorDAO.doctor(this, responseListener);
@@ -350,12 +349,19 @@ public class MyAccountActivity extends ConnectedBaseClass {
                                     @Override
                                     public <T> void onResponse(T object) {
                                         Toast.makeText(activity, R.string.update_doctor_info_success, Toast.LENGTH_SHORT).show();
-                                        finish();
                                     }
 
                                     @Override
                                     public <T> void onErrorResponse(T error) {
+                                        populateData(doctor);
 
+                                        if (errorResponse(error))
+                                            return;
+
+                                        if (errorMessage(error))
+                                            return;
+
+                                        Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
                                     }
                                 }
                         );
