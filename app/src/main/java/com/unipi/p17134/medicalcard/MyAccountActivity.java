@@ -204,7 +204,8 @@ public class MyAccountActivity extends ConnectedBaseClass {
 
             @Override
             public <T> void onErrorResponse(T error) {
-
+                if (unauthorizedResponse(error))
+                    return;
             }
         };
         DoctorDAO.doctor(this, responseListener);

@@ -57,7 +57,8 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
 
             @Override
             public <T> void onErrorResponse(T error) {
-
+                if (unauthorizedResponse(error))
+                    return;
             }
         });
     }

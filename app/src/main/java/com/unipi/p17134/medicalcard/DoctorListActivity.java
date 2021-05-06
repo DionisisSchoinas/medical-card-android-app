@@ -54,7 +54,7 @@ public class DoctorListActivity extends ConnectedBaseClass {
 
         Activity activity = this;
 
-        DAOResponseListener responseListener = new DAOResponseListener() {
+        responseListener = new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
                 processNewDoctors((ArrayList<Doctor>)object);
@@ -62,7 +62,8 @@ public class DoctorListActivity extends ConnectedBaseClass {
 
             @Override
             public <T> void onErrorResponse(T error) {
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                if (unauthorizedResponse(error))
+                    return;
             }
         };
         searchView = findViewById(R.id.searchView);

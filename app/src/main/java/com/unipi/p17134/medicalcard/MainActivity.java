@@ -89,7 +89,8 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
 
             @Override
             public <T> void onErrorResponse(T error) {
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                if (unauthorizedResponse(error))
+                    return;
             }
         };
 

@@ -6,7 +6,7 @@
     <string name="problem_with_request">Υπήρξε κάποιο πρόβλημα</string>
     <string name="fatal_error">Υπήρξε κάποιο πρόβλημα</string>
 
-    <string name="enable_internet_connection">Ενεργοποιήστε την σύνδεσή σας στο διαδίκυτο</string>
+    <string name="enable_internet_connection">Ενεργοποιήστε την σύνδεσή σας στο διαδίκτυο</string>
     <string name="unable_to_open_camera">Η κάμερα δεν μπόρεσε να ανοιχτεί</string>
     <string name="unable_to_load_image">Η φωτογραφία δεν μπόρεσε να φορτωθεί</string>
     <string name="image_not_picked">Δεν διαλέχτηκε φωτογραφία</string>

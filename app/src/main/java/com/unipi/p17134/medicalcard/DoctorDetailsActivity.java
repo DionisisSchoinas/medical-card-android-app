@@ -56,7 +56,8 @@ public class DoctorDetailsActivity extends ConnectedBaseClass {
 
             @Override
             public <T> void onErrorResponse(T error) {
-
+                if (unauthorizedResponse(error))
+                    return;
             }
         });
     }
