@@ -53,7 +53,7 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
     private Calendar minDay;
     private Calendar maxDay;
 
-    private TextView dateDisplay;
+    private TextView nameDisplay, dateDisplay;
     private Button prev;
     private Button next;
     private RecyclerView recyclerView;
@@ -71,9 +71,12 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
         doctor = (Doctor) getIntent().getParcelableExtra("doctor");
         id = doctor.getId();
 
+        nameDisplay = findViewById(R.id.doctor_name_display);
         dateDisplay = findViewById(R.id.date_display);
         prev = findViewById(R.id.previous_date_button);
         next = findViewById(R.id.next_day_button);
+
+        nameDisplay.setText(doctor.getUser().getFullname());
 
         minDay = Calendar.getInstance();
         if (minDay.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || minDay.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)

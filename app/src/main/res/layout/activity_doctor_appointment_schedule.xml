@@ -24,6 +24,32 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+
+    <TextView
+        android:id="@+id/doctor_name_display_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/doctor"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout3" />
+
+    <TextView
+        android:id="@+id/doctor_name_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Doctor Name"
+        android:textColor="#555555"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/doctor_name_display_label" />
+
     <TextView
         android:id="@+id/date_display"
         android:layout_width="wrap_content"
@@ -54,8 +80,8 @@
         app:layout_constraintEnd_toStartOf="@+id/date_display"
         app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout3"
-        app:layout_constraintVertical_bias="0.03" />
+        app:layout_constraintTop_toBottomOf="@+id/doctor_name_display"
+        app:layout_constraintVertical_bias="0.01" />
 
     <Button
         android:id="@+id/next_day_button"
