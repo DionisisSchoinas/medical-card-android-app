@@ -43,21 +43,6 @@ public class LoginActivity extends AppCompatActivity {
         registerBtn.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        fromRegister = getIntent().getBooleanExtra("fromRegister", false);
-        if (fromRegister)
-            registerBtn.setVisibility(View.INVISIBLE);
-    }
-
     public void login(View view) {
         Activity activity = this;
 
@@ -104,6 +89,21 @@ public class LoginActivity extends AppCompatActivity {
     public void register(View view) {
         startActivity(new Intent(this, RegisterPickActivity.class));
         finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        fromRegister = getIntent().getBooleanExtra("fromRegister", false);
+        if (fromRegister)
+            registerBtn.setVisibility(View.INVISIBLE);
     }
 
     @Override

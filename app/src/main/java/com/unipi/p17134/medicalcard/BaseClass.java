@@ -30,7 +30,7 @@ public class BaseClass extends AppCompatActivity {
         backButton();
         return true;
     }
-
+/*
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -41,7 +41,7 @@ public class BaseClass extends AppCompatActivity {
         else
             return super.onOptionsItemSelected(item);
     }
-
+ */
     @Override
     public void onBackPressed() {
         backButton();
