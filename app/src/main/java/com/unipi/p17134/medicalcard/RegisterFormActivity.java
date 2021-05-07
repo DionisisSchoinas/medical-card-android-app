@@ -58,7 +58,7 @@ public class RegisterFormActivity extends BaseClass {
 
                 MyPrefs.setToken(activity, loginResponse.getAuthToken());
                 MyPrefs.isDoctor(activity, loginResponse.isDoctor());
-                //Toast.makeText(activity, response.getString("message"), Toast.LENGTH_SHORT).show();
+                MyPrefs.setDoctorId(activity, loginResponse.getDoctorId());
 
                 if (simpleRegister) {
                     startActivity(new Intent(activity, MainActivity.class));

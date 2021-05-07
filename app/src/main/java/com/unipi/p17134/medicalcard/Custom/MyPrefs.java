@@ -25,6 +25,7 @@ public class MyPrefs {
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove("token");
         editor.remove("isDoctor");
+        editor.remove("doctorId");
         editor.remove("userFullname");
         editor.remove("userBirth");
         editor.apply();
@@ -33,6 +34,7 @@ public class MyPrefs {
     public static void setLogin(Context ctx, LoginResponse loginData) {
         MyPrefs.setToken(ctx, loginData.getAuthToken());
         MyPrefs.isDoctor(ctx, loginData.isDoctor());
+        MyPrefs.setDoctorId(ctx, loginData.getDoctorId());
         MyPrefs.setUserData(ctx, loginData.getUser());
     }
 
@@ -58,6 +60,18 @@ public class MyPrefs {
     public static boolean isDoctor(Context ctx) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
         return preferences.getBoolean("isDoctor", false);
+    }
+
+    public static void setDoctorId(Context ctx, int id) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("doctorId", id);
+        editor.apply();
+    }
+
+    public static int getDoctorId(Context ctx) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+        return preferences.getInt("doctorId", 0);
     }
 
     public static void setUserData(Context ctx, User user) {

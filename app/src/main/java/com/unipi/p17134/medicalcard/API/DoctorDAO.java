@@ -344,13 +344,19 @@ public class DoctorDAO extends BaseDAO {
             page = appointmentCurrentPage + 1;
         }
 
+        // Pull current page again
+        if (page == -3) {
+            page = appointmentCurrentPage;
+            blockAppointmentItems = false;
+        }
+
         // Override auto pull block
         if (page != -2 && blockAppointmentItems)
             return;
         else if (page == -2)
             page = appointmentCurrentPage + 1;
 
-        String appointmentsUrl = url + "/doctor/appointments?page="+page;
+        String appointmentsUrl = url + "/doctor/appointments?per_page=20&page="+page;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, appointmentsUrl, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

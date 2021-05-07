@@ -1,22 +1,24 @@
 package com.unipi.p17134.medicalcard;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
-import com.applandeo.materialcalendarview.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.DatePicker;
 import com.applandeo.materialcalendarview.builders.DatePickerBuilder;
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 import com.unipi.p17134.medicalcard.API.DoctorDAO;
 import com.unipi.p17134.medicalcard.API.PatientDAO;
 import com.unipi.p17134.medicalcard.Adapters.DoctorScheduleAppointmentsAdapter;
@@ -29,6 +31,10 @@ import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Listeners.VerificationPopupListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -154,6 +160,83 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+        FirebaseMessaging.getInstance().subscribeToTopic(id+"");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(id+"");
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(RemoteMessage remoteMessage) {
+        if (remoteMessage.getNotification() == null)
+            return;
+        if (remoteMessage.getNotification().getBody() == null)
+            return;
+
+        if (remoteMessage.getNotification().getBody().equals("DELETE")) {
+            removeAppointment(remoteMessage);
+        }
+        else if (remoteMessage.getNotification().getBody().equals("CREATE")) {
+            addAppointment(remoteMessage);
+        }
+    }
+
+    private void addAppointment(RemoteMessage remoteMessage) {
+        if (remoteMessage.getData().size() == 0)
+            return;
+
+        Appointment appointment = new Appointment();
+        try {
+            appointment.setId(Integer.parseInt(remoteMessage.getData().get("id")));
+            appointment.setStartDate(DateTimeParsing.APIDateToDate(remoteMessage.getData().get("appointment_date_time_start")));
+            appointment.setEndDate(DateTimeParsing.APIDateToDate(remoteMessage.getData().get("appointment_date_time_end")));
+
+            ArrayList<Appointment> appointments = new ArrayList<>();
+            appointments.add(appointment);
+
+            newAppointments(appointments);
+        }
+        catch (Exception ignored) {
+        }
+    }
+
+    private void removeAppointment(RemoteMessage remoteMessage) {
+        if (remoteMessage.getData().size() == 0)
+            return;
+
+        Appointment appointment = new Appointment();
+        try {
+            appointment.setId(Integer.parseInt(remoteMessage.getData().get("id")));
+            appointment.setStartDate(DateTimeParsing.APIDateToDate(remoteMessage.getData().get("appointment_date_time_start")));
+
+            String monthString = DateTimeParsing.dateToMonthString(appointment.getStartDate());
+            String dayString = DateTimeParsing.dateToDayString(appointment.getStartDate());
+            if (!appointmentsMap.containsKey(monthString))
+                return;
+            if (!appointmentsMap.get(monthString).containsKey(dayString))
+                return;
+
+            ArrayList<Appointment> savedApps = appointmentsMap.get(monthString).get(dayString);
+            for (int i=0; i < savedApps.size(); i++) {
+                if (savedApps.get(i).getId() == appointment.getId()) {
+                    savedApps.remove(i);
+                    updateAppointmentsView();
+                    break;
+                }
+            }
+        }
+        catch (Exception ignored) {
+        }
+    }
+
     public void prevDay(View view) {
         Calendar prevDate = (Calendar)currentDay.clone();
         prevDate.add(Calendar.DAY_OF_MONTH, -1);
@@ -161,9 +244,9 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
     }
 
     public void nextDay(View view) {
-        Calendar prevDate = (Calendar)currentDay.clone();
-        prevDate.add(Calendar.DAY_OF_MONTH, 1);
-        setDate(prevDate);
+        Calendar nextDate = (Calendar)currentDay.clone();
+        nextDate.add(Calendar.DAY_OF_MONTH, 1);
+        setDate(nextDate);
     }
 
     private void setDate(Calendar newDate) {
@@ -405,7 +488,7 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
     private void generateVisibleItems() {
         ArrayList<Appointment> appointments = generateAvailableAppointments();
 
-        visibleAppointments.clear();;
+        visibleAppointments.clear();
         for (Appointment appointment : appointments) {
             RecyclerViewItem item = new RecyclerViewItem();
             item.setDoctorScheduleItem(appointment, false);
@@ -435,7 +518,7 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
 
         for (int i=0; i<visibleAppointments.size(); i++) {
             RecyclerViewItem item = visibleAppointments.get(i);
-            item.isBooked(false);
+            //item.isBooked(false);
             if (bookedAppointments == null)
                 continue;
 
@@ -447,13 +530,22 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
                 int appointmentTime = testCal2.get(Calendar.HOUR_OF_DAY);
 
                 if (itemTime == appointmentTime) {
-                    item.isBooked(true);
+                    visibleAppointments.get(i).isBooked(true);
                     break;
                 }
             }
         }
 
-        mAdapter.notifyDataSetChanged();
+        //mAdapter.notifyDataSetChanged();
+
+        mAdapter = new DoctorScheduleAppointmentsAdapter(this, visibleAppointments, new ClickListener() {
+            @Override
+            public void onClick(int index) {
+                bookAppointment(index);
+            }
+        });
+        // Attach the adapter to the recyclerview to populate items
+        recyclerView.setAdapter(mAdapter);
     }
 
     private int calculateNoOfColumns(float columnWidthDp) { // For example columnWidthdp=180

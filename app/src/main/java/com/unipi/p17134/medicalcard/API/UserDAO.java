@@ -51,6 +51,7 @@ public class UserDAO extends BaseDAO {
                         LoginResponse loginResponse = new LoginResponse(
                                 response.getString("auth_token"),
                                 response.getBoolean("is_doctor"),
+                                response.getInt("doctor_id"),
                                 new User()
                                         .setFullname(response.getString("fullname"))
                                         .setDateOfBirth(DateTimeParsing.dateToDateString(formatter.parse(response.getString("date_of_birth"))
@@ -89,6 +90,7 @@ public class UserDAO extends BaseDAO {
                         LoginResponse loginResponse = new LoginResponse(
                                 response.getString("auth_token"),
                                 response.getBoolean("is_doctor"),
+                                response.getInt("doctor_id"),
                                 null
                         );
                         responseListener.onResponse(loginResponse);
@@ -119,7 +121,19 @@ public class UserDAO extends BaseDAO {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, signupUrl, postData, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    responseListener.onResponse(null);
+                    try {
+                        LoginResponse loginResponse = new LoginResponse(
+                                null,
+                                true,
+                                response.getInt("doctor_id"),
+                                null
+                        );
+                        responseListener.onResponse(loginResponse);
+                    }
+                    catch (JSONException e) {
+                        //Toast.makeText(activity, activity.getResources().getString(R.string.fatal_error), Toast.LENGTH_LONG).show();
+                        responseListener.onErrorResponse(e);
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override

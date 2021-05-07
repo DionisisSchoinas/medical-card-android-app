@@ -28,6 +28,7 @@ import com.unipi.p17134.medicalcard.Custom.MyPermissions;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
+import com.unipi.p17134.medicalcard.Singletons.LoginResponse;
 import com.unipi.p17134.medicalcard.Singletons.User;
 
 import java.io.FileNotFoundException;
@@ -161,7 +162,9 @@ public class DoctorRegisterFormActivity extends BaseClass {
         ), new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                LoginResponse loginResponse = (LoginResponse) object;
                 MyPrefs.isDoctor(activity, true);
+                MyPrefs.setDoctorId(activity, loginResponse.getDoctorId());
                 //Toast.makeText(activity, response.getString("message"), Toast.LENGTH_SHORT).show();
 
                 startActivity(new Intent(activity, MainActivity.class));

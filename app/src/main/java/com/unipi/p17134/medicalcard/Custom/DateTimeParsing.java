@@ -3,6 +3,7 @@ package com.unipi.p17134.medicalcard.Custom;
 import com.unipi.p17134.medicalcard.API.BaseDAO;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,5 +37,14 @@ public class DateTimeParsing {
     public static String dateToAPIDate(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(BaseDAO.APPOINTMENT_TIME_FORMAT);
         return dateFormat.format(date);
+    }
+
+    public static Date APIDateToDate(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(BaseDAO.APPOINTMENT_TIME_FORMAT);
+        try {
+            return dateFormat.parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 }
