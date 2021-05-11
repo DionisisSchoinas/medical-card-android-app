@@ -29,9 +29,7 @@
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/update_account_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
@@ -46,7 +44,7 @@
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toTopOf="@+id/divider2"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -113,13 +111,13 @@
                     android:layout_marginStart="40dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="40dp"
-                    tools:text="-"
                     android:ems="10"
                     android:hint="@string/doctor_register_form_speciality_hint"
                     android:inputType="textPersonName"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4"/>
+                    app:layout_constraintTop_toBottomOf="@+id/textView4"
+                    tools:text="-" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -151,12 +149,12 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="40dp"
                     android:ems="10"
-                    tools:text="-"
                     android:hint="@string/doctor_register_form_address_hint"
                     android:inputType="text"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView5"
+                    tools:text="-" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Space
@@ -187,12 +185,12 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="40dp"
                     android:ems="10"
-                    tools:text="-"
                     android:hint="@string/doctor_register_form_email_hint"
                     android:inputType="text|textEmailAddress"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView7" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView7"
+                    tools:text="-" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Space
@@ -223,12 +221,12 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="40dp"
                     android:ems="10"
-                    tools:text="-"
                     android:hint="@string/doctor_register_form_phone_hint"
                     android:inputType="phone|text"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView6"
+                    tools:text="-" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Space
@@ -265,25 +263,30 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView8"
                     tools:text="-" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <Button
+                android:id="@+id/update_account_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blue"
+                android:elevation="15dp"
+                android:insetLeft="5dp"
+                android:insetRight="5dp"
+                android:onClick="updateDoctor"
+                android:text="@string/update_doctor_info_button"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
         </LinearLayout>
     </ScrollView>
-
-    <Button
-        android:id="@+id/update_account_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/blue"
-        android:elevation="15dp"
-        android:insetLeft="5dp"
-        android:insetRight="5dp"
-        android:onClick="updateDoctor"
-        android:text="@string/update_doctor_info_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
