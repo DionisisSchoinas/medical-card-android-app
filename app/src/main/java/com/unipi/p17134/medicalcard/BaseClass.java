@@ -1,12 +1,9 @@
 package com.unipi.p17134.medicalcard;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.VolleyError;
@@ -35,15 +32,19 @@ public class BaseClass extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        loadingDialog.dismissLoadingDialog();
+    }
+
+    @Override
     protected void onStop() {
         EventBus.getDefault().unregister(this);
-        loadingDialog.dismissLoadingDialog();
         super.onStop();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LoadingDialogEvent loading) {
-        Log.e("Event triggered", "With : " + loading.isLoading());
         if (loading.isLoading())
             loadingDialog.startLoadingDialog();
         else

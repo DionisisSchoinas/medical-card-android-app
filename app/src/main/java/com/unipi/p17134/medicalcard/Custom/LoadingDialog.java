@@ -28,6 +28,6 @@ public class LoadingDialog {
 
     public void dismissLoadingDialog() {
         if (dialog != null)
-            dialog.hide();
+            dialog.dismiss();
     }
 }

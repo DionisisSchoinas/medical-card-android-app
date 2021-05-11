@@ -90,6 +90,9 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
             @Override
             public <T> void onErrorResponse(T error) {
                 loadingDialog.dismissLoadingDialog();
+                if (activity.isFinishing())
+                    return;
+
                 if (errorResponse(error))
                     return;
 
