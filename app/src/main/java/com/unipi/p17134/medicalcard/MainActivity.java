@@ -148,7 +148,6 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         });
 
         processNewAppointments(new ArrayList<>());
-        loadingDialog.startLoadingDialog();
         PatientDAO.appointments(activity, 1, responseListener);
     }
 
@@ -156,6 +155,8 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
     protected void onStart() {
         super.onStart();
         fullnameDisplay.setText(MyPrefs.getUserData(this).getFullname());
+
+        loadingDialog.startLoadingDialog();
     }
 
     @Override

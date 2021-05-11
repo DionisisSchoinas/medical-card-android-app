@@ -209,10 +209,15 @@ public class MyAccountActivity extends ConnectedBaseClass {
                 Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         };
-        loadingDialog.startLoadingDialog();
-        DoctorDAO.doctor(this, responseListener);
 
+        DoctorDAO.doctor(this, responseListener);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loadingDialog.startLoadingDialog();
     }
 
     private void disableAll() {

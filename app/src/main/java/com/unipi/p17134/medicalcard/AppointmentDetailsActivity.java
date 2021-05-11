@@ -45,7 +45,6 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
         cancelButton.setEnabled(false);
 
         id = getIntent().getIntExtra("id", 0);
-        loadingDialog.startLoadingDialog();
         PatientDAO.appointment(this, id, new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
@@ -63,6 +62,12 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
                 Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loadingDialog.startLoadingDialog();
     }
 
     private void loadAppointmentData(Appointment appointment) {

@@ -30,9 +30,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout4">
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout4" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/login_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical">
@@ -115,7 +116,6 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="20dp"
                 android:backgroundTint="@color/dark_blue"
                 android:elevation="15dp"
                 android:insetLeft="5dp"
@@ -128,7 +128,6 @@
                 android:text="@string/login_button_register"
                 android:textSize="14sp"
                 android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/loginButton" />

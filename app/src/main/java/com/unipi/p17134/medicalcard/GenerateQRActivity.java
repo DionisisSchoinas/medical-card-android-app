@@ -58,7 +58,11 @@ public class GenerateQRActivity extends ConnectedBaseClass {
                 Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         };
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         getNewQr(null);
     }
 

@@ -163,13 +163,12 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
                 datePicker.show();
             }
         });
-
-        loadingDialog.startLoadingDialog();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        loadingDialog.startLoadingDialog();
         FirebaseMessaging.getInstance().subscribeToTopic(id+"");
     }
 

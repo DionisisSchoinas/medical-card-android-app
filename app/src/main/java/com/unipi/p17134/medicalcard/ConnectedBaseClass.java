@@ -2,6 +2,7 @@ package com.unipi.p17134.medicalcard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -9,6 +10,13 @@ import com.unipi.p17134.medicalcard.API.UserDAO;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 
 public class ConnectedBaseClass extends BaseClass {
+    // Force user to login before accessing any page
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        checkLogin();
+    }
+
     // Force user to login before accessing any page
     @Override
     protected void onResume() {

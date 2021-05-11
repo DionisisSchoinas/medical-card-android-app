@@ -113,13 +113,13 @@ public class DoctorAppointmentListActivity extends ConnectedBaseClass {
         });
 
         processNewAppointments(new ArrayList<>());
-        loadingDialog.startLoadingDialog();
         DoctorDAO.appointments(activity, 1, responseListener);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        loadingDialog.startLoadingDialog();
         FirebaseMessaging.getInstance().subscribeToTopic("extra"+MyPrefs.getDoctorId(this));
     }
 

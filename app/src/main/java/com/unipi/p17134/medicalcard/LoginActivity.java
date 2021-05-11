@@ -3,15 +3,21 @@ package com.unipi.p17134.medicalcard;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -30,9 +36,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 public class LoginActivity extends BaseClass {
-    EditText username, password;
-    Button registerBtn;
-    boolean fromRegister;
+    private EditText username, password;
+    private Button registerBtn;
+    private boolean fromRegister;
+
+    private ConstraintLayout loginLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +55,16 @@ public class LoginActivity extends BaseClass {
 
         registerBtn = findViewById(R.id.registerButton);
         registerBtn.setVisibility(View.VISIBLE);
+
+        loginLayout = findViewById(R.id.login_constraint_layout);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) loginLayout.getLayoutParams();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            params.gravity = Gravity.TOP;
+        }
+        else {
+            params.gravity = Gravity.CENTER_VERTICAL;
+        }
+        loginLayout.setLayoutParams(params);
     }
 
     @Override
