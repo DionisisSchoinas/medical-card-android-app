@@ -44,6 +44,7 @@ public class DoctorDetailsActivity extends ConnectedBaseClass {
         scheduleButton.setEnabled(false);
 
         id = getIntent().getIntExtra("id", 0);
+        loadingDialog.startLoadingDialog();
         DoctorDAO.doctor(this, id, new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
@@ -61,12 +62,6 @@ public class DoctorDetailsActivity extends ConnectedBaseClass {
                 Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        loadingDialog.startLoadingDialog();
     }
 
     private void loadDoctorData(Doctor doctor) {

@@ -125,14 +125,9 @@ public class DoctorListActivity extends ConnectedBaseClass {
         });
 
         processNewDoctors(new ArrayList<>());
+        loadingDialog.startLoadingDialog();
         // Fill with 1 page of doctors
         DoctorDAO.doctors(activity, 1, specialitySearch.getText().toString(), responseListener);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        loadingDialog.startLoadingDialog();
     }
 
     public void searchWithFilter(View view) {

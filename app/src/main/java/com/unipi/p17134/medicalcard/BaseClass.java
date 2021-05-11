@@ -43,6 +43,7 @@ public class BaseClass extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LoadingDialogEvent loading) {
+        Log.e("Event triggered", "With : " + loading.isLoading());
         if (loading.isLoading())
             loadingDialog.startLoadingDialog();
         else
