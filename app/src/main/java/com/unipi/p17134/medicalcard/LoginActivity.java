@@ -15,15 +15,21 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.google.firebase.messaging.RemoteMessage;
 import com.unipi.p17134.medicalcard.API.UserDAO;
+import com.unipi.p17134.medicalcard.Custom.LoadingDialog;
+import com.unipi.p17134.medicalcard.Custom.LoadingDialogEvent;
 import com.unipi.p17134.medicalcard.Custom.MyPrefs;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Singletons.LoginResponse;
 import com.unipi.p17134.medicalcard.Singletons.User;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseClass {
     EditText username, password;
     Button registerBtn;
     boolean fromRegister;
@@ -43,12 +49,23 @@ public class LoginActivity extends AppCompatActivity {
         registerBtn.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        fromRegister = getIntent().getBooleanExtra("fromRegister", false);
+        if (fromRegister)
+            registerBtn.setVisibility(View.INVISIBLE);
+    }
+
     public void login(View view) {
         Activity activity = this;
+
+        loadingDialog.startLoadingDialog();
 
         UserDAO.login(this, new User(username.getText().toString(), password.getText().toString()), new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
                 MyPrefs.setLogin(getApplicationContext(), (LoginResponse)object);
 
                 if (fromRegister) {
@@ -64,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
                 if (errorMessage(error))
                     return;
 
@@ -72,38 +90,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private <T> boolean errorMessage(T error) {
-        try {
-            VolleyError volleyError = (VolleyError) error;
-            String responseBody = new String(volleyError.networkResponse.data, "utf-8");
-            JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-            return true;
-        }
-        catch (Exception e) {
-            return false;
-        }
-    }
-
     public void register(View view) {
         startActivity(new Intent(this, RegisterPickActivity.class));
         finish();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        fromRegister = getIntent().getBooleanExtra("fromRegister", false);
-        if (fromRegister)
-            registerBtn.setVisibility(View.INVISIBLE);
     }
 
     @Override

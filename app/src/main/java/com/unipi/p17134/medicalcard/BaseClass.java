@@ -1,6 +1,7 @@
 package com.unipi.p17134.medicalcard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -9,13 +10,44 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.VolleyError;
+import com.unipi.p17134.medicalcard.Custom.LoadingDialog;
+import com.unipi.p17134.medicalcard.Custom.LoadingDialogEvent;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 public class BaseClass extends AppCompatActivity {
+    protected LoadingDialog loadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        loadingDialog = new LoadingDialog(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        loadingDialog.dismissLoadingDialog();
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(LoadingDialogEvent loading) {
+        Log.e("Event triggered", "With : " + loading.isLoading());
+        if (loading.isLoading())
+            loadingDialog.startLoadingDialog();
+        else
+            loadingDialog.dismissLoadingDialog();
     }
 
     @Override

@@ -57,11 +57,13 @@ public class DoctorListActivity extends ConnectedBaseClass {
         responseListener = new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
                 processNewDoctors((ArrayList<Doctor>)object);
             }
 
             @Override
             public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
                 if (errorResponse(error))
                     return;
 
@@ -85,6 +87,7 @@ public class DoctorListActivity extends ConnectedBaseClass {
         }, new ClickListener() {
             @Override
             public void onClick(int index) {
+                loadingDialog.startLoadingDialog();
                 DoctorDAO.doctors(activity, -2, specialitySearch.getText().toString(), responseListener);
             }
         });
@@ -122,6 +125,7 @@ public class DoctorListActivity extends ConnectedBaseClass {
         });
 
         processNewDoctors(new ArrayList<>());
+        loadingDialog.startLoadingDialog();
         // Fill with 1 page of doctors
         DoctorDAO.doctors(activity, 1, specialitySearch.getText().toString(), responseListener);
     }
@@ -130,14 +134,20 @@ public class DoctorListActivity extends ConnectedBaseClass {
         DAOResponseListener filterResponseListener = new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
                 filterDoctors((ArrayList<Doctor>)object);
             }
 
             @Override
             public <T> void onErrorResponse(T error) {
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                loadingDialog.dismissLoadingDialog();
+                if (errorResponse(error))
+                    return;
+                Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         };
+
+        loadingDialog.startLoadingDialog();
         DoctorDAO.resetCounters();
         DoctorDAO.doctors(this, 1, specialitySearch.getText().toString(), filterResponseListener);
         currentFilter = specialitySearch.getText().toString();

@@ -44,15 +44,18 @@ public class DoctorDetailsActivity extends ConnectedBaseClass {
         scheduleButton.setEnabled(false);
 
         id = getIntent().getIntExtra("id", 0);
+        loadingDialog.startLoadingDialog();
         DoctorDAO.doctor(this, id, new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
                 Doctor doctor = (Doctor)object;
                 loadDoctorData(doctor);
             }
 
             @Override
             public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
                 if (errorResponse(error))
                     return;
 

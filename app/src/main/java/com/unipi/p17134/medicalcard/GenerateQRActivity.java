@@ -45,11 +45,13 @@ public class GenerateQRActivity extends ConnectedBaseClass {
         responseListener = new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
                 manageQR((QR) object);
             }
 
             @Override
             public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
                 if (errorResponse(error))
                     return;
 
@@ -63,6 +65,7 @@ public class GenerateQRActivity extends ConnectedBaseClass {
     public void getNewQr(View view) {
         if (timer != null)
             timer.cancel();
+        loadingDialog.startLoadingDialog();
         QrDAO.generate(this, responseListener);
     }
 

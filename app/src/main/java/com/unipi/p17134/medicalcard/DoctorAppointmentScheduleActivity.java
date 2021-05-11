@@ -121,12 +121,14 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
         responseListener = new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
                 ArrayList<Appointment> appointments = (ArrayList<Appointment>) object;
                 newAppointments(appointments);
             }
 
             @Override
             public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
                 if (errorResponse(error))
                     return;
 
@@ -161,20 +163,20 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
                 datePicker.show();
             }
         });
+
+        loadingDialog.startLoadingDialog();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
         FirebaseMessaging.getInstance().subscribeToTopic(id+"");
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
         FirebaseMessaging.getInstance().unsubscribeFromTopic(id+"");
+        super.onStop();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -325,9 +327,12 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
                         finalCalendar2.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
                         appointment.setEndDate(finalCalendar2.getTime());
 
+                        loadingDialog.startLoadingDialog();
+
                         PatientDAO.bookAppointment(activity, appointment, new DAOResponseListener() {
                             @Override
                             public <T> void onResponse(T object) {
+                                loadingDialog.dismissLoadingDialog();
                                 Toast.makeText(getApplicationContext(), R.string.book_appointment_success, Toast.LENGTH_SHORT).show();
 
                                 setResult(RESULT_OK, new Intent());
@@ -336,6 +341,7 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
 
                             @Override
                             public <T> void onErrorResponse(T error) {
+                                loadingDialog.dismissLoadingDialog();
                                 Toast.makeText(getApplicationContext(), R.string.book_appointment_failure, Toast.LENGTH_SHORT).show();
                             }
                         });

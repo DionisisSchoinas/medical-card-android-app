@@ -196,17 +196,20 @@ public class MyAccountActivity extends ConnectedBaseClass {
         DAOResponseListener responseListener = new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
                 populateData((Doctor)object);
             }
 
             @Override
             public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
                 if (errorResponse(error))
                     return;
 
                 Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         };
+        loadingDialog.startLoadingDialog();
         DoctorDAO.doctor(this, responseListener);
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -342,17 +345,20 @@ public class MyAccountActivity extends ConnectedBaseClass {
                 new VerificationPopupListener() {
                     @Override
                     public void onPositive() {
+                        loadingDialog.startLoadingDialog();
                         DoctorDAO.updateDoctor(
                                 activity,
                                 newDoctor,
                                 new DAOResponseListener() {
                                     @Override
                                     public <T> void onResponse(T object) {
+                                        loadingDialog.dismissLoadingDialog();
                                         Toast.makeText(activity, R.string.update_doctor_info_success, Toast.LENGTH_SHORT).show();
                                     }
 
                                     @Override
                                     public <T> void onErrorResponse(T error) {
+                                        loadingDialog.dismissLoadingDialog();
                                         populateData(doctor);
 
                                         if (errorResponse(error))

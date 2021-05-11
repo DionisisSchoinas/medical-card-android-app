@@ -41,11 +41,13 @@ public class ReadQRActivity extends ConnectedBaseClass {
         responseListener = new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
                 parseData((QrResponse) object);
             }
 
             @Override
             public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
                 if (errorResponse(error))
                     return;
 
@@ -106,6 +108,7 @@ public class ReadQRActivity extends ConnectedBaseClass {
     }
 
     private void manageDecodedQR(Result result) {
+        loadingDialog.startLoadingDialog();
         QR qr = new QR(result.getText());
         QrDAO.read(this, qr, responseListener);
     }

@@ -45,15 +45,18 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
         cancelButton.setEnabled(false);
 
         id = getIntent().getIntExtra("id", 0);
+        loadingDialog.startLoadingDialog();
         PatientDAO.appointment(this, id, new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
                 Appointment appointment = (Appointment)object;
                 loadAppointmentData(appointment);
             }
 
             @Override
             public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
                 if (errorResponse(error))
                     return;
 
@@ -118,14 +121,17 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
     }
 
     private void completeCancellation() {
+        loadingDialog.startLoadingDialog();
         PatientDAO.deleteAppointment(this, id, new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
                 deletionComplete();
             }
 
             @Override
             public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.cancel_appointment_failure), Toast.LENGTH_SHORT).show();
             }
         });

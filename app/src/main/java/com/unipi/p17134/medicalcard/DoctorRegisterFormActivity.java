@@ -152,6 +152,9 @@ public class DoctorRegisterFormActivity extends BaseClass {
             return;
         }
         Activity activity = this;
+
+        loadingDialog.startLoadingDialog();
+
         UserDAO.registerDoctor(this, new Doctor(
                 speciality.getText().toString(),
                 office.getText().toString(),
@@ -162,6 +165,8 @@ public class DoctorRegisterFormActivity extends BaseClass {
         ), new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
+
                 LoginResponse loginResponse = (LoginResponse) object;
                 MyPrefs.isDoctor(activity, true);
                 MyPrefs.setDoctorId(activity, loginResponse.getDoctorId());
@@ -173,6 +178,7 @@ public class DoctorRegisterFormActivity extends BaseClass {
 
             @Override
             public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
                 if (errorMessage(error))
                     return;
 

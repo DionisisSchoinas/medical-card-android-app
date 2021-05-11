@@ -14,6 +14,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.unipi.p17134.medicalcard.R;
 
+import org.greenrobot.eventbus.EventBus;
+
 public class MyRequestHandler {
     private static MyRequestHandler instance;
     private RequestQueue requestQueue;
@@ -40,12 +42,14 @@ public class MyRequestHandler {
 
     public <T> boolean addToRequestQueue(Activity activity, Request<T> req) {
         if (InternetAccessController.noInternetAccess(activity)) {
+            EventBus.getDefault().post(new LoadingDialogEvent(false));
             Toast.makeText(activity, activity.getResources().getString(R.string.enable_internet_connection), Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+                EventBus.getDefault().post(new LoadingDialogEvent(false));
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.INTERNET}, MyPermissions.INTERNET_ACCESS_REQUEST);
                 return false;
             }

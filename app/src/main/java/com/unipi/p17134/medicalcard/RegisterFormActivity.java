@@ -42,6 +42,8 @@ public class RegisterFormActivity extends BaseClass {
     }
 
     public void register(View view) {
+        loadingDialog.startLoadingDialog();
+
         Activity activity = this;
 
         UserDAO.register(this, new User(
@@ -54,6 +56,7 @@ public class RegisterFormActivity extends BaseClass {
         ), new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
                 LoginResponse loginResponse = (LoginResponse)object;
 
                 MyPrefs.setToken(activity, loginResponse.getAuthToken());
@@ -72,6 +75,7 @@ public class RegisterFormActivity extends BaseClass {
 
             @Override
             public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
                 if (errorMessage(error))
                     return;
 

@@ -83,11 +83,13 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         responseListener = new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
                 processNewAppointments((ArrayList<Appointment>)object);
             }
 
             @Override
             public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
                 if (errorResponse(error))
                     return;
 
@@ -108,6 +110,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         }, new ClickListener() {
             @Override
             public void onClick(int index) {
+                loadingDialog.startLoadingDialog();
                 PatientDAO.appointments(activity, -2, responseListener);
             }
         });
@@ -145,6 +148,7 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
         });
 
         processNewAppointments(new ArrayList<>());
+        loadingDialog.startLoadingDialog();
         PatientDAO.appointments(activity, 1, responseListener);
     }
 

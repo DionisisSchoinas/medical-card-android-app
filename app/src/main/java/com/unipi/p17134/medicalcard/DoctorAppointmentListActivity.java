@@ -53,11 +53,13 @@ public class DoctorAppointmentListActivity extends ConnectedBaseClass {
         responseListener = new DAOResponseListener() {
             @Override
             public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
                 processNewAppointments((ArrayList<Appointment>)object);
             }
 
             @Override
             public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
                 if (errorResponse(error))
                     return;
 
@@ -73,6 +75,7 @@ public class DoctorAppointmentListActivity extends ConnectedBaseClass {
         mAdapter = new DoctorAppointmentsAdapter(recyclerViewItems, new ClickListener() {
             @Override
             public void onClick(int index) {
+                loadingDialog.startLoadingDialog();
                 DoctorDAO.appointments(activity, -2, responseListener);
             }
         });
@@ -110,21 +113,20 @@ public class DoctorAppointmentListActivity extends ConnectedBaseClass {
         });
 
         processNewAppointments(new ArrayList<>());
+        loadingDialog.startLoadingDialog();
         DoctorDAO.appointments(activity, 1, responseListener);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
         FirebaseMessaging.getInstance().subscribeToTopic("extra"+MyPrefs.getDoctorId(this));
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
         FirebaseMessaging.getInstance().unsubscribeFromTopic("extra"+MyPrefs.getDoctorId(this));
+        super.onStop();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -186,7 +188,6 @@ public class DoctorAppointmentListActivity extends ConnectedBaseClass {
                 }
                 return;
             }
-
             // If current appointments are exactly 20, 40, 60, 80, ... this means the new item is in the next page so pull it
             if (appointments.size() % 20 == 0)
                 DoctorDAO.appointments(this, -2, responseListener);

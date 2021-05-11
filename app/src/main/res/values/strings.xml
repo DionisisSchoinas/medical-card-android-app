@@ -46,6 +46,7 @@
     <string name="today">Σήμερα</string>
     <string name="no_more_items">Δεν βρέθηκαν αντικείμενα\nΔοκιμάστε ξανά</string>
     <string name="doctor">Γιατρός</string>
+    <string name="loading">Φόρτωση …</string>
 
     <!-- Main Activity -->
     <string name="connected_as_subtitle">Συνδεδεμένος ως :</string>
