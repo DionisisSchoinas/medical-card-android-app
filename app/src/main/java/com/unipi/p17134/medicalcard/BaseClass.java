@@ -18,6 +18,8 @@ import org.json.JSONObject;
 
 public class BaseClass extends AppCompatActivity {
     protected LoadingDialog loadingDialog;
+    protected final float PASSWORD_ALPHA_HIDDEN = 0.5f;
+    protected final float PASSWORD_ALPHA_SHOWING = 1f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

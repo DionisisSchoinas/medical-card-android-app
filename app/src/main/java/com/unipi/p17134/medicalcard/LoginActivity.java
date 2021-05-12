@@ -3,12 +3,15 @@ package com.unipi.p17134.medicalcard;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.media.Image;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -23,7 +26,8 @@ import com.unipi.p17134.medicalcard.Singletons.User;
 public class LoginActivity extends BaseClass {
     private EditText username, password;
     private Button registerBtn;
-    private boolean fromRegister;
+    private ImageButton hidePassword;
+    private boolean fromRegister, passwordHidden;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,8 @@ public class LoginActivity extends BaseClass {
 
         username = findViewById(R.id.emailLoginInput);
         password = findViewById(R.id.passwordLoginInput);
+        hidePassword = findViewById(R.id.login_hide_password);
+        setPasswordHidden(true);
 
         registerBtn = findViewById(R.id.registerButton);
         registerBtn.setVisibility(View.VISIBLE);
@@ -56,6 +62,25 @@ public class LoginActivity extends BaseClass {
         fromRegister = getIntent().getBooleanExtra("fromRegister", false);
         if (fromRegister)
             registerBtn.setVisibility(View.INVISIBLE);
+    }
+
+    public void hidePassword(View view) {
+        setPasswordHidden(!passwordHidden);
+    }
+
+    private void setPasswordHidden(boolean hide) {
+        if (hide) {
+            password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD );
+            hidePassword.setImageResource(R.drawable.ic_visibility_on);
+            hidePassword.setAlpha(PASSWORD_ALPHA_HIDDEN);
+        }
+        else
+        {
+            password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            hidePassword.setImageResource(R.drawable.ic_visibility_off);
+            hidePassword.setAlpha(PASSWORD_ALPHA_SHOWING);
+        }
+        passwordHidden = hide;
     }
 
     public void login(View view) {

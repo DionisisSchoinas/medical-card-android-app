@@ -3,8 +3,10 @@ package com.unipi.p17134.medicalcard;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -23,7 +25,8 @@ import java.util.Date;
 
 public class RegisterFormActivity extends BaseClass {
     private EditText amka, email, password, passwordConf, fullname, dateOfBirth;
-    private boolean simpleRegister;
+    private boolean simpleRegister, passwordHidden, passwordHiddenConf;
+    private ImageButton hidePassword, hidePasswordConf;
 
     private Calendar min, max;
     private final SimpleDateFormat formatter = new SimpleDateFormat(UserDAO.USER_DATE_OF_BIRTH_FORMAT);
@@ -41,11 +44,12 @@ public class RegisterFormActivity extends BaseClass {
         min = (Calendar) max.clone();
         min.add(Calendar.YEAR, -150);
 
-
         amka = findViewById(R.id.amkaRegisterInput);
         email = findViewById(R.id.emailRegisterInput);
         password = findViewById(R.id.passwordRegisterInput);
+        hidePassword = findViewById(R.id.register_hide_password);
         passwordConf = findViewById(R.id.passwordConfirmationRegisterInput);
+        hidePasswordConf = findViewById(R.id.register_hide_password_conf);
         fullname = findViewById(R.id.fullnameRegisterInput);
         dateOfBirth = findViewById(R.id.dateOfBirthRegisterInput);
         dateOfBirth.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -64,6 +68,41 @@ public class RegisterFormActivity extends BaseClass {
         });
 
         simpleRegister = getIntent().getBooleanExtra("simpleRegister", true);
+
+        passwordHidden = false;
+        passwordHiddenConf = false;
+        hidePassword(null);
+        hidePasswordConf(null);
+    }
+
+    public void hidePassword(View view) {
+        if (!passwordHidden) {
+            password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD );
+            hidePassword.setImageResource(R.drawable.ic_visibility_on);
+            hidePassword.setAlpha(PASSWORD_ALPHA_HIDDEN);
+        }
+        else
+        {
+            password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            hidePassword.setImageResource(R.drawable.ic_visibility_off);
+            hidePassword.setAlpha(PASSWORD_ALPHA_SHOWING);
+        }
+        passwordHidden = !passwordHidden;
+    }
+
+    public void hidePasswordConf(View view) {
+        if (!passwordHiddenConf) {
+            passwordConf.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD );
+            hidePasswordConf.setImageResource(R.drawable.ic_visibility_on);
+            hidePasswordConf.setAlpha(PASSWORD_ALPHA_HIDDEN);
+        }
+        else
+        {
+            passwordConf.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            hidePasswordConf.setImageResource(R.drawable.ic_visibility_off);
+            hidePasswordConf.setAlpha(PASSWORD_ALPHA_SHOWING);
+        }
+        passwordHiddenConf = !passwordHiddenConf;
     }
 
     private void showCalendar() {
