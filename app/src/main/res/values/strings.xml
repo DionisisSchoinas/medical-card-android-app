@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Κάρτα Υγείας</string>
+    <string name="app_name">M-Doctor</string>
 
     <!-- Messages to user -->
     <string name="failed_to_speak_to_server">Δεν έγινε σύνδεση με τον server</string>
