@@ -13,10 +13,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.applandeo.materialcalendarview.CalendarView;
-import com.applandeo.materialcalendarview.DatePicker;
-import com.applandeo.materialcalendarview.builders.DatePickerBuilder;
-import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 import com.unipi.p17134.medicalcard.API.DoctorDAO;
@@ -31,8 +27,8 @@ import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Listeners.VerificationPopupListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -85,6 +81,7 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
         minDay.set(Calendar.MINUTE, 0);
         minDay.set(Calendar.SECOND, 0);
 
+        // Create list of disabled items
         ArrayList<Calendar> disabledDays = new ArrayList<>();
         Calendar test = (Calendar)minDay.clone();
         test.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
@@ -94,9 +91,11 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
             disabledDays.add((Calendar)test.clone());
             test.add(Calendar.DAY_OF_WEEK, 6);
         }
+        // Copy list to array
+        Calendar[] disabledDaysArray = new Calendar[disabledDays.size()];
+        disabledDaysArray = disabledDays.toArray(disabledDaysArray);
 
         Calendar min = (Calendar) minDay.clone();
-        min.add(Calendar.DAY_OF_MONTH, -1);
         Calendar max = (Calendar) min.clone();
         max.add(Calendar.YEAR, 1);
         max.set(Calendar.MONTH, Calendar.DECEMBER);
@@ -138,29 +137,27 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
 
         setDate(minDay);
 
-        DatePickerBuilder builder = new DatePickerBuilder(
-                this,
-                new OnSelectDateListener() {
-                    @Override
-                    public void onSelect(List<Calendar> calendar) {
-                        setDate(calendar.get(0));
-                    }
-                })
-                .setPickerType(CalendarView.ONE_DAY_PICKER)
-                .setMinimumDate(min)
-                .setMaximumDate(max)
-                .setHeaderColor(R.color.dark_blue)
-                .setTodayLabelColor(R.color.dark_blue)
-                .setSelectionColor(R.color.blue)
-                .setDisabledDays(disabledDays);
-
+        Calendar[] finalDisabledDaysArray = disabledDaysArray;
         dateDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePicker datePicker = builder
-                        .setDate(currentDay)
-                        .build();
-                datePicker.show();
+                DatePickerDialog dialog = DatePickerDialog.newInstance(
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+                                Calendar c = Calendar.getInstance();
+                                c.set(year, monthOfYear, dayOfMonth);
+                                setDate(c);
+                            }
+                        },
+                        currentDay.get(Calendar.YEAR), // Initial year selection
+                        currentDay.get(Calendar.MONTH), // Initial month selection
+                        currentDay.get(Calendar.DAY_OF_MONTH) // Inital day selection
+                );
+                dialog.setMinDate(min);
+                dialog.setMaxDate(max);
+                dialog.setDisabledDays(finalDisabledDaysArray);
+                dialog.show(getSupportFragmentManager(), "Datepickerdialog");
             }
         });
 
@@ -320,11 +317,13 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
                         cal1.setTime(item.getAppointmentData().getStartDate());
                         finalCalendar1.set(Calendar.HOUR_OF_DAY, cal1.get(Calendar.HOUR_OF_DAY));
                         finalCalendar1.set(Calendar.MINUTE, cal1.get(Calendar.MINUTE));
+                        finalCalendar1.set(Calendar.SECOND, 0);
                         appointment.setStartDate(finalCalendar1.getTime());
                         // Set start date
                         cal2.setTime(item.getAppointmentData().getEndDate());
                         finalCalendar2.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
                         finalCalendar2.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
+                        finalCalendar2.set(Calendar.SECOND, 0);
                         appointment.setEndDate(finalCalendar2.getTime());
 
                         loadingDialog.startLoadingDialog();

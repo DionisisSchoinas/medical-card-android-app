@@ -38,7 +38,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.3.2'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
-    implementation 'com.applandeo:material-calendar-view:1.7.0'
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
     implementation 'androidmads.library.qrgenearator:QRGenearator:1.0.3'
     implementation 'com.budiyev.android:code-scanner:2.1.0'
     implementation 'com.google.firebase:firebase-messaging:21.0.0'

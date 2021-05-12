@@ -2,6 +2,7 @@ package com.unipi.p17134.medicalcard;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ public class BaseClass extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         loadingDialog = new LoadingDialog(this);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override

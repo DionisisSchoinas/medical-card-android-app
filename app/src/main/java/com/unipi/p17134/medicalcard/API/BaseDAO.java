@@ -11,5 +11,5 @@ import org.json.JSONObject;
 public class BaseDAO {
     protected static final String url = "http://192.168.1.4:3000";
     public static final String APPOINTMENT_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
-    protected static final String USER_DATE_OF_BIRTH_FORMAT = "yyyy-MM-dd";
+    public static final String USER_DATE_OF_BIRTH_FORMAT = "yyyy-MM-dd";
 }

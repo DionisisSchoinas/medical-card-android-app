@@ -88,6 +88,7 @@
     <string name="register_form_date_of_birth">Ημερομηνία Γέννησης</string>
 
     <string name="register_form_error_need_cost">Δώστε έγκυρη τιμή κόστους</string>
+    <string name="register_form_error_need_birth">Δώστε έγκυρη ημερομηνία γέννησης</string>
 
     <!-- Appointment Details -->
     <string name="appointment_details_address">Διεύθυνση Γραφείου</string>
