@@ -57,7 +57,7 @@
                 android:layout_marginTop="5dp"
                 android:ems="10"
                 android:inputType="textEmailAddress"
-                android:text="user1@gmail.com"
+                android:hint="@string/login_email_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -82,7 +82,6 @@
                 android:layout_marginTop="5dp"
                 android:ems="10"
                 android:inputType="textPassword"
-                android:text="123456"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
