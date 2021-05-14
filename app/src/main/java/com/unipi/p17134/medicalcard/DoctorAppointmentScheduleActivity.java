@@ -21,7 +21,7 @@ import com.unipi.p17134.medicalcard.Adapters.DoctorScheduleAppointmentsAdapter;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
 import com.unipi.p17134.medicalcard.Custom.MyRequestHandler;
 import com.unipi.p17134.medicalcard.Custom.RecyclerViewItem;
-import com.unipi.p17134.medicalcard.Custom.VerificationPopup;
+import com.unipi.p17134.medicalcard.Custom.Popup.VerificationPopup;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Listeners.VerificationPopupListener;

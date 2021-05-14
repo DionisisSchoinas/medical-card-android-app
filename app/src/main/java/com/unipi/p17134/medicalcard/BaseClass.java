@@ -27,12 +27,13 @@ public class BaseClass extends AppCompatActivity {
 
         loadingDialog = new LoadingDialog(this);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override

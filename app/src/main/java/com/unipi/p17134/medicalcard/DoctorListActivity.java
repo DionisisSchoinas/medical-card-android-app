@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,9 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.unipi.p17134.medicalcard.API.DoctorDAO;
 import com.unipi.p17134.medicalcard.Adapters.DoctorListAdapter;
 import com.unipi.p17134.medicalcard.Custom.MyPermissions;
+import com.unipi.p17134.medicalcard.Custom.Popup.InputPopup;
 import com.unipi.p17134.medicalcard.Custom.RecyclerViewItem;
 import com.unipi.p17134.medicalcard.Listeners.ClickListener;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
+import com.unipi.p17134.medicalcard.Listeners.InputPopupListener;
 import com.unipi.p17134.medicalcard.Singletons.Doctor;
 
 import java.util.ArrayList;
@@ -36,10 +39,8 @@ public class DoctorListActivity extends ConnectedBaseClass {
     private ArrayList<RecyclerViewItem> recyclerViewItems;
     private DAOResponseListener responseListener;
 
-    private ConstraintLayout searchView;
-    private EditText specialitySearch;
-
     private String currentFilter;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +71,6 @@ public class DoctorListActivity extends ConnectedBaseClass {
                 Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
             }
         };
-        searchView = findViewById(R.id.searchView);
-        specialitySearch = findViewById(R.id.specialitySearch);
-        hideSearchView();
 
         doctors = new ArrayList<>();
         recyclerViewItems = new ArrayList<>();
@@ -88,7 +86,7 @@ public class DoctorListActivity extends ConnectedBaseClass {
             @Override
             public void onClick(int index) {
                 loadingDialog.startLoadingDialog();
-                DoctorDAO.doctors(activity, -2, specialitySearch.getText().toString(), responseListener);
+                DoctorDAO.doctors(activity, -2, currentFilter, responseListener);
             }
         });
         // Attach the adapter to the recyclerview to populate items
@@ -106,7 +104,7 @@ public class DoctorListActivity extends ConnectedBaseClass {
 
                 // If last visible item's index is greater than the total appointments - 10
                 if (layoutManager.findLastVisibleItemPosition() >= recyclerView.getAdapter().getItemCount() - 10) {
-                    DoctorDAO.doctors(activity, -1, specialitySearch.getText().toString(), responseListener);
+                    DoctorDAO.doctors(activity, -1, currentFilter, responseListener);
                 }
             }
 
@@ -119,7 +117,7 @@ public class DoctorListActivity extends ConnectedBaseClass {
 
                 // If last visible item's index is greater than the total appointments - 10
                 if (currentDisplayState == RecyclerView.SCROLL_STATE_DRAGGING && dy > 0 && layoutManager.findLastVisibleItemPosition() >= recyclerView.getAdapter().getItemCount() - 10) {
-                    DoctorDAO.doctors(activity, -1, specialitySearch.getText().toString(), responseListener);
+                    DoctorDAO.doctors(activity, -1, currentFilter, responseListener);
                 }
             }
         });
@@ -127,31 +125,7 @@ public class DoctorListActivity extends ConnectedBaseClass {
         processNewDoctors(new ArrayList<>());
         loadingDialog.startLoadingDialog();
         // Fill with 1 page of doctors
-        DoctorDAO.doctors(activity, 1, specialitySearch.getText().toString(), responseListener);
-    }
-
-    public void searchWithFilter(View view) {
-        DAOResponseListener filterResponseListener = new DAOResponseListener() {
-            @Override
-            public <T> void onResponse(T object) {
-                loadingDialog.dismissLoadingDialog();
-                filterDoctors((ArrayList<Doctor>)object);
-            }
-
-            @Override
-            public <T> void onErrorResponse(T error) {
-                loadingDialog.dismissLoadingDialog();
-                if (errorResponse(error))
-                    return;
-                Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        loadingDialog.startLoadingDialog();
-        DoctorDAO.resetCounters();
-        DoctorDAO.doctors(this, 1, specialitySearch.getText().toString(), filterResponseListener);
-        currentFilter = specialitySearch.getText().toString();
-        hideSearchView();
+        DoctorDAO.doctors(activity, 1, currentFilter, responseListener);
     }
 
     private void addAppointment(int index) {
@@ -229,10 +203,7 @@ public class DoctorListActivity extends ConnectedBaseClass {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_filter) {
-            if (searchView.getVisibility() == View.VISIBLE)
-                hideSearchView();
-            else
-                showSearchView();
+            showSearchView();
             return true;
         }
         else
@@ -246,8 +217,8 @@ public class DoctorListActivity extends ConnectedBaseClass {
 
     @Override
     protected void backButton() {
-        if (searchView.getVisibility() == View.VISIBLE) {
-            hideSearchView();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
             return;
         }
 
@@ -255,16 +226,40 @@ public class DoctorListActivity extends ConnectedBaseClass {
         finish();
     }
 
-    private void showSearchView() {
-        searchView.setVisibility(View.VISIBLE);
+    private void searchWithFilter(String filter) {
+        DAOResponseListener filterResponseListener = new DAOResponseListener() {
+            @Override
+            public <T> void onResponse(T object) {
+                loadingDialog.dismissLoadingDialog();
+                filterDoctors((ArrayList<Doctor>)object);
+            }
+
+            @Override
+            public <T> void onErrorResponse(T error) {
+                loadingDialog.dismissLoadingDialog();
+                if (errorResponse(error))
+                    return;
+                Toast.makeText(getApplicationContext(), R.string.problem_with_request, Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        loadingDialog.startLoadingDialog();
+        DoctorDAO.resetCounters();
+        DoctorDAO.doctors(this, 1, filter, filterResponseListener);
     }
 
-    private void hideSearchView() {
-        searchView.setVisibility(View.GONE);
-        if (currentFilter != null)
-            specialitySearch.setText(currentFilter);
+    private void showSearchView() {
+        dialog = InputPopup.showPopup(this, R.string.filter_doctors, currentFilter, R.string.popup_positive_search, R.string.popup_negative_cancel, new InputPopupListener() {
+            @Override
+            public void onPositive(String value) {
+                searchWithFilter(value);
+                currentFilter = value;
+            }
 
-        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(searchView.getRootView().getWindowToken(), 0);
+            @Override
+            public void onNegative() {
+
+            }
+        });
     }
 }

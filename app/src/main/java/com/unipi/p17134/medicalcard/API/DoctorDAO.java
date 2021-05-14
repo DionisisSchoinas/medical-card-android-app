@@ -67,7 +67,7 @@ public class DoctorDAO extends BaseDAO {
         else if (page == -2)
             page = currentPage + 1;
 
-        boolean withQuery = !(specialityQuery == null || specialityQuery.length() == 0);
+        boolean withQuery = !(specialityQuery == null || specialityQuery.trim().isEmpty());
         if (withQuery != hasQuery) {
             page = 1;
             hasQuery = withQuery;

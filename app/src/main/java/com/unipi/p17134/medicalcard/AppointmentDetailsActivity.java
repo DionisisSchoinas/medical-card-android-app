@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.unipi.p17134.medicalcard.API.PatientDAO;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
-import com.unipi.p17134.medicalcard.Custom.VerificationPopup;
+import com.unipi.p17134.medicalcard.Custom.Popup.VerificationPopup;
 import com.unipi.p17134.medicalcard.Listeners.DAOResponseListener;
 import com.unipi.p17134.medicalcard.Listeners.VerificationPopupListener;
 import com.unipi.p17134.medicalcard.Singletons.Appointment;

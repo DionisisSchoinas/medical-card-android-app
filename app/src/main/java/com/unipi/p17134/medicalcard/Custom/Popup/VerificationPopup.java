@@ -1,7 +1,6 @@
-package com.unipi.p17134.medicalcard.Custom;
+package com.unipi.p17134.medicalcard.Custom.Popup;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 
 import androidx.appcompat.app.AlertDialog;
