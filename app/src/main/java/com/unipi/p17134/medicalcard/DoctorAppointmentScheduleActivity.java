@@ -299,10 +299,10 @@ public class DoctorAppointmentScheduleActivity extends ConnectedBaseClass {
         Activity activity = this;
         VerificationPopup.showPopup(
                 this,
-                getResources().getString(R.string.book_appointment_popup_title),
+                R.string.book_appointment_popup_title,
                 message,
-                getResources().getString(R.string.popup_positive_confirm),
-                getResources().getString(R.string.popup_negative_cancel),
+                R.string.popup_positive_confirm,
+                R.string.popup_negative_cancel,
                 new VerificationPopupListener() {
                     @Override
                     public void onPositive() {

@@ -197,10 +197,10 @@ public class MainActivity extends ConnectedBaseClass implements NavigationView.O
     private void logout() {
         Activity activity = this;
         VerificationPopup.showPopup(this,
-                getResources().getString(R.string.logout_popup_title),
-                getResources().getString(R.string.logout_popup_message),
-                getResources().getString(R.string.popup_positive_yes),
-                getResources().getString(R.string.popup_negative_no),
+                R.string.logout_popup_title,
+                R.string.logout_popup_message,
+                R.string.popup_positive_yes,
+                R.string.popup_negative_no,
                 new VerificationPopupListener() {
                     @Override
                     public void onPositive() {

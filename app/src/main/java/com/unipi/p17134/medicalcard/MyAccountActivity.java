@@ -338,10 +338,10 @@ public class MyAccountActivity extends ConnectedBaseClass {
         String message = getResources().getString(R.string.doctor_update_popup_message) + "\n\n" + getChangedData();
         VerificationPopup.showPopup(
                 activity,
-                getResources().getString(R.string.doctor_update_popup_title),
+                R.string.doctor_update_popup_title,
                 message,
-                getResources().getString(R.string.popup_positive_confirm),
-                getResources().getString(R.string.popup_negative_cancel),
+                R.string.popup_positive_confirm,
+                R.string.popup_negative_cancel,
                 new VerificationPopupListener() {
                     @Override
                     public void onPositive() {

@@ -11,17 +11,6 @@ import com.unipi.p17134.medicalcard.Listeners.InputPopupListener;
 import com.unipi.p17134.medicalcard.R;
 
 public class InputPopup {
-    public static AlertDialog showPopup(Activity activity, int title, int existingText, int positive, int negative, InputPopupListener listener) {
-        return showPopup(
-                activity,
-                activity.getResources().getString(title),
-                activity.getResources().getString(existingText),
-                activity.getResources().getString(positive),
-                activity.getResources().getString(negative),
-                listener
-        );
-    }
-
     public static AlertDialog showPopup(Activity activity, int title, String existingText, int positive, int negative, InputPopupListener listener) {
         return showPopup(
                 activity,
