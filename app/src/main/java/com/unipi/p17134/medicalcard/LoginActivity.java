@@ -71,13 +71,13 @@ public class LoginActivity extends BaseClass {
     private void setPasswordHidden(boolean hide) {
         if (hide) {
             password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD );
-            hidePassword.setImageResource(R.drawable.ic_visibility_on);
+            hidePassword.setImageResource(R.drawable.ic_visibility_off);
             hidePassword.setAlpha(PASSWORD_ALPHA_HIDDEN);
         }
         else
         {
             password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            hidePassword.setImageResource(R.drawable.ic_visibility_off);
+            hidePassword.setImageResource(R.drawable.ic_visibility_on);
             hidePassword.setAlpha(PASSWORD_ALPHA_SHOWING);
         }
         passwordHidden = hide;

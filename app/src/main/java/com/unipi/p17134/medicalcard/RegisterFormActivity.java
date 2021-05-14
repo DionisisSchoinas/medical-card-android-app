@@ -78,13 +78,13 @@ public class RegisterFormActivity extends BaseClass {
     public void hidePassword(View view) {
         if (!passwordHidden) {
             password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD );
-            hidePassword.setImageResource(R.drawable.ic_visibility_on);
+            hidePassword.setImageResource(R.drawable.ic_visibility_off);
             hidePassword.setAlpha(PASSWORD_ALPHA_HIDDEN);
         }
         else
         {
             password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            hidePassword.setImageResource(R.drawable.ic_visibility_off);
+            hidePassword.setImageResource(R.drawable.ic_visibility_on);
             hidePassword.setAlpha(PASSWORD_ALPHA_SHOWING);
         }
         passwordHidden = !passwordHidden;
@@ -93,13 +93,13 @@ public class RegisterFormActivity extends BaseClass {
     public void hidePasswordConf(View view) {
         if (!passwordHiddenConf) {
             passwordConf.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD );
-            hidePasswordConf.setImageResource(R.drawable.ic_visibility_on);
+            hidePasswordConf.setImageResource(R.drawable.ic_visibility_off);
             hidePasswordConf.setAlpha(PASSWORD_ALPHA_HIDDEN);
         }
         else
         {
             passwordConf.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            hidePasswordConf.setImageResource(R.drawable.ic_visibility_off);
+            hidePasswordConf.setImageResource(R.drawable.ic_visibility_on);
             hidePasswordConf.setAlpha(PASSWORD_ALPHA_SHOWING);
         }
         passwordHiddenConf = !passwordHiddenConf;
