@@ -1,7 +1,5 @@
 package com.unipi.p17134.medicalcard;
 
-import androidx.appcompat.widget.Toolbar;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +8,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.unipi.p17134.medicalcard.API.PatientDAO;
 import com.unipi.p17134.medicalcard.Custom.DateTimeParsing;
@@ -32,6 +32,7 @@ public class AppointmentDetailsActivity extends ConnectedBaseClass {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.appointment_details_activity));
 
         image = findViewById(R.id.appointment_details_doctor_photo);
         fullname = findViewById(R.id.appointment_details_doctor_name);

@@ -39,6 +39,7 @@ public class RegisterFormActivity extends BaseClass {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.register_activity));
 
         max = Calendar.getInstance();
         min = (Calendar) max.clone();

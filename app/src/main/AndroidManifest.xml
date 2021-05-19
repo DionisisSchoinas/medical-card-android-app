@@ -9,7 +9,7 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-    
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_default"
@@ -17,7 +17,11 @@
         android:roundIcon="@mipmap/ic_default_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MedicalCard">
-        <activity android:name=".DoctorAppointmentListActivity"
+        <activity android:name=".SettingsActivity"
+            android:label="@string/settings_activity"
+            android:theme="@style/Theme.MedicalCard.NoActionBar" />
+        <activity
+            android:name=".DoctorAppointmentListActivity"
             android:label="@string/doctor_appointments_list_activity"
             android:theme="@style/Theme.MedicalCard.NoActionBar" />
         <activity
@@ -38,7 +42,7 @@
             android:theme="@style/Theme.MedicalCard.NoActionBar" />
         <activity
             android:name=".DoctorAppointmentScheduleActivity"
-            android:label="@string/doctor_appointments_display_activity"
+            android:label="@string/doctor_appointments_schedule_activity"
             android:theme="@style/Theme.MedicalCard.NoActionBar" />
         <activity
             android:name=".DoctorDetailsActivity"
@@ -82,6 +86,7 @@
             android:name=".LoginActivity"
             android:label="@string/login_activity"
             android:theme="@style/Theme.MedicalCard.NoActionBar" />
+
         <service
             android:name=".Custom.MyFirebaseMessagingService"
             android:exported="false">

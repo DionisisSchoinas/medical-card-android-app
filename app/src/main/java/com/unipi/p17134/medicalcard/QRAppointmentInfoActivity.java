@@ -31,6 +31,7 @@ public class QRAppointmentInfoActivity extends ConnectedBaseClass {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.qr_result_activity));
 
         name = findViewById(R.id.appointment_details_qr_name);
         birth = findViewById(R.id.appointment_details_qr_birth);

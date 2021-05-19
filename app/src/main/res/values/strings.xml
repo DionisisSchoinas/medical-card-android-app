@@ -2,195 +2,199 @@
     <string name="app_name">M-Doctor</string>
 
     <!-- Messages to user -->
-    <string name="failed_to_speak_to_server">Δεν έγινε σύνδεση με τον server</string>
-    <string name="problem_with_request">Υπήρξε κάποιο πρόβλημα με την φόρτωση δεδομένων</string>
-    <string name="fatal_error">Υπήρξε κάποιο πρόβλημα</string>
+    <string name="failed_to_speak_to_server">Couldn\'t connect to the server</string>
+    <string name="problem_with_request">There was problem loading the data</string>
+    <string name="fatal_error">There was a problem</string>
 
-    <string name="enable_internet_connection">Ενεργοποιήστε την σύνδεσή σας στο διαδίκτυο</string>
-    <string name="unable_to_open_camera">Η κάμερα δεν μπόρεσε να ανοιχτεί</string>
-    <string name="unable_to_load_image">Η φωτογραφία δεν μπόρεσε να φορτωθεί</string>
-    <string name="image_not_picked">Δεν διαλέχτηκε φωτογραφία</string>
-    <string name="picture_not_taken">Δεν τραβήχτηκε φωτογραφία</string>
+    <string name="enable_internet_connection">Enable your internet connection</string>
+    <string name="unable_to_open_camera">Couldn\'t open the camera</string>
+    <string name="unable_to_load_image">Image couldn\'t be loaded</string>
+    <string name="image_not_picked">Didn\'t pick an image</string>
+    <string name="picture_not_taken">Didn\'t take a picture</string>
 
-    <string name="already_a_doctor">Αυτός ο λογαριασμός είναι ήδη γιατρός</string>
+    <string name="already_a_doctor">This account is already a doctor</string>
 
-    <string name="cancel_appointment_success">Επιτυχής ακύρωση ραντεβού</string>
-    <string name="cancel_appointment_failure">Δεν έγινε ακύρωση του ραντεβού</string>
+    <string name="cancel_appointment_success">Appointment cancelled</string>
+    <string name="cancel_appointment_failure">Couldn\'t cancel appointment</string>
 
-    <string name="book_appointment_success">Επιτυχής κράτηση ραντεβού</string>
-    <string name="book_appointment_failure">Δεν έγινε κράτηση του ραντεβού</string>
+    <string name="book_appointment_success">Appointment booked</string>
+    <string name="book_appointment_failure">Couldn\'t book appointment</string>
 
-    <string name="update_doctor_info_success">Επιτυχής ανανέωση στοιχείων</string>
-    <string name="update_doctor_info_failure">Δεν έγινε ανανέωση στοιχείων</string>
-    <string name="update_doctor_new_image">Νέα εικόνα</string>
+    <string name="update_doctor_info_success">User information updated</string>
+    <string name="update_doctor_info_failure">Couldn\'t update user information</string>
+    <string name="update_doctor_new_image">New picture</string>
 
     <!-- Popups -->
-    <string name="popup_positive_yes">Ναι</string>
-    <string name="popup_negative_no">Όχι</string>
-    <string name="popup_positive_confirm">Επιβεβαίωση</string>
-    <string name="popup_negative_cancel">Ακύρωση</string>
-    <string name="popup_positive_search">Αναζήτηση</string>
-    <string name="logout_popup_title">Αποσύνδεση</string>
-    <string name="logout_popup_message">Είσαι σίγουρος ότι θες να αποσυνδεθείς ;</string>
-    <string name="cancel_appointment_popup_title_1">Ακύρωση Ραντεβού</string>
-    <string name="cancel_appointment_popup_message_1">Είσαι σίγουρος ότι θες να ακυρώσεις αυτό το ραντεβού ;</string>
-    <string name="cancel_appointment_popup_title_2">Επιβεβαίωση Ακύρωσης Ραντεβού</string>
-    <string name="cancel_appointment_popup_message_2">Είσαι σίγουρος ότι θες να ακυρώσεις το ραντεβού ;</string>
-    <string name="book_appointment_popup_title">Επιβεβαίωση Κράτησης Ραντεβού</string>
-    <string name="book_appointment_popup_message">Θα κλέισετε το ακόλουθρο ραντεβού ;</string>
-    <string name="doctor_update_popup_title">Επιβεβαίωση Ανανέωσης Στοιχείων</string>
-    <string name="doctor_update_popup_message">Θα αλλάξετε τα ακόλουθα στοιχεία ;</string>
-    <string name="filter_doctors">Φιλτράρισμα</string>
+    <string name="popup_positive_yes">Yes</string>
+    <string name="popup_negative_no">No</string>
+    <string name="popup_positive_confirm">Confirm</string>
+    <string name="popup_negative_cancel">Cancel</string>
+    <string name="popup_positive_search">Search</string>
+    <string name="logout_popup_title">Logout</string>
+    <string name="logout_popup_message">Are you sure you want to logout ?</string>
+    <string name="cancel_appointment_popup_title_1">Cancel Appointment</string>
+    <string name="cancel_appointment_popup_message_1">Are you sure you want to cancel this appointment ?</string>
+    <string name="cancel_appointment_popup_title_2">Appointment Cancel Confirmation</string>
+    <string name="cancel_appointment_popup_message_2">Are you sure you want to cancel the appointment ?</string>
+    <string name="book_appointment_popup_title">Appointment Booking Confirmation</string>
+    <string name="book_appointment_popup_message">Are you going to book this appointment ?</string>
+    <string name="doctor_update_popup_title">User Information Update Confirmation</string>
+    <string name="doctor_update_popup_message">Are you going to update the following information ?</string>
+    <string name="filter_doctors">Filter</string>
 
     <!-- Global -->
-    <string name="action_settings">Ρυθμίσεις</string>
-    <string name="action_filter">Φιλτράρισμα</string>
-    <string name="today">Σήμερα</string>
-    <string name="no_more_items">Δεν βρέθηκαν αντικείμενα\nΔοκιμάστε ξανά</string>
-    <string name="doctor">Γιατρός</string>
-    <string name="loading">Φόρτωση …</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_filter">Filter</string>
+    <string name="today">Today</string>
+    <string name="no_more_items">Couldn\'t find data\nTry again</string>
+    <string name="doctor">Doctor</string>
+    <string name="loading">Loading …</string>
 
     <!-- Main Activity -->
-    <string name="connected_as_subtitle">Συνδεδεμένος ως :</string>
-    <string name="connected_as_name">Όνομα Χρήστη</string>
-    <string name="logged_out_successfully">Επιτυχής αποσύνδεση</string>
-    <string name="appointment_list_updated">Ανανεώθηκε η λίστα</string>
+    <string name="connected_as_subtitle">Connected as :</string>
+    <string name="connected_as_name">User\'s Name</string>
+    <string name="logged_out_successfully">Successfully logged out</string>
+    <string name="appointment_list_updated">List updated</string>
 
     <!-- Login Form -->
     <string name="login_email">Email</string>
-    <string name="login_password">Κωδικός Πρόσβασης</string>
+    <string name="login_password">Password</string>
 
     <string name="login_email_hint">myemail@gmail.com</string>
 
     <!-- Doctor Register Pick -->
-    <string name="register_pick_need_account">Χρειαζομαι νεο λογαριασμο</string>
-    <string name="register_pick_have_account">Εχω λογαριασμο</string>
+    <string name="register_pick_need_account">Need new account</string>
+    <string name="register_pick_have_account">Have an account</string>
 
     <!-- Register Pick -->
-    <string name="register_pick_simple_account">Απλος χρηστης</string>
-    <string name="register_pick_doctor_account">Γιατρος</string>
+    <string name="register_pick_simple_account">Simple user</string>
+    <string name="register_pick_doctor_account">Doctor</string>
 
     <!-- Doctor Register -->
-    <string name="doctor_register_form_speciality">Ειδίκευση</string>
-    <string name="doctor_register_form_address">Διεύθυνση Γραφείου</string>
-    <string name="doctor_register_form_email">Email Επικοινωνίας</string>
-    <string name="doctor_register_form_phone">Τηλέφωνο Επικοινωνίας</string>
-    <string name="doctor_register_form_cost">Κόστος Συνάντησης (€)</string>
+    <string name="doctor_register_form_speciality">Speciality</string>
+    <string name="doctor_register_form_address">Office Address</string>
+    <string name="doctor_register_form_email">Contact Email</string>
+    <string name="doctor_register_form_phone">Contact Phone Number</string>
+    <string name="doctor_register_form_cost">Visit Cost (€)</string>
 
-    <string name="doctor_register_form_speciality_hint">Καρδιολόγος, …</string>
-    <string name="doctor_register_form_address_hint">Απόλωνος 5, Ανθούπολη</string>
+    <string name="doctor_register_form_speciality_hint">Cardiologist, …</string>
+    <string name="doctor_register_form_address_hint">Apolonos 5, Anthoupoli</string>
     <string name="doctor_register_form_email_hint">myemail@gmail.com, myemail2@gmail.com</string>
     <string name="doctor_register_form_phone_hint">210–5864895, 6977785856</string>
     <string name="doctor_register_form_cost_hint">50</string>
 
     <!-- Register -->
     <string name="register_form_amka">ΑΜΚΑ</string>
-    <string name="register_form_email">Email (για σύνδεση)</string>
-    <string name="register_form_password">Κωδικός Πρόσβασης</string>
-    <string name="register_form_password_confirmation">Επανάληψη Κωδικού Πρόσβασης</string>
-    <string name="register_form_fullname">Ονοματεπώνυμο</string>
-    <string name="register_form_date_of_birth">Ημερομηνία Γέννησης</string>
+    <string name="register_form_email">Email (for login)</string>
+    <string name="register_form_password">Password</string>
+    <string name="register_form_password_confirmation">Password Confirmation</string>
+    <string name="register_form_fullname">Fullname</string>
+    <string name="register_form_date_of_birth">Date of Birth</string>
 
-    <string name="register_form_error_need_cost">Δώστε έγκυρη τιμή κόστους</string>
-    <string name="register_form_error_need_birth">Δώστε έγκυρη ημερομηνία γέννησης</string>
+    <string name="register_form_error_need_cost">Give a valid cost value</string>
+    <string name="register_form_error_need_birth">Give a valid date of birth</string>
 
     <string name="register_amka_hint">29086205810</string>
-    <string name="register_fullname_hint">Γεώργιος Παπαδόπουλος</string>
+    <string name="register_fullname_hint">George Papadopoulos</string>
     <string name="register_date_of_birth_hint">1985–05–25</string>
 
     <!-- Appointment Details -->
-    <string name="appointment_details_address">Διεύθυνση Γραφείου</string>
-    <string name="appointment_details_date">Ημερομηνία/Ώρα Ραντεβού</string>
-    <string name="appointment_details_phone">Τηλέφωνο Επικοινωνίας</string>
-    <string name="appointment_details_email">Email Επικοινωνίας</string>
+    <string name="appointment_details_address">Office Address</string>
+    <string name="appointment_details_date">Appointment Date/Time</string>
+    <string name="appointment_details_phone">Contact Phone Number</string>
+    <string name="appointment_details_email">Contact Email</string>
 
     <!-- Menu -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="menu_doctor_search">Αναζήτηση Γιατρού</string>
-    <string name="menu_qr_generate">Δημιουργία QR</string>
-    <string name="menu_qr_read">Ανάγνωση QR</string>
-    <string name="menu_login_register">Σύνδεση/Εγγραφή</string>
-    <string name="menu_my_account">Τα Στοιχεία Μου</string>
-    <string name="menu_my_appointments">Τα Ραντεβού Μου</string>
-    <string name="menu_logout">Αποσύνδεση</string>
+    <string name="menu_doctor_search">Find Doctor</string>
+    <string name="menu_qr_generate">Generate QR</string>
+    <string name="menu_qr_read">Read QR</string>
+    <string name="menu_login_register">Login/Register</string>
+    <string name="menu_my_account">My Account</string>
+    <string name="menu_my_appointments">My Appointments</string>
+    <string name="menu_logout">Logout</string>
 
     <!-- Doctors List -->
-    <string name="doctors_list_speciality_search_hint">Ειδικότητα</string>
+    <string name="doctors_list_speciality_search_hint">Speciality</string>
 
     <!-- Generate QR Activity -->
-    <string name="qr_expires_after">Λήξη QR σε :</string>
+    <string name="qr_expires_after">QR Expires in :</string>
 
     <!-- QR Appointment Information -->
-    <string name="not_found_message">Δεν υπάρχει</string>
-    <string name="not_booked_message">Δεν έχει κλείσει ραντεβού</string>
-    <string name="patient_label">Ασθενής</string>
-    <string name="patient_name_label">Ονοματεπώνυμο</string>
-    <string name="patient_birth_label">Ημερομηνία Γέννησης</string>
-    <string name="today_appointment_label">Τωρινό/Επόμενο Ραντεβού</string>
-    <string name="previous_appointment_label">Προηγούμενο Ραντεβού</string>
-    <string name="appointment_details_date_only">Ημερομηνία Ραντεβού</string>
+    <string name="not_found_message">Doesn\'t exist</string>
+    <string name="not_booked_message">Hasn\'t booked appointment</string>
+    <string name="patient_label">Patient</string>
+    <string name="patient_name_label">Fullname</string>
+    <string name="patient_birth_label">Date of Birth</string>
+    <string name="today_appointment_label">Current/Next Appointment</string>
+    <string name="previous_appointment_label">Previous Appointment</string>
+    <string name="appointment_details_date_only">Appointment Date</string>
+
+    <!-- Settings Activity -->
+    <string name="language_label">Language</string>
 
     <!-- Buttons -->
-    <string name="register_button">Ολοκληρωση Εγγραφης</string>
-    <string name="login_button_login">Συνδεση</string>
-    <string name="login_button_register">Εγγραφή</string>
-    <string name="appointment_button_cancel">Ακυρωση ραντεβου</string>
-    <string name="doctors_details_book_button">Κλεισιμο Ραντεβου</string>
-    <string name="update_doctor_info_button">Ανανέωση Στοιχείων</string>
-    <string name="create_new_qr_code">Νεος κωδικος qr</string>
+    <string name="register_button">Complete Register</string>
+    <string name="login_button_login">Login</string>
+    <string name="login_button_register">Register</string>
+    <string name="appointment_button_cancel">Cancel Appointment</string>
+    <string name="doctors_details_book_button">Book Appointment</string>
+    <string name="update_doctor_info_button">Update User Information</string>
+    <string name="create_new_qr_code">New QR Code</string>
 
     <!-- Activity Names -->
-    <string name="main_activity">Κεντρική Σελίδα</string>
-    <string name="doctor_register_pick_activity">Εγγραφή Γιατρού</string>
-    <string name="doctor_register_activity">Εγγραφή Γιατρού</string>
-    <string name="register_pick_activity">Εγγραφή</string>
-    <string name="register_activity">Εγγραφή</string>
-    <string name="login_activity">Σύνδεση</string>
-    <string name="appointment_details_activity">Λεπτομέρειες Ραντεβού</string>
-    <string name="doctor_list_activity">Λίστα Γιατρών</string>
-    <string name="doctor_details_activity">Πληροφορίες Γιατρού</string>
-    <string name="doctor_appointments_display_activity">Διαθέσιμα Ραντεβού</string>
-    <string name="doctor_update_account_activity">Ο Λογαριασμός Μου</string>
-    <string name="generate_qr_activity">Δημιουργία QR</string>
-    <string name="read_qr_activity">Ανάγνωση QR</string>
-    <string name="qr_result_activity">Αποτέλεσμα QR</string>
-    <string name="doctor_appointments_list_activity">Τα Ραντεβού Μου</string>
+    <string name="main_activity">Main Page</string>
+    <string name="doctor_register_pick_activity">Register Doctor</string>
+    <string name="doctor_register_activity">Register Doctor</string>
+    <string name="register_pick_activity">Register</string>
+    <string name="register_activity">Register</string>
+    <string name="login_activity">Login</string>
+    <string name="appointment_details_activity">Appointment Information</string>
+    <string name="doctor_list_activity">Doctors\' List</string>
+    <string name="doctor_details_activity">Doctor Information</string>
+    <string name="doctor_appointments_schedule_activity">Available Appointments</string>
+    <string name="doctor_update_account_activity">My Account</string>
+    <string name="generate_qr_activity">Generate QR</string>
+    <string name="read_qr_activity">Read QR</string>
+    <string name="qr_result_activity">QR Results</string>
+    <string name="doctor_appointments_list_activity">My Appointments</string>
+    <string name="settings_activity">Settings</string>
 
     <!-- Days -->
-    <string name="mon">Δευτέρα</string>
-    <string name="tue">Τρίτη</string>
-    <string name="wed">Τετάρτη</string>
-    <string name="thu">Πέμπτη</string>
-    <string name="fri">Παρασκευή</string>
-    <string name="sat">Σάββατο</string>
-    <string name="sun">Κυριακή</string>
+    <string name="mon">Monday</string>
+    <string name="tue">Thursday</string>
+    <string name="wed">Wednesday</string>
+    <string name="thu">Tuesday</string>
+    <string name="fri">Friday</string>
+    <string name="sat">Saturday</string>
+    <string name="sun">Sunday</string>
 
     <!-- Date picker -->
-    <string name="material_calendar_monday">Δ</string>
-    <string name="material_calendar_tuesday">Τ</string>
-    <string name="material_calendar_wednesday">Τ</string>
-    <string name="material_calendar_thursday">Π</string>
-    <string name="material_calendar_friday">Π</string>
-    <string name="material_calendar_saturday">Σ</string>
-    <string name="material_calendar_sunday">Κ</string>
+    <string name="material_calendar_monday">M</string>
+    <string name="material_calendar_tuesday">T</string>
+    <string name="material_calendar_wednesday">W</string>
+    <string name="material_calendar_thursday">T</string>
+    <string name="material_calendar_friday">F</string>
+    <string name="material_calendar_saturday">S</string>
+    <string name="material_calendar_sunday">S</string>
 
     <array name="material_calendar_months_array">
-        <item>Ιανουάριος</item>
-        <item>Φεβρουάριος</item>
-        <item>Μάρτιος</item>
-        <item>Απρίλιος</item>
-        <item>Μάιος</item>
-        <item>Ιούνιος</item>
-        <item>Ιούλιος</item>
-        <item>Αύγουστος</item>
-        <item>Σεπτέμβριος</item>
-        <item>Οκτώμβριος</item>
-        <item>Νοέμβριος</item>
-        <item>Δεκέμβριος</item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>november</item>
+        <item>December</item>
     </array>
 
-    <string name="material_calendar_today_button">Σήμερα</string>
-    <string name="material_calendar_positive_button">ΟΚ</string>
-    <string name="material_calendar_negative_button">Ακύρωση</string>
+    <string name="material_calendar_today_button">Today</string>
+    <string name="material_calendar_positive_button">OK</string>
+    <string name="material_calendar_negative_button">Cancel</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.unipi.p17134.medicalcard;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;

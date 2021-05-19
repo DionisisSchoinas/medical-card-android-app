@@ -52,6 +52,7 @@ public class MyAccountActivity extends ConnectedBaseClass {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.doctor_appointments_list_activity));
 
         newDoctor = new Doctor();
 

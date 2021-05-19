@@ -37,6 +37,7 @@ public class ReadQRActivity extends ConnectedBaseClass {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.read_qr_activity));
 
         responseListener = new DAOResponseListener() {
             @Override

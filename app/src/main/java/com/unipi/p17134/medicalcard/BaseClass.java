@@ -1,15 +1,20 @@
 package com.unipi.p17134.medicalcard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.VolleyError;
 import com.unipi.p17134.medicalcard.Custom.LoadingDialog;
 import com.unipi.p17134.medicalcard.Custom.LoadingDialogEvent;
+import com.unipi.p17134.medicalcard.Custom.MyPrefs;
+import com.unipi.p17134.medicalcard.Singletons.Language;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -21,6 +26,8 @@ public class BaseClass extends AppCompatActivity {
     protected final float PASSWORD_ALPHA_HIDDEN = 0.5f;
     protected final float PASSWORD_ALPHA_SHOWING = 1f;
 
+    protected Language currentLocale;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,12 +35,23 @@ public class BaseClass extends AppCompatActivity {
         loadingDialog = new LoadingDialog(this);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        currentLocale = MyPrefs.LocalePrefs.getLanguage(this);
+
         EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyPrefs.LocalePrefs.setLocale(this, currentLocale);
     }
 
     @Override
@@ -68,18 +86,18 @@ public class BaseClass extends AppCompatActivity {
         backButton();
         return true;
     }
-/*
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
         else
             return super.onOptionsItemSelected(item);
     }
- */
+
     @Override
     public void onBackPressed() {
         backButton();

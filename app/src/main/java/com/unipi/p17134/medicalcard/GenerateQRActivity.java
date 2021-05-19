@@ -37,6 +37,7 @@ public class GenerateQRActivity extends ConnectedBaseClass {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.generate_qr_activity));
 
         newQr = findViewById(R.id.new_qr_code_button);
         expireCountdown = findViewById(R.id.expire_qr_countdown_display);

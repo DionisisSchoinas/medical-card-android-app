@@ -2,12 +2,8 @@ package com.unipi.p17134.medicalcard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 public class RegisterPickActivity extends BaseClass {
@@ -20,6 +16,7 @@ public class RegisterPickActivity extends BaseClass {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.register_pick_activity));
     }
 
     public void simpleUser(View view) {

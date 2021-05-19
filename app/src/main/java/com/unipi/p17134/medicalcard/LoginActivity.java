@@ -3,7 +3,6 @@ package com.unipi.p17134.medicalcard;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.media.Image;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Gravity;
@@ -36,6 +35,7 @@ public class LoginActivity extends BaseClass {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.login_activity));
 
         username = findViewById(R.id.emailLoginInput);
         password = findViewById(R.id.passwordLoginInput);

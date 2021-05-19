@@ -32,6 +32,7 @@ public class DoctorDetailsActivity extends ConnectedBaseClass {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.doctor_details_activity));
 
         image = findViewById(R.id.doctor_details_photo);
         fullname = findViewById(R.id.doctor_details_name);
