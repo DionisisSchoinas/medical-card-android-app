@@ -98,7 +98,9 @@ public class DoctorDetailsActivity extends ConnectedBaseClass {
 
     public void showSchedule(View view) {
         Intent intent = new Intent(this, DoctorAppointmentScheduleActivity.class);
-        intent.putExtra("doctor", doctor);
+        Doctor doc = new Doctor(doctor);
+        doc.setImage(null);
+        intent.putExtra("doctor", doc);
         startActivityForResult(intent, MyPermissions.RESPONSE_FROM_DOCTOR_SCHEDULE);
     }
 }

@@ -42,6 +42,17 @@ public class Doctor implements Parcelable {
         this.image = image;
     }
 
+    public Doctor(Doctor doctor) {
+        this.id = doctor.id;
+        this.user = doctor.user;
+        this.speciality = doctor.speciality;
+        this.office_address = doctor.office_address;
+        this.phone = doctor.phone;
+        this.email = doctor.email;
+        this.cost = doctor.cost;
+        this.image = doctor.image;
+    }
+
     protected Doctor(Parcel in) {
         id = in.readInt();
         user = in.readParcelable(User.class.getClassLoader());
